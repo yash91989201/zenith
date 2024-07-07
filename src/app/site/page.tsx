@@ -19,9 +19,9 @@ export default function HomePage() {
         <div className="absolute bottom-0 left-0 right-0 top-0 -z-10 bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)] dark:bg-[linear-gradient(to_right,#161616_1px,transparent_1px),linear-gradient(to_bottom,#161616_1px,transparent_1px)]" />
 
         <p className="text-center">Run your agency, in one place</p>
-        <div className="from-primary to-secondary-foreground relative bg-gradient-to-r bg-clip-text text-transparent">
+        <div className="relative bg-gradient-to-r from-primary to-secondary-foreground bg-clip-text text-transparent">
           <h1 className="text-center text-9xl font-bold md:text-[300px] ">
-            Plura
+            Zenith
           </h1>
         </div>
         <div className="relative flex items-center justify-center md:-mt-[70px]">
@@ -30,14 +30,14 @@ export default function HomePage() {
             alt="preview"
             height={1200}
             width={1200}
-            className="border-muted rounded-tl-2xl rounded-tr-2xl"
+            className="rounded-tl-2xl rounded-tr-2xl border-muted"
           />
-          <div className="dark:from-background absolute bottom-0 left-0 right-0 top-1/2 z-10 bg-gradient-to-t"></div>
+          <div className="absolute bottom-0 left-0 right-0 top-1/2 z-10 bg-gradient-to-t dark:from-background"></div>
         </div>
       </section>
       <section className="-mt-20 flex flex-col items-center justify-center gap-4 md:mt-20 xl:mt-48">
         <h2 className="text-center text-4xl">Choose what fits you right</h2>
-        <p className="text-muted-foreground max-w-md text-center">
+        <p className="max-w-md text-center text-muted-foreground">
           Our straightforward pricing plans are tailored to meet your needs. If
           you are not ready to commit you can get started for free
         </p>
@@ -47,7 +47,7 @@ export default function HomePage() {
               key={card.priceId}
               className={cn(
                 "mx-auto w-[300px] flex-col justify-between",
-                card.title === "Unlimited Saas" && "border-primary border-2",
+                card.title === "Unlimited Saas" && "border-2 border-primary",
               )}
             >
               <CardHeader>
@@ -77,11 +77,9 @@ export default function HomePage() {
                 <Link
                   href={`/agency?plan=${card.priceId}`}
                   className={buttonVariants({
-                    variant: "default",
-                    className: cn(
-                      "w-full font-medium",
-                      card.title !== "Unlimited Saas" && "bg-muted-foreground",
-                    ),
+                    variant:
+                      card.title === "Unlimited Saas" ? "default" : "secondary",
+                    className: "w-full font-medium",
                   })}
                 >
                   Start now

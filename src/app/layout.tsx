@@ -2,6 +2,8 @@ import "@/styles/globals.css";
 
 import { DM_Sans } from "next/font/google";
 import { ThemeProvider } from "@/providers/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
+import { TRPCReactProvider } from "@/trpc/react";
 
 export const metadata = {
   title: "Zenith",
@@ -19,14 +21,17 @@ export default function RootLayout({
   return (
     <html lang="en" className={DM_Sans_Font.className} suppressHydrationWarning>
       <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
+        <TRPCReactProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </TRPCReactProvider>
+        <Toaster richColors theme="light" />
       </body>
     </html>
   );

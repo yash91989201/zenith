@@ -1,20 +1,24 @@
+// UTILS
+import { validateRequest } from "@/lib/auth";
 // TYPES
-import { Navigation } from "@/components/site/navigation";
 import type React from "react";
 // CUSTOM COMPONENTS
-// import Navigation from "@/components/site/navigation";
+import { Navigation } from "@/components/site/navigation";
+import { SessionProvider } from "@/providers/session-provider";
 
-export default function SiteLayout({
+export default async function SiteLayout({
   children,
 }: {
   children: React.ReactElement;
 }) {
+  const user = await validateRequest();
+
   return (
-    // <ClerkProvider appearance={{ baseTheme: dark }}>
-    <main className="h-full">
-      <Navigation />
-      {children}
-    </main>
-    // </ClerkProvider>
+    <SessionProvider user={user}>
+      <main className="h-full">
+        <Navigation />
+        {children}
+      </main>
+    </SessionProvider>
   );
 }

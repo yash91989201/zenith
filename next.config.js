@@ -5,6 +5,14 @@
 await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
-const config = {};
+const config = {
+  webpack: (config) => {
+    // eslint-disable-next-line
+    config.externals.push("@node-rs/argon2", "@node-rs/bcrypt");
+    // eslint-disable-next-line
+    return config;
+  },
+  output: "standalone",
+};
 
 export default config;

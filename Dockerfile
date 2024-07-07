@@ -1,18 +1,56 @@
-# Dockerfile
-FROM oven/bun:latest
+FROM oven/bun:latest AS base
 
-# Set working directory
+# Install dependencies only when needed
+FROM base AS deps
+
 WORKDIR /app
 
 # Install dependencies
-COPY package.json ./
-RUN bun install
+COPY package.json bun.lockb ./
+RUN bun install --frozen-lockfile
 
-# Copy project files
+# Rebuild the source code only when needed
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Expose the Next.js port
+# Next.js collects completely anonymous telemetry data about general usage.
+# Learn more here: https://nextjs.org/telemetry
+# Disable telemetry during the build
+ENV NEXT_TELEMETRY_DISABLED 1
+
+RUN bun run build
+
+# Production image, copy all the files and run next
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV production
+
+# Disable telemetry
+ENV NEXT_TELEMETRY_DISABLED 1
+
+RUN adduser --system --uid 1001 nextjs
+
+COPY --from=builder /app/public ./public
+
+# Set the correct permission for prerender cache
+RUN mkdir .next
+RUN chown nextjs:bun .next
+
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=builder --chown=nextjs:bun /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:bun /app/.next/static ./.next/static
+
+USER nextjs
+
 EXPOSE 3000
 
-# Start the Next.js development server
-CMD ["bun", "run", "dev"]
+ENV PORT 3000
+
+# Set hostname to localhost
+ENV HOSTNAME "0.0.0.0"
+
+CMD ["bun", "server.js"]
