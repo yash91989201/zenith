@@ -1,10 +1,10 @@
 "use client";
-// UTILS
+import React from "react";
+import Link from "next/link";
+import Image from "next/image";
+// CUSTOM COMPONENTS
 import { ThemeToggle } from "@/components/global/theme-toggle";
 import { UserButton } from "@/components/global/user-button";
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
 
 export function Navigation() {
   return (

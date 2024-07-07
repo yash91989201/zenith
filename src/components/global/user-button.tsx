@@ -3,8 +3,8 @@ import Link from "next/link";
 // UTILS
 import { buttonVariants } from "@ui/button";
 // CUSTOM HOOKS
-import { useUser } from "@/hooks/use-user";
 import { useAuth } from "@/hooks/use-auth";
+import { useUser } from "@/hooks/use-user";
 // UI
 import {
   DropdownMenu,
@@ -19,28 +19,22 @@ import { Avatar, AvatarFallback, AvatarImage } from "@ui/avatar";
 import { LogOut, Settings } from "lucide-react";
 
 type UserButtonProps = {
-  signedOutFallback?: "SignInButton" | "Empty";
+  signedOutFallback?: "SignInButton" | "None";
 };
 
 export function UserButton({
   signedOutFallback = "SignInButton",
 }: UserButtonProps) {
-  const { isSignedIn, user } = useUser();
   const { signOut } = useAuth();
+  const { isSignedIn, user, nameInitials } = useUser();
 
   if (isSignedIn) {
-    const nameInitials = user?.name
-      .split(" ")
-      .filter((nameChunk) => nameChunk.charAt(0))
-      .slice(0, 2)
-      .join("");
-
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Avatar className="size-10">
             <AvatarImage src={user?.avatarUrl} alt={user?.name} />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarFallback>{nameInitials}</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" sideOffset={12} className="w-80">
@@ -56,7 +50,6 @@ export function UserButton({
               <p className="text-sm text-muted-foreground">{user?.email}</p>
             </div>
           </DropdownMenuItem>
-
           <DropdownMenuItem className="h-12 gap-3 text-sm">
             <Settings className="size-4" />
             <span>Manage Account</span>
@@ -78,5 +71,6 @@ export function UserButton({
       </Link>
     );
   }
+
   return null;
 }
