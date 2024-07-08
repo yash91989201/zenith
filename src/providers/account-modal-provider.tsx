@@ -9,8 +9,8 @@ import { useToggle } from "@/hooks/use-toggle";
 type AccountModalContextProps = {
   open: boolean;
   onOpenChange: () => void;
-  openAccountModal: () => void;
-  closeAccountModal: () => void;
+  openModal: () => void;
+  closeModal: () => void;
 };
 
 export const AccountModalContext = createContext<
@@ -31,8 +31,8 @@ export const AccountModalProvider: React.FC<ModalProviderProps> = ({
       value={{
         open: modal.isOpen,
         onOpenChange: modal.toggle,
-        openAccountModal: modal.show,
-        closeAccountModal: modal.hide,
+        openModal: modal.show,
+        closeModal: modal.hide,
       }}
     >
       {children}

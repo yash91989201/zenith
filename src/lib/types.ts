@@ -30,6 +30,7 @@ import type {
   CredsSignInSchema,
   CredsSignUpSchema,
   UserInsertSchema,
+  UpdateUsernameSchema,
 } from "@lib/schema"
 
 // DB TABLE TYPES
@@ -75,6 +76,8 @@ export type UserSessionType =
     session: null;
   };
 
+// USER TYPE
+export type UpdateUsernameType = z.infer<typeof UpdateUsernameSchema>
 
 // OAUTH USER TYPES
 export type GoogleUserType = {

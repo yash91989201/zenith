@@ -22,6 +22,7 @@ import {
   FormMessage,
 } from "@ui/form";
 import { Input } from "@ui/input";
+import { Button } from "@ui/button";
 // CUSTOM COMPONENTS
 import { AuthCardWrapper } from "@/components/global/auth-card-wrapper";
 // ICONS
@@ -31,10 +32,10 @@ export function SignUp() {
   const router = useRouter();
   const showPasswordToggle = useToggle(false);
 
-  const signInForm = useForm<CredsSignUpType>({
+  const signUpForm = useForm<CredsSignUpType>({
     resolver: zodResolver(CredsSignUpSchema),
   });
-  const { control, handleSubmit, setError } = signInForm;
+  const { control, handleSubmit, setError } = signUpForm;
 
   const signUpAction: SubmitHandler<CredsSignUpType> = async (formData) => {
     const actionRes = await credsSignUp(formData);
@@ -60,8 +61,21 @@ export function SignUp() {
       backButtonLabel="Already have an account? Sign In"
       backButtonHref="/agency/sign-in"
     >
-      <Form {...signInForm}>
-        <form onSubmit={handleSubmit(signUpAction)}>
+      <Form {...signUpForm}>
+        <form onSubmit={handleSubmit(signUpAction)} className="space-y-3">
+          <FormField
+            control={control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="Enter your name" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             control={control}
             name="email"
@@ -104,6 +118,7 @@ export function SignUp() {
               </FormItem>
             )}
           />
+          <Button className="my-3 w-full">Sign Up</Button>
         </form>
       </Form>
     </AuthCardWrapper>

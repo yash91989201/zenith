@@ -24,7 +24,7 @@ export function AuthCardWrapper({
   backButtonHref,
 }: AuthCardWrapperProps) {
   return (
-    <Card className="w-[96vw] border-0 shadow-none md:max-w-[480px]">
+    <Card className="w-[96vw] md:max-w-[480px]">
       <CardHeader className="flex flex-col items-center justify-center gap-y-3">
         <div className="relative aspect-square w-20">
           <Image src="/assets/zenith-logo.svg" alt="team_sync_logo" fill />

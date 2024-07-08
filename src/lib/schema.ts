@@ -69,3 +69,8 @@ export const CredsSignUpSchema = z.object({
   email: z.string().email(),
   password: z.string(),
 })
+
+// USER SCHEMA
+export const UpdateUsernameSchema = z.object({
+  name: z.string(),
+})

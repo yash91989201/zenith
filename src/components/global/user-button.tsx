@@ -29,7 +29,7 @@ export function UserButton({
 }: UserButtonProps) {
   const { signOut } = useAuth();
   const { isSignedIn, user, nameInitials } = useUser();
-  const { openAccountModal } = useAccountModal();
+  const { openModal } = useAccountModal();
 
   if (isSignedIn) {
     return (
@@ -56,7 +56,7 @@ export function UserButton({
             </DropdownMenuItem>
             <DropdownMenuItem
               className="h-12 gap-3 text-sm"
-              onClick={openAccountModal}
+              onClick={openModal}
             >
               <Settings className="size-4" />
               <span>Manage Account</span>

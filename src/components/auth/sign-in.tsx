@@ -62,7 +62,7 @@ export function SignIn() {
       backButtonHref="/agency/sign-up"
     >
       <Form {...signInForm}>
-        <form onSubmit={handleSubmit(signInAction)}>
+        <form onSubmit={handleSubmit(signInAction)} className="space-y-3">
           <FormField
             control={control}
             name="email"
@@ -105,7 +105,7 @@ export function SignIn() {
               </FormItem>
             )}
           />
-          <Button className="my-3 w-full">Sign In with e-mail</Button>
+          <Button className="my-3 w-full">Sign In</Button>
         </form>
       </Form>
     </AuthCardWrapper>
