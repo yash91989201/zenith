@@ -5,8 +5,8 @@ import { redirect } from "next/navigation";
 import { createId } from "@paralleldrive/cuid2";
 import { generateCodeVerifier, generateState } from "arctic";
 // SCHEMAS
-import { CredsSignInSchema, CredsSignUpSchema } from "@/lib/schema";
 import { OAuthAccountTable, UserTable } from "@/server/db/schema";
+import { CredsSignInSchema, CredsSignUpSchema } from "@/lib/schema";
 // UTILS
 import { env } from "@/env";
 import { db } from "@/server/db";

@@ -17,6 +17,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@ui/avatar";
 // ICONS
 import { LogOut, Settings } from "lucide-react";
+import { AccountModal } from "@/components/global/account-modal";
+import { useAccountModal } from "@/hooks/use-account-modal";
 
 type UserButtonProps = {
   signedOutFallback?: "SignInButton" | "None";
@@ -27,40 +29,47 @@ export function UserButton({
 }: UserButtonProps) {
   const { signOut } = useAuth();
   const { isSignedIn, user, nameInitials } = useUser();
+  const { openAccountModal } = useAccountModal();
 
   if (isSignedIn) {
     return (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Avatar className="size-10">
-            <AvatarImage src={user?.avatarUrl} alt={user?.name} />
-            <AvatarFallback>{nameInitials}</AvatarFallback>
-          </Avatar>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" sideOffset={12} className="w-80">
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem className="gap-3">
-            <Avatar className="size-9 self-start">
+      <>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Avatar className="size-10">
               <AvatarImage src={user?.avatarUrl} alt={user?.name} />
               <AvatarFallback>{nameInitials}</AvatarFallback>
             </Avatar>
-            <div className="flex flex-col gap-1.5">
-              <p className="text-sm font-semibold">{user?.name}</p>
-              <p className="text-sm text-muted-foreground">{user?.email}</p>
-            </div>
-          </DropdownMenuItem>
-          <DropdownMenuItem className="h-12 gap-3 text-sm">
-            <Settings className="size-4" />
-            <span>Manage Account</span>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem className="h-12 gap-3 text-sm" onClick={signOut}>
-            <LogOut className="size-4" />
-            <span>Sign Out</span>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" sideOffset={12} className="w-80">
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="gap-3">
+              <Avatar className="size-9 self-start">
+                <AvatarImage src={user?.avatarUrl} alt={user?.name} />
+                <AvatarFallback>{nameInitials}</AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col gap-1.5">
+                <p className="text-sm font-semibold">{user?.name}</p>
+                <p className="text-sm text-muted-foreground">{user?.email}</p>
+              </div>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="h-12 gap-3 text-sm"
+              onClick={openAccountModal}
+            >
+              <Settings className="size-4" />
+              <span>Manage Account</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="h-12 gap-3 text-sm" onClick={signOut}>
+              <LogOut className="size-4" />
+              <span>Sign Out</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <AccountModal />
+      </>
     );
   }
 
