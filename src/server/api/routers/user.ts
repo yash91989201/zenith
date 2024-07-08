@@ -15,6 +15,29 @@ export const userRouter = createTRPCRouter({
       }
     })
   }),
+
+  getDetails: protectedProcedure.query(({ ctx }) => {
+    return ctx.db.query.UserTable.findFirst({
+      where: eq(UserTable.id, ctx.session.user.id),
+      columns: {
+        password: false
+      },
+      with: {
+        agency: {
+          with: {
+            sidebarOptions: true,
+            subAccounts: {
+              with: {
+                sidebarOptions: true
+              }
+            }
+          }
+        },
+        permissions: true
+      }
+    })
+  }),
+
   updateName: protectedProcedure.input(UpdateUsernameSchema).mutation(async ({ ctx, input }) => {
     const [updateNameQuery] = await ctx.db.update(UserTable).set({
       name: input.name

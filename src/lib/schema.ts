@@ -74,3 +74,18 @@ export const CredsSignUpSchema = z.object({
 export const UpdateUsernameSchema = z.object({
   name: z.string(),
 })
+
+// AGENCY SCHEMA
+export const AgencyDetailsFormSchema = z.object({
+  name: z.string().min(2, { message: "Agency name must be atleat 2 characters" }),
+  companyName: z.string().min(2, { message: "Agency name must be atleat 2 characters" }),
+  companyEmail: z.string().email(),
+  companyPhone: z.string().min(9),
+  whiteLabel: z.boolean().default(false),
+  address: z.string().min(48),
+  city: z.string().min(4),
+  zipCode: z.string().min(4),
+  state: z.string().min(4),
+  country: z.string().min(4),
+  agencyLogo: z.string().url(),
+})

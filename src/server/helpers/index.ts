@@ -1,6 +1,6 @@
 import "server-only";
 
-import { eq } from "drizzle-orm";
+import { and, eq, getTableColumns } from "drizzle-orm";
 import { headers } from "next/headers";
 import { userAgent } from "next/server";
 import { Argon2id } from "oslo/password";
@@ -8,7 +8,9 @@ import { Argon2id } from "oslo/password";
 import { db } from "@/server/db";
 import { validateRequest } from "@/lib/auth";
 // SCHEMAS
-import { OAuthAccountTable, UserTable } from "@/server/db/schema";
+import { AgencyTable, InvitationTable, NotificationTable, OAuthAccountTable, SubAccountTable, UserTable } from "@/server/db/schema";
+// TYPES
+import type { UserInsertType, UserType } from "@/lib/types";
 
 const argon2id = new Argon2id();
 
@@ -32,7 +34,7 @@ export function getUserOAuthAccounts(userId: string) {
   })
 }
 
-export async function getUser() {
+export async function currentUser() {
   const { user, session } = await validateRequest();
 
   if (!session || !user) {
@@ -64,5 +66,123 @@ export function getUserDeviceInfo() {
     browser: `${userAgentData.browser.name ?? "unknown"} ${userAgentData.browser.version}`.trim(),
     os: `${userAgentData.os.name ?? "unknown"} ${userAgentData.os.version}`.trim(),
     ip
+  }
+}
+
+export async function saveActivityLog(
+  {
+    agencyId,
+    activity,
+    subAccountId
+  }: {
+    agencyId?: string;
+    activity: string;
+    subAccountId?: string
+  }) {
+
+  let userData: UserType | undefined;
+  const { user } = await validateRequest()
+  if (!user) {
+    const userBySubAccountId = await db
+      .select(getTableColumns(UserTable))
+      .from(UserTable)
+      .innerJoin(AgencyTable, eq(UserTable.agencyId, AgencyTable.id))
+      .innerJoin(SubAccountTable, eq(AgencyTable.id, SubAccountTable.agencyId))
+      .where(eq(SubAccountTable.id, subAccountId ?? ""))
+    if (userBySubAccountId.length > 1) {
+      userData = userBySubAccountId[0]
+    }
+  } else {
+    userData = await db.query.UserTable.findFirst({ where: eq(UserTable.email, user.email) })
+  }
+  if (!userData) {
+    throw new Error("Unable to find user")
+  }
+
+  let foundAgencyId: string = agencyId ?? "";
+  if (!foundAgencyId) {
+    if (!subAccountId) {
+      throw new Error("You need to provide atleast an agency id or subaccount id.")
+    }
+
+    const subAccount = await db.query.SubAccountTable.findFirst({ where: eq(SubAccountTable.id, subAccountId) })
+    if (subAccount) {
+      foundAgencyId = subAccount.agencyId
+    }
+  }
+
+  if (subAccountId) {
+    await db.insert(NotificationTable).values({
+      text: `${userData.name} | ${activity}`,
+      userId: userData.id,
+      agencyId: foundAgencyId,
+      subAccountId: subAccountId,
+    })
+  } else {
+    await db.insert(NotificationTable).values({
+      text: `${userData.name} | ${activity}`,
+      userId: userData.id,
+      agencyId: foundAgencyId,
+    })
+  }
+}
+
+export async function createTeamUser(user: UserInsertType): Promise<{ status: "SUCCESS" | "FAILED"; message: string; }> {
+  if (user?.role === "AGENCY_OWNER") {
+    return {
+      status: "FAILED",
+      message: "Cannot create team user, user is agency owner."
+    }
+  }
+
+  const [createTeamUserQuery] = await db.insert(UserTable).values(user)
+  if (createTeamUserQuery.affectedRows === 0) {
+    return {
+      status: "FAILED",
+      message: "Unable to create team user."
+    }
+  }
+  return {
+    status: "SUCCESS",
+    message: "team user created successfully."
+  }
+}
+
+export async function verifyAndAcceptInvitation(user: UserType) {
+
+  const userInvitation = await db.query.InvitationTable.findFirst({
+    where: and(
+      eq(InvitationTable.email, user.email),
+      eq(InvitationTable.status, "PENDING"),
+    )
+  })
+
+  if (userInvitation !== undefined) {
+    const createTeamUserRes = await createTeamUser({
+      email: userInvitation.email,
+      agencyId: userInvitation.agencyId,
+      avatarUrl: user.avatarUrl,
+      id: user.id,
+      name: user.name,
+      role: userInvitation.role,
+    })
+
+    await saveActivityLog({
+      agencyId: userInvitation?.agencyId ?? "",
+      activity: "Joined",
+    })
+
+    if (createTeamUserRes.status === "SUCCESS") {
+
+      await db.update(UserTable).set({ role: userInvitation.role }).where(eq(UserTable.id, user.id))
+      await db.delete(InvitationTable).where(eq(InvitationTable.email, user.email))
+
+      return userInvitation.agencyId
+    } else {
+      return null
+    }
+  } else {
+    const agency = await db.query.UserTable.findFirst({ where: eq(UserTable.email, user.email) })
+    return agency ? agency.agencyId : null
   }
 }

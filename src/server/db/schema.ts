@@ -526,7 +526,7 @@ export const InvitationTable = mysqlTable("invitation", {
   id: varchar("id", { length: 48 }).$defaultFn(() => createId()).primaryKey(),
   createdAt: datetime("created_at").notNull().$defaultFn(() => new Date()),
   updatedAt: datetime("updated_at").notNull().$defaultFn(() => new Date()).$onUpdateFn(() => new Date()),
-  email: varchar("email", { length: 256 }).unique(),
+  email: varchar("email", { length: 256 }).notNull().unique(),
   status: InvitationStatusEnum.notNull().default("PENDING"),
   role: RoleEnum.notNull().default("SUBACCOUNT_USER"),
   // FOREIGN KEY RELATIONS
