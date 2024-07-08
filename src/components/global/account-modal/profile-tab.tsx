@@ -115,6 +115,7 @@ const ProfileUpdateCard = ({
         <CardTitle className="text-xs">Update profile</CardTitle>
       </CardHeader>
       <CardContent className="p-3">
+        <div className="flex items-center"></div>
         <Form {...updateUsernameForm}>
           <form onSubmit={handleSubmit(updateUsernameAction)}>
             <FormField

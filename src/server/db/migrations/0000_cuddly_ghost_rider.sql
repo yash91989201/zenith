@@ -122,7 +122,7 @@ CREATE TABLE `invitation` (
 	`id` varchar(48) NOT NULL,
 	`created_at` datetime NOT NULL,
 	`updated_at` datetime NOT NULL,
-	`email` varchar(256),
+	`email` varchar(256) NOT NULL,
 	`invitation_status` enum('ACCEPTED','REVOKED','PENDING') NOT NULL DEFAULT 'PENDING',
 	`role` enum('AGENCY_OWNER','AGENCY_ADMIN','SUBACCOUNT_USER','SUBACCOUNT_GUEST') NOT NULL DEFAULT 'SUBACCOUNT_USER',
 	`agency_id` varchar(48),

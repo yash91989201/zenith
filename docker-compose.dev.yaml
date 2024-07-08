@@ -1,10 +1,10 @@
 version: "3.8"
 
 services:
-  zenith:
+  app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: app.Dockerfile
     container_name: zenith
     ports:
       - "3000:3000"
@@ -15,10 +15,10 @@ services:
     env_file:
       - .env
     depends_on:
-      - mysql
-      - minio
+      - db
+      - storage
 
-  mysql:
+  db:
     image: mysql:latest
     container_name: mysql
     volumes:
@@ -29,18 +29,17 @@ services:
       - MYSQL_DATABASE="zenith"
       - MYSQL_ROOT_PASSWORD="2z8FDa4zDw4zNh06KemsDyWFOu2lR2FJ"
 
-  minio:
-    image: minio/minio:latest
+  storage:
+    image: bitnami/minio:latest
     container_name: minio
     volumes:
       - minio_data:/data
     ports:
       - "9000:9000"
-      - "9090:9090"
+      - "9001:9001"
     environment:
       - MINIO_ROOT_USER=admin
       - MINIO_ROOT_PASSWORD=f1f6LQMWJ0CLsRP7Z1W9P4xg4C0sgCel
-    command: server /data --console-address ":9090"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
       interval: 30s

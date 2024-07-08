@@ -10,6 +10,7 @@ import { validateRequest } from "@/lib/auth";
 // SCHEMAS
 import { AgencyTable, InvitationTable, NotificationTable, OAuthAccountTable, SubAccountTable, UserTable } from "@/server/db/schema";
 // TYPES
+import type { Readable } from "stream";
 import type { UserInsertType, UserType } from "@/lib/types";
 
 const argon2id = new Argon2id();
@@ -68,6 +69,15 @@ export function getUserDeviceInfo() {
     ip
   }
 }
+
+export async function streamToBuffer(stream: Readable): Promise<Buffer> {
+  return new Promise((resolve, reject) => {
+    const chunks: Uint8Array[] = [];
+    stream.on('data', (chunk: Uint8Array) => chunks.push(chunk));
+    stream.on('end', () => resolve(Buffer.concat(chunks)));
+    stream.on('error', reject);
+  });
+};
 
 export async function saveActivityLog(
   {

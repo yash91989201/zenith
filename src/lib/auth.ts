@@ -77,14 +77,14 @@ export const validateRequest = cache(
 export const googleOAuth = new Google(
   env.GOOGLE_CLIENT_ID,
   env.GOOGLE_CLIENT_SECRET,
-  `${env.NEXT_PUBLIC_URL}api/oauth/google/callback`
+  `${env.NEXT_PUBLIC_URL}/api/oauth/google/callback`
 )
 
 export const githubOAuth = new GitHub(
   env.GITHUB_CLIENT_ID,
   env.GITHUB_CLIENT_SECRET,
   {
-    redirectURI: `${env.NEXT_PUBLIC_URL}api/oauth/github/callback`
+    redirectURI: `${env.NEXT_PUBLIC_URL}/api/oauth/github/callback`
   }
 )
 

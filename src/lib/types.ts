@@ -123,3 +123,7 @@ export type CreateGithubOAuthUserResponseType = Promise<
   { status: "failed", error: string, data: null } |
   { status: "success", error: null, data: Omit<UserInsertType, "id"> & { id: string } }
 >
+
+// S3 BUCKETS
+export type S3_BUCKETS = "profile" | "media"
+

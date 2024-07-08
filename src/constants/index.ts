@@ -1,4 +1,4 @@
-export const pricingCards = [
+export const PRICING_CARDS = [
   {
     title: 'Starter',
     description: 'Perfect for trying out plura',

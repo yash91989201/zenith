@@ -1,1 +1,0 @@
-ALTER TABLE `invitation` MODIFY COLUMN `email` varchar(256) NOT NULL;

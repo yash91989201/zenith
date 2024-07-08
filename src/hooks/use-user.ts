@@ -12,11 +12,11 @@ export function useUser() {
     };
   }
 
-  const nameInitials = user?.name
-    .split(" ")
-    .filter((nameChunk) => nameChunk.charAt(0))
+  const nameInitials = user.name
+    .trim()
+    .split(/\s+/)
     .slice(0, 2)
-    .join("");
+    .map(word => word[0]?.toUpperCase()).join("")
 
   return {
     isSignedIn: true,

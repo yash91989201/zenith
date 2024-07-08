@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { pricingCards } from "@/constants";
+import { PRICING_CARDS } from "@/constants";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
@@ -42,7 +42,7 @@ export default function HomePage() {
           you are not ready to commit you can get started for free
         </p>
         <div className="mt-6 flex flex-wrap gap-4">
-          {pricingCards.map((card) => (
+          {PRICING_CARDS.map((card) => (
             <Card
               key={card.priceId}
               className={cn(
