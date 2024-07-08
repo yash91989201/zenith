@@ -1,7 +1,7 @@
 "use client";
 import { use } from "react";
 // UTILS
-import { signOut as signOutAction } from "@/server/actions/auth";
+import { signOut } from "@/server/actions/auth";
 // CONTEXT
 import { SessionContext } from "@/providers/session-provider";
 
@@ -14,8 +14,8 @@ export function useAuth() {
     };
   }
 
-  const signOut = async () => {
-    await signOutAction()
+  const signOutAction = async () => {
+    await signOut()
   }
 
   return {
@@ -23,6 +23,6 @@ export function useAuth() {
     userId: user.id,
     sessionId: session.id,
     role: user.role,
-    signOut,
+    signOut: signOutAction,
   };
 }

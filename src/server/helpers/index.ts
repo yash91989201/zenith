@@ -1,14 +1,14 @@
-import "server-only"
+import "server-only";
 
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { userAgent } from "next/server";
-import { Argon2id } from "oslo/password"
-// SCHEMAS
-import { UserTable } from "@/server/db/schema";
+import { Argon2id } from "oslo/password";
 // UTILS
 import { db } from "@/server/db";
 import { validateRequest } from "@/lib/auth";
+// SCHEMAS
+import { OAuthAccountTable, UserTable } from "@/server/db/schema";
 
 const argon2id = new Argon2id();
 
@@ -26,6 +26,12 @@ export function getUserByEmail(email: string) {
   });
 }
 
+export function getUserOAuthAccounts(userId: string) {
+  return db.query.OAuthAccountTable.findMany({
+    where: eq(OAuthAccountTable.userId, userId)
+  })
+}
+
 export async function getUser() {
   const { user, session } = await validateRequest();
 
@@ -39,7 +45,6 @@ export async function getUser() {
   };
 }
 
-// only use in server actions
 export function getUserDeviceInfo() {
   let ip;
   const FALLBACK_IP_ADDRESS = "0.0.0.0"

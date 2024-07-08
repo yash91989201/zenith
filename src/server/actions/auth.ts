@@ -10,11 +10,17 @@ import { OAuthAccountTable, UserTable } from "@/server/db/schema";
 // UTILS
 import { env } from "@/env";
 import { db } from "@/server/db";
+import { verifyPassword } from "@/server/helpers"
 import { parseZodValidationErrors } from "@/lib/utils";
 import { githubOAuth, googleOAuth, lucia, validateRequest } from "@/lib/auth";
+import { getUserByEmail, getUserDeviceInfo, getUserOAuthAccounts } from "@/server/helpers";
 // TYPES
-import type { CredsSignInType, CredsSignUpType, GithubAuthUrlResType, GoogleAuthUrlResType } from "@/lib/types";
-import { getUserDeviceInfo, verifyPassword } from "@/server/helpers";
+import type {
+  CredsSignInType,
+  CredsSignUpType,
+  GithubAuthUrlResType,
+  GoogleAuthUrlResType
+} from "@/lib/types";
 
 export async function createGoogleAuthUrl(): GoogleAuthUrlResType {
 
@@ -166,10 +172,7 @@ export async function credsSignIn(rawPayload: CredsSignInType): CredsSignInStatu
     }
 
     const payload = validatedPayload.data
-
-    const user = await db.query.UserTable.findFirst({
-      where: eq(UserTable.email, payload.email)
-    })
+    const user = await getUserByEmail(payload.email)
 
     if (!user) {
       return {
@@ -182,9 +185,7 @@ export async function credsSignIn(rawPayload: CredsSignInType): CredsSignInStatu
     }
 
     // Check if user has only outh account registered
-    const oAuthAccounts = await db.query.OAuthAccountTable.findMany({
-      where: eq(OAuthAccountTable.userId, user.id)
-    })
+    const oAuthAccounts = await getUserOAuthAccounts(user.id)
 
     if (oAuthAccounts.length > 0 && user.password === null) {
       return {
