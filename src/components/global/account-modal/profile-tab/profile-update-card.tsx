@@ -65,7 +65,7 @@ export const ProfileUpdateCard = ({
   };
 
   return (
-    <Card className="w-full bg-white">
+    <Card className="w-full ">
       <CardHeader className="p-3">
         <CardTitle className="text-sm">Update profile</CardTitle>
       </CardHeader>
@@ -80,7 +80,7 @@ export const ProfileUpdateCard = ({
               <span>
                 <Label
                   className={buttonVariants({
-                    variant: "outline",
+                    variant: "secondary",
                     size: "sm",
                     className: "cursor-pointer",
                   })}

@@ -49,7 +49,7 @@ export const OAuthAccountRow = ({
 
   return (
     <div className="flex items-center justify-between " key={oAuthAccount.id}>
-      <p className="inline-flex items-center text-muted-foreground">
+      <p className="inline-flex items-center text-muted-foreground dark:text-gray-200">
         {CustomIcons[oAuthAccount.provider]}
         <span className="ml-1.5 text-xs capitalize">
           {oAuthAccount.provider}

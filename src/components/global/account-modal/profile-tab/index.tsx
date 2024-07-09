@@ -27,11 +27,14 @@ export function ProfileTab() {
   const profileUpdateCard = useToggle(false);
 
   return (
-    <Tabs.Content className="w-full bg-white p-6" value="profile">
-      <h4 className="border-b py-6 pt-0 font-bold lg:text-lg">
+    <Tabs.Content
+      className="w-full bg-white p-6 dark:bg-dark-tremor-background-subtle"
+      value="profile"
+    >
+      <h4 className="border-b py-6 pt-0 font-bold dark:border-gray-400 lg:text-lg">
         Profile Details
       </h4>
-      <div className="flex items-start border-b py-6">
+      <div className="flex items-start border-b py-6 dark:border-gray-400">
         <h6 className="w-2/5 shrink-0 text-sm font-medium">Profile</h6>
         {/* user profile */}
         {profileUpdateCard.isShowing ? (
@@ -59,15 +62,17 @@ export function ProfileTab() {
           </div>
         )}
       </div>
-      <div className="flex items-start border-b py-6">
+      <div className="flex items-start border-b py-6 dark:border-gray-400">
         <h6 className="w-2/5 shrink-0 text-sm font-medium">Email addresses</h6>
         {/* user profile */}
         <div className="w-full space-y-3">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <p className="space-x-3">
-                <span className="text-sm text-gray-700">{user?.email}</span>
-                <span className="rounded border p-1 py-0.5 text-xs font-medium text-muted-foreground">
+                <span className="text-sm text-gray-700 dark:text-gray-200">
+                  {user?.email}
+                </span>
+                <span className="rounded border p-1 py-0.5 text-xs font-medium text-muted-foreground dark:border-gray-400 dark:text-gray-400">
                   Primary
                 </span>
               </p>
@@ -80,7 +85,7 @@ export function ProfileTab() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem asChild>
-                    <Button variant="destructive" size="sm">
+                    <Button variant="destructive" size="sm" className="w-full">
                       Remove email
                     </Button>
                   </DropdownMenuItem>
@@ -103,12 +108,12 @@ export function ProfileTab() {
           )}
         </div>
       </div>
-      <div className="flex items-center border-b py-6">
+      <div className="flex items-center border-b py-6 dark:border-gray-400">
         <h6 className="w-2/5 text-sm font-medium">Phone numbers</h6>
         {/* user profile */}
         <div></div>
       </div>
-      <div className="flex items-start border-b py-6">
+      <div className="flex items-start border-b py-6 dark:border-gray-400">
         <h6 className="w-2/5 shrink-0 text-sm font-medium">
           Connected accounts
         </h6>
