@@ -26,6 +26,7 @@ import {
   NotificationTable,
   SubscriptionTable,
   AddOnTable,
+  OAuthAccountTable,
 } from "@/server/db/schema"
 
 // DB TABLES SCHEMAS
@@ -53,6 +54,8 @@ export const InvitationSchema = createSelectSchema(InvitationTable)
 export const NotificationSchema = createSelectSchema(NotificationTable)
 export const SubscriptionSchema = createSelectSchema(SubscriptionTable)
 export const AddOnSchema = createSelectSchema(AddOnTable)
+export const OAuthAccountSchema = createSelectSchema(OAuthAccountTable)
+
 
 // DB TABLES INSERT SCHEMAS
 export const UserInsertSchema = createInsertSchema(UserTable)
@@ -73,6 +76,23 @@ export const CredsSignUpSchema = z.object({
 // USER SCHEMA
 export const UpdateUsernameSchema = z.object({
   name: z.string(),
+})
+
+export const UpdateAvatarSchema = z.object({
+  avatarUrl: z.string().url(),
+})
+
+export const AddEmailSchema = z.object({
+  email: z.string().email(),
+})
+
+export const DeleteOAuthAccountSchema = z.object({
+  provider: z.enum(["google", "github"])
+})
+
+export const DeleteSessionSchema = z.object({
+  sessionId: z.string(),
+  current: z.boolean()
 })
 
 // AGENCY SCHEMA

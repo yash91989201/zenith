@@ -49,3 +49,8 @@ export const GithubIcon = ({ className = "" }: { className?: string }) => {
     </svg>
   );
 };
+
+export const CustomIcons = {
+  github: <GithubIcon />,
+  google: <GoogleIcon />,
+};

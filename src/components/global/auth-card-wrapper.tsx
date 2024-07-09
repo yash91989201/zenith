@@ -1,21 +1,17 @@
 "use client";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 // UTILS
-import {
-  createGithubAuthUrl,
-  createGoogleAuthUrl,
-} from "@/server/actions/auth";
 import { buttonVariants } from "@ui/button";
+import { OAuthAccountConnect } from "@/lib/utils";
 // UI
 import { Button } from "@ui/button";
-import { toast } from "@ui/use-toast";
-import { Separator } from "@ui/separator";
 import { Card, CardContent, CardFooter, CardHeader } from "@ui/card";
+import { Separator } from "@ui/separator";
 // ICONS
 import { ArrowRight } from "lucide-react";
 // CUSTOM ICONS
-import { GithubIcon, GoogleIcon } from "@/components/global/icons";
+import { GithubIcon, GoogleIcon } from "@icons";
 
 export function AuthCardWrapper({
   children,
@@ -67,20 +63,12 @@ export function AuthCardWrapper({
 }
 
 export function GoogleOAuthSignInButton() {
-  const signInAction = async () => {
-    const res = await createGoogleAuthUrl();
-    if (res.status === "success") {
-      window.location.href = res.authorizationUrl;
-    } else {
-      toast({
-        variant: "destructive",
-        description: res.error,
-      });
-    }
-  };
-
   return (
-    <Button className="w-full gap-3" variant="outline" onClick={signInAction}>
+    <Button
+      className="w-full gap-3"
+      variant="outline"
+      onClick={OAuthAccountConnect.google.connect}
+    >
       <GoogleIcon className="size-5" />
       <span>Sign In with Google</span>
     </Button>
@@ -88,20 +76,12 @@ export function GoogleOAuthSignInButton() {
 }
 
 export function GithubOAuthSignInButton() {
-  const signInAction = async () => {
-    const res = await createGithubAuthUrl();
-    if (res.status === "success") {
-      window.location.href = res.authorizationUrl;
-    } else {
-      toast({
-        variant: "destructive",
-        description: res.error,
-      });
-    }
-  };
-
   return (
-    <Button className="w-full gap-3" variant="outline" onClick={signInAction}>
+    <Button
+      className="w-full gap-3"
+      variant="outline"
+      onClick={OAuthAccountConnect.github.connect}
+    >
       <GithubIcon className="size-5 dark:rounded-full dark:bg-white" />
       <span>Sign In with Github</span>
     </Button>

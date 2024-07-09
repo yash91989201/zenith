@@ -76,6 +76,7 @@ export async function GET(req: NextRequest) {
       }
 
       const [createGoogleOAuthAccountRes] = await trx.insert(OAuthAccountTable).values({
+        username: googleUserData.email,
         provider: "google",
         providerUserId: googleUserData.id,
         accessToken,
@@ -107,6 +108,7 @@ export async function GET(req: NextRequest) {
 
       if (!userGoogleOAuthEntry) {
         const [createUserGoogleOAuthDataRes] = await trx.insert(OAuthAccountTable).values({
+          username: googleUserData.email,
           provider: "google",
           providerUserId: googleUserData.id,
           accessToken,

@@ -27,3 +27,5 @@ export const PRICING_CARDS = [
     priceId: 'price_1OYxkqFj9oKEERu1NbKUxXxN',
   },
 ]
+
+export const OAUTH_ACCOUNT_OPTIONS = ["github", "google"] as const

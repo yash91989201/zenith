@@ -164,6 +164,7 @@ CREATE TABLE `notification` (
 --> statement-breakpoint
 CREATE TABLE `oauth_account` (
 	`id` varchar(48) NOT NULL,
+	`username` varchar(256) NOT NULL,
 	`provider` enum('google','github') NOT NULL,
 	`provider_user_id` varchar(64) NOT NULL,
 	`access_token` text NOT NULL,

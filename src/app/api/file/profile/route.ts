@@ -35,7 +35,7 @@ export async function GET(req: Request) {
   }
 }
 
-export async function POST(req: NextRequest,) {
+export async function POST(req: NextRequest) {
   try {
     const { user } = await currentUser()
     if (!user) throw new Error("Un-authorized: login to perform this task")

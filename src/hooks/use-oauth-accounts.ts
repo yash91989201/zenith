@@ -5,15 +5,15 @@ import { api } from "@/trpc/react";
 // CONTEXT
 import { SessionContext } from "@/providers/session-provider";
 
-export function useSessionList() {
+export function useOAuthAccounts() {
   const { user, session } = use(SessionContext);
 
   if (session === null && user === null) {
     throw new Error("Un authorized")
   }
 
-  const { data: sessions = [], isLoading } = api.user.getSessionList.useQuery()
-  const { mutateAsync: deleteSession, isPending: isDeletingSession } = api.user.deleteSession.useMutation()
+  const { data: oAuthAccounts = [], isLoading } = api.user.getOAuthAccounts.useQuery()
+  const { mutateAsync: deleteOAuthAccount, isPending: isDeletingSession } = api.user.deleteOAuthAccount.useMutation()
 
   if (isLoading) {
     return {
@@ -24,8 +24,8 @@ export function useSessionList() {
 
   return {
     isSignedIn: true,
-    sessions,
-    deleteSession,
+    oAuthAccounts,
+    deleteOAuthAccount,
     isDeletingSession
   };
 }

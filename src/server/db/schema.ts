@@ -619,6 +619,7 @@ export const AddOnTableRelations = relations(AddOnTable, ({ one }) => ({
 
 export const OAuthAccountTable = mysqlTable("oauth_account", {
   id: varchar("id", { length: 48 }).$defaultFn(() => createId()).primaryKey(),
+  username: varchar("username", { length: 256 }).notNull(),
   provider: OAuthProviderEnum.notNull(),
   providerUserId: varchar("provider_user_id", { length: 64 }).notNull(),
   accessToken: text("access_token").notNull(),

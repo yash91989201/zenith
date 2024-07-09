@@ -78,6 +78,7 @@ export async function GET(req: NextRequest) {
       }
 
       const [createGithubOAuthAccountRes] = await trx.insert(OAuthAccountTable).values({
+        username: githubUserData.login,
         provider: "github",
         providerUserId: githubUserData.id,
         accessToken,
@@ -108,6 +109,7 @@ export async function GET(req: NextRequest) {
 
       if (!userGithubOAuthEntry) {
         const [createUserGithubOAuthDataRes] = await trx.insert(OAuthAccountTable).values({
+          username: githubUserData.login,
           provider: "github",
           providerUserId: githubUserData.id,
           accessToken,

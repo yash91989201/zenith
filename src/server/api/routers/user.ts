@@ -1,10 +1,13 @@
-import { eq, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 // SCHEMAS
-import { UpdateUsernameSchema } from "@/lib/schema";
+import { DeleteOAuthAccountSchema, DeleteSessionSchema, UpdateAvatarSchema, UpdateUsernameSchema } from "@/lib/schema";
 // UTILS
+import { env } from "@/env";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 // DB SCHEMAS
-import { SessionTable, UserTable } from "@/server/db/schema";
+import { OAuthAccountTable, SessionTable, UserTable } from "@/server/db/schema";
+// TYPES
+import type { DeleteOAuthAccountType, DeleteSessionType, UpdateAvatarType, UpdateUsernameType } from "@/lib/types";
 
 export const userRouter = createTRPCRouter({
   getSessionList: protectedProcedure.query(({ ctx }) => {
@@ -14,6 +17,10 @@ export const userRouter = createTRPCRouter({
         current: sql<boolean>`${SessionTable.id} = ${ctx.session.session.id}`.as("current")
       }
     })
+  }),
+
+  getOAuthAccounts: protectedProcedure.query(({ ctx }) => {
+    return ctx.db.query.OAuthAccountTable.findMany({ where: eq(OAuthAccountTable.userId, ctx.session.user.id) })
   }),
 
   getDetails: protectedProcedure.query(({ ctx }) => {
@@ -38,7 +45,7 @@ export const userRouter = createTRPCRouter({
     })
   }),
 
-  updateName: protectedProcedure.input(UpdateUsernameSchema).mutation(async ({ ctx, input }) => {
+  updateName: protectedProcedure.input(UpdateUsernameSchema).mutation(async ({ ctx, input }): ProcedureStatusType<UpdateUsernameType> => {
     const [updateNameQuery] = await ctx.db.update(UserTable).set({
       name: input.name
     }).where(eq(UserTable.id, ctx.session.user.id))
@@ -52,6 +59,115 @@ export const userRouter = createTRPCRouter({
     return {
       status: "SUCCESS",
       message: "Username updated successfully"
+    }
+  }),
+
+  updateAvatar: protectedProcedure.input(UpdateAvatarSchema).mutation(async ({ ctx, input }): ProcedureStatusType<UpdateAvatarType> => {
+    const [updateAvatarQuery] = await ctx.db.update(UserTable).set({
+      avatarUrl: input.avatarUrl
+    }).where(eq(UserTable.id, ctx.session.user.id))
+
+    if (updateAvatarQuery.affectedRows === 0) {
+      return {
+        status: "FAILED",
+        message: "Unable to update avatar url",
+      }
+    }
+    return {
+      status: "SUCCESS",
+      message: "Avatar url updated for user"
+    }
+  }),
+
+  deleteOAuthAccount: protectedProcedure.input(DeleteOAuthAccountSchema).mutation(async ({ ctx, input }): ProcedureStatusType<DeleteOAuthAccountType> => {
+
+    try {
+      const oAuthAccount = await ctx.db.query.OAuthAccountTable.findFirst({
+        where: and(
+          eq(OAuthAccountTable.userId, ctx.session.user.id),
+          eq(OAuthAccountTable.provider, input.provider)
+        )
+      })
+
+      if (!oAuthAccount) {
+        return {
+          status: "FAILED",
+          message: "OAuth account not found"
+        }
+      }
+      const { provider, accessToken } = oAuthAccount
+
+      switch (provider) {
+        case "google": {
+
+          const res = await fetch(`https://accounts.google.com/o/oauth2/revoke?token=${accessToken}`);
+          console.log(await res.json())
+          break;
+        }
+        case "github": {
+
+          const res = await fetch(`https://api.github.com/applications/${env.GITHUB_CLIENT_ID}/grant`, {
+            method: 'DELETE',
+            headers: {
+              'Accept': 'application/vnd.github+json',
+              'Authorization': 'Basic ' + btoa(`${env.GITHUB_CLIENT_ID}:${env.GITHUB_CLIENT_SECRET}`),
+              'X-GitHub-Api-Version': '2022-11-28',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              access_token: accessToken
+            })
+          })
+          console.log(await res.json())
+
+          break;
+        }
+      }
+
+      const [deleteOAuthAccountQuery] = await ctx.db
+        .delete(OAuthAccountTable)
+        .where(
+          eq(OAuthAccountTable.id, oAuthAccount.id)
+        )
+
+      if (deleteOAuthAccountQuery.affectedRows === 0) {
+        return {
+          status: "FAILED",
+          message: "Unable to delete oauth account"
+        }
+      }
+      return {
+        status: "SUCCESS",
+        message: "OAuth account deleted successfully"
+      }
+
+    } catch (error) {
+      return {
+        status: "FAILED",
+        message: "Unable to delete oauth account"
+      }
+    }
+  }),
+
+  deleteSession: protectedProcedure.input(DeleteSessionSchema).mutation(async ({ ctx, input }): ProcedureStatusType<DeleteSessionType> => {
+    const [deleteSessionQuery] = await ctx.db
+      .delete(SessionTable)
+      .where(
+        and(
+          eq(SessionTable.userId, ctx.session.user.id),
+          eq(SessionTable.id, input.sessionId)
+        )
+      );
+
+    if (deleteSessionQuery.affectedRows === 0) {
+      return {
+        status: "FAILED",
+        message: "Unable to delete session"
+      }
+    }
+    return {
+      status: "SUCCESS",
+      message: "Session deleted successfully"
     }
   })
 });

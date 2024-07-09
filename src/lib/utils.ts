@@ -1,3 +1,5 @@
+import { toast } from "@ui/use-toast";
+import { createGithubAuthUrl, createGoogleAuthUrl } from "@/server/actions/auth";
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -17,4 +19,48 @@ export function parseZodValidationErrors(validationErrors: Record<string, string
   }
 
   return errors;
+}
+
+export async function uploadAvatar(file: File) {
+
+  const formData = new FormData()
+  formData.append("file", file)
+
+  const response = await fetch("/api/file/profile", {
+    method: "POST",
+    body: formData
+  })
+
+  const data = (await response.json()) as SimpleApiResType
+
+  return data
+}
+
+export const OAuthAccountConnect = {
+  google: {
+    connect: async () => {
+      const res = await createGoogleAuthUrl();
+      if (res.status === "success") {
+        window.location.href = res.authorizationUrl;
+      } else {
+        toast({
+          variant: "destructive",
+          description: res.error,
+        });
+      }
+    },
+  },
+  github: {
+    connect: async () => {
+      const res = await createGithubAuthUrl();
+      if (res.status === "success") {
+        window.location.href = res.authorizationUrl;
+      } else {
+        toast({
+          variant: "destructive",
+          description: res.error,
+        });
+      }
+    },
+  }
 }

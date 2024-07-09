@@ -15,6 +15,16 @@ type FormFailType<ErrorsType> = {
   message: string;
 };
 
+type ProcedureStatusType<SchemaType> = Promise<
+  FormSuccessType |
+  FormFailType<SchemaType>
+>
+
+type SimpleApiResType = {
+  status: "SUCCESS" | "FAILED";
+  message: string;
+}
+
 type CredsSignInErrorsType = {
   email?: string;
   password?: string;

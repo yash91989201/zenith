@@ -31,6 +31,11 @@ import type {
   CredsSignUpSchema,
   UserInsertSchema,
   UpdateUsernameSchema,
+  UpdateAvatarSchema,
+  AddEmailSchema,
+  DeleteSessionSchema,
+  DeleteOAuthAccountSchema,
+  OAuthAccountSchema,
 } from "@lib/schema"
 
 // DB TABLE TYPES
@@ -58,6 +63,7 @@ export type InvitationType = z.infer<typeof InvitationSchema>
 export type NotificationType = z.infer<typeof NotificationSchema>
 export type SubscriptionType = z.infer<typeof SubscriptionSchema>
 export type AddOnType = z.infer<typeof AddOnSchema>
+export type OAuthAccountType = z.infer<typeof OAuthAccountSchema>
 
 // DB TABLE INSERT TYPES
 export type UserInsertType = Omit<z.infer<typeof UserInsertSchema>, "password">
@@ -78,6 +84,10 @@ export type UserSessionType =
 
 // USER TYPE
 export type UpdateUsernameType = z.infer<typeof UpdateUsernameSchema>
+export type UpdateAvatarType = z.infer<typeof UpdateAvatarSchema>
+export type AddEmailType = z.infer<typeof AddEmailSchema>
+export type DeleteOAuthAccountType = z.infer<typeof DeleteOAuthAccountSchema>
+export type DeleteSessionType = z.infer<typeof DeleteSessionSchema>
 
 // OAUTH USER TYPES
 export type GoogleUserType = {
