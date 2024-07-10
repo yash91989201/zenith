@@ -71,7 +71,7 @@ export function getPhoneData(phone: string): PhoneData {
 
 export function PhoneInput({
   value: valueProp,
-  defaultCountry = "US",
+  defaultCountry = "IN",
   className,
   id,
   required = true,

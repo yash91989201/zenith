@@ -5,7 +5,6 @@ import { api } from "@/trpc/react";
 import type { OAuthAccountType } from "@/lib/types";
 // CUSTOM HOOKS
 import { useOAuthAccounts } from "@/hooks/use-oauth-accounts";
-
 // UI
 import { Button } from "@ui/button";
 import {
@@ -15,8 +14,8 @@ import {
   DropdownMenuTrigger,
 } from "@ui/dropdown-menu";
 // ICONS
+import { Icons } from "@icons";
 import { Dot, MoreHorizontal } from "lucide-react";
-import { CustomIcons } from "@icons";
 
 export function OAuthAccountList() {
   const { oAuthAccounts } = useOAuthAccounts();
@@ -50,7 +49,7 @@ export const OAuthAccountRow = ({
   return (
     <div className="flex items-center justify-between " key={oAuthAccount.id}>
       <p className="inline-flex items-center text-muted-foreground dark:text-gray-200">
-        {CustomIcons[oAuthAccount.provider]}
+        {Icons[oAuthAccount.provider]}
         <span className="ml-1.5 text-xs capitalize">
           {oAuthAccount.provider}
         </span>

@@ -15,7 +15,7 @@ type FormFailType<ErrorsType> = {
   message: string;
 };
 
-type ProcedureStatusType<SchemaType> = Promise<
+type ProcedureStatus<SchemaType> = Promise<
   FormSuccessType |
   FormFailType<SchemaType>
 >

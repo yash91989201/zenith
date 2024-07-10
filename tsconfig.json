@@ -32,7 +32,8 @@
       "@lib/*":["./src/lib/*"],
       "@forms/*":["./src/components/forms/*"],
       "@icons":["./src/components/global/icons"],
-      "@accountModal/*":["./src/components/global/account-modal/*"]
+      "@accountModal/*":["./src/components/global/account-modal/*"],
+      "@hooks/*":["./src/hooks/*"]
     }
   },
   "include": [

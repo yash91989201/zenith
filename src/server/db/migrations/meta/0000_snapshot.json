@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "d95eb4f6-bebf-4c7a-b34b-8da9ec74bb49",
+  "id": "d45e30a3-4be4-42ca-9ada-6961000fc0e2",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "action": {
@@ -235,7 +235,7 @@
         },
         "icon": {
           "name": "icon",
-          "type": "enum('settings','chart','calendar','check','chip','compass','database','flag','home','info','link','lock','messages','notification','payment','power','receipt','shield','star','tune','videorecorder','wallet','warning','headphone','send','pipelines','person','category','contact','clipboardIcon')",
+          "type": "enum('settings','chart','calendar','check','chip','compass','database','flag','home','info','link','lock','messages','notification','payment','power','receipt','shield','star','tune','videorecorder','wallet','warning','headphone','send','pipelines','person','category','contact','clipboard')",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
@@ -332,7 +332,7 @@
         },
         "agency_logo": {
           "name": "agency_logo",
-          "type": "varchar(128)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -361,6 +361,34 @@
         },
         "address": {
           "name": "address",
+          "type": "varchar(512)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "city": {
+          "name": "city",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "zip_code": {
+          "name": "zip_code",
+          "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "state": {
+          "name": "state",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "country": {
+          "name": "country",
           "type": "varchar(64)",
           "primaryKey": false,
           "notNull": true,
@@ -1168,7 +1196,7 @@
           "name": "type",
           "type": "varchar(128)",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "link": {
@@ -1709,7 +1737,7 @@
         },
         "icon": {
           "name": "icon",
-          "type": "enum('settings','chart','calendar','check','chip','compass','database','flag','home','info','link','lock','messages','notification','payment','power','receipt','shield','star','tune','videorecorder','wallet','warning','headphone','send','pipelines','person','category','contact','clipboardIcon')",
+          "type": "enum('settings','chart','calendar','check','chip','compass','database','flag','home','info','link','lock','messages','notification','payment','power','receipt','shield','star','tune','videorecorder','wallet','warning','headphone','send','pipelines','person','category','contact','clipboard')",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
@@ -1819,6 +1847,34 @@
         },
         "address": {
           "name": "address",
+          "type": "varchar(512)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "city": {
+          "name": "city",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "zip_code": {
+          "name": "zip_code",
+          "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "state": {
+          "name": "state",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "country": {
+          "name": "country",
           "type": "varchar(64)",
           "primaryKey": false,
           "notNull": true,

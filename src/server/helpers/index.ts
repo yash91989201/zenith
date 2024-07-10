@@ -1,14 +1,20 @@
 import "server-only";
-
-import { and, eq, getTableColumns } from "drizzle-orm";
 import { headers } from "next/headers";
 import { userAgent } from "next/server";
 import { Argon2id } from "oslo/password";
+import { and, eq, getTableColumns } from "drizzle-orm";
 // UTILS
 import { db } from "@/server/db";
 import { validateRequest } from "@/lib/auth";
 // SCHEMAS
-import { AgencyTable, InvitationTable, NotificationTable, OAuthAccountTable, SubAccountTable, UserTable } from "@/server/db/schema";
+import {
+  UserTable,
+  AgencyTable,
+  SubAccountTable,
+  InvitationTable,
+  NotificationTable,
+  OAuthAccountTable,
+} from "@/server/db/schema";
 // TYPES
 import type { Readable } from "stream";
 import type { UserInsertType, UserType } from "@/lib/types";
@@ -164,7 +170,7 @@ export async function verifyAndAcceptInvitation(user: UserType) {
     where: and(
       eq(InvitationTable.email, user.email),
       eq(InvitationTable.status, "PENDING"),
-    )
+    ),
   })
 
   if (userInvitation !== undefined) {

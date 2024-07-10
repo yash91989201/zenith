@@ -48,7 +48,7 @@ export const IconEnum = mysqlEnum("icon", [
   "person",
   "category",
   "contact",
-  "clipboardIcon",
+  "clipboard",
 ])
 
 export const TriggerTypeEnum = mysqlEnum("type", ["CONTACT_FORM"])
@@ -114,15 +114,15 @@ export const AgencyTable = mysqlTable("agency", {
   customerId: varchar("customer_id", { length: 48 }).notNull().default(""),
   connectAccountId: varchar("connect_account_id", { length: 48 }).default(""),
   name: varchar("name", { length: 256 }).notNull(),
-  agencyLogo: varchar("agency_logo", { length: 128 }).notNull(),
+  agencyLogo: text("agency_logo").notNull(),
   companyEmail: varchar("company_email", { length: 256 }).notNull(),
   companyPhone: varchar("company_phone", { length: 16 }).notNull(),
   whiteLabel: boolean("white_label").notNull().default(true),
   address: varchar("address", { length: 512 }).notNull(),
-  city: varchar("address", { length: 128 }).notNull(),
-  zipCode: varchar("address", { length: 16 }).notNull(),
-  state: varchar("address", { length: 128 }).notNull(),
-  country: varchar("address", { length: 64 }).notNull(),
+  city: varchar("city", { length: 128 }).notNull(),
+  zipCode: varchar("zip_code", { length: 16 }).notNull(),
+  state: varchar("state", { length: 128 }).notNull(),
+  country: varchar("country", { length: 64 }).notNull(),
   goal: int("goal").notNull().default(5),
 })
 
@@ -149,10 +149,10 @@ export const SubAccountTable = mysqlTable("sub_account", {
   companyEmail: varchar("company_email", { length: 256 }).notNull(),
   companyPhone: varchar("company_phone", { length: 16 }).notNull(),
   address: varchar("address", { length: 512 }).notNull(),
-  city: varchar("address", { length: 128 }).notNull(),
-  zipCode: varchar("address", { length: 16 }).notNull(),
-  state: varchar("address", { length: 128 }).notNull(),
-  country: varchar("address", { length: 64 }).notNull(),
+  city: varchar("city", { length: 128 }).notNull(),
+  zipCode: varchar("zip_code", { length: 16 }).notNull(),
+  state: varchar("state", { length: 128 }).notNull(),
+  country: varchar("country", { length: 64 }).notNull(),
   goal: int("goal").notNull().default(5),
   // FOREIGN KEY RELATIONS
   agencyId: varchar("agency_id", { length: 48 }).notNull().references(() => AgencyTable.id)
@@ -399,7 +399,7 @@ export const MediaTable = mysqlTable("media", {
   createdAt: datetime("created_at").notNull().$defaultFn(() => new Date()),
   updatedAt: datetime("updated_at").notNull().$defaultFn(() => new Date()).$onUpdateFn(() => new Date()),
   name: varchar("name", { length: 256 }).notNull(),
-  type: varchar("type", { length: 128 }),
+  type: varchar("type", { length: 128 }).notNull(),
   link: varchar("link", { length: 1024 }).notNull(),
   // FOREIGN KEY RELATIONS
   subAccountId: varchar("sub_account_id", { length: 48 }).notNull().references(() => SubAccountTable.id)

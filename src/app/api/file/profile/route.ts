@@ -5,15 +5,15 @@ import { UserTable } from "@/server/db/schema";
 // UTILS
 import { env } from "@/env";
 import { db } from "@/server/db";
+import { getFileExtension } from "@/lib/utils";
 import { currentUser, streamToBuffer } from "@/server/helpers";
 import { getFileFromBucket, saveFileInBucket } from "@/server/helpers/store";
 // TYPES
 import type { NextRequest } from "next/server";
 
 export async function GET(req: Request) {
-  console.log(req.url)
   try {
-    const fileId = new URL(req.url).searchParams.get("fileId")
+    const fileId = new URL(req.url).searchParams.get("file")
     if (!fileId) throw new Error("File id param is required")
 
     const profileImage = await getFileFromBucket({
@@ -44,17 +44,18 @@ export async function POST(req: NextRequest) {
     const profileImage = formData.get("file") as File
     const profileImageArrayBuffer = await profileImage.arrayBuffer()
 
-    const fileId = createId()
+    const fileName = `${createId()}.${getFileExtension(profileImage)}`
+    const fileUrl = `${env.NEXT_PUBLIC_URL}/api/file/profile?file=${fileName}`
     await saveFileInBucket(
       {
         bucketName: "profile",
-        fileName: fileId,
+        fileName,
         file: Buffer.from(profileImageArrayBuffer)
       }
     )
 
     const [updateUserProfileQuery] = await db.update(UserTable).set({
-      avatarUrl: `${env.NEXT_PUBLIC_URL}/api/file/profile?fileId=${fileId}`
+      avatarUrl: fileUrl,
     }).where(eq(UserTable.id, user.id))
 
     if (updateUserProfileQuery.affectedRows === 0) {

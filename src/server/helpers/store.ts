@@ -72,6 +72,41 @@ export async function saveFileInBucket({
 }
 
 /**
+ * Delete file in S3 bucket
+ * @param bucketName name of the bucket
+ * @param fileName name of the file
+ */
+export async function deleteFileFromBucket({
+  bucketName,
+  fileName,
+}: {
+  bucketName: S3_BUCKETS
+  fileName: string
+}) {
+  // Create bucket if it doesn't exist
+  const bucketExists = await s3Client.bucketExists(bucketName)
+
+  if (!bucketExists) {
+    throw new Error("Given bucket does not exists")
+  }
+
+  // check if file exists - optional.
+  // Without this check, the file will be overwritten if it exists
+  const fileExists = await checkFileExistsInBucket({
+    bucketName,
+    fileName,
+  })
+
+  if (!fileExists) {
+    throw new Error('File does not exists')
+  }
+
+  // Upload image to S3 bucket
+  // await s3Client.putObject(bucketName, fileName, file)
+  await s3Client.removeObject(bucketName, fileName,)
+}
+
+/**
  * Check if file exists in bucket
  * @param bucketName name of the bucket
  * @param fileName name of the file

@@ -45,7 +45,7 @@ export const userRouter = createTRPCRouter({
     })
   }),
 
-  updateName: protectedProcedure.input(UpdateUsernameSchema).mutation(async ({ ctx, input }): ProcedureStatusType<UpdateUsernameType> => {
+  updateName: protectedProcedure.input(UpdateUsernameSchema).mutation(async ({ ctx, input }): ProcedureStatus<UpdateUsernameType> => {
     const [updateNameQuery] = await ctx.db.update(UserTable).set({
       name: input.name
     }).where(eq(UserTable.id, ctx.session.user.id))
@@ -62,7 +62,7 @@ export const userRouter = createTRPCRouter({
     }
   }),
 
-  updateAvatar: protectedProcedure.input(UpdateAvatarSchema).mutation(async ({ ctx, input }): ProcedureStatusType<UpdateAvatarType> => {
+  updateAvatar: protectedProcedure.input(UpdateAvatarSchema).mutation(async ({ ctx, input }): ProcedureStatus<UpdateAvatarType> => {
     const [updateAvatarQuery] = await ctx.db.update(UserTable).set({
       avatarUrl: input.avatarUrl
     }).where(eq(UserTable.id, ctx.session.user.id))
@@ -79,7 +79,7 @@ export const userRouter = createTRPCRouter({
     }
   }),
 
-  deleteOAuthAccount: protectedProcedure.input(DeleteOAuthAccountSchema).mutation(async ({ ctx, input }): ProcedureStatusType<DeleteOAuthAccountType> => {
+  deleteOAuthAccount: protectedProcedure.input(DeleteOAuthAccountSchema).mutation(async ({ ctx, input }): ProcedureStatus<DeleteOAuthAccountType> => {
 
     try {
       const oAuthAccount = await ctx.db.query.OAuthAccountTable.findFirst({
@@ -99,14 +99,11 @@ export const userRouter = createTRPCRouter({
 
       switch (provider) {
         case "google": {
-
-          const res = await fetch(`https://accounts.google.com/o/oauth2/revoke?token=${accessToken}`);
-          console.log(await res.json())
+          await fetch(`https://accounts.google.com/o/oauth2/revoke?token=${accessToken}`);
           break;
         }
         case "github": {
-
-          const res = await fetch(`https://api.github.com/applications/${env.GITHUB_CLIENT_ID}/grant`, {
+          await fetch(`https://api.github.com/applications/${env.GITHUB_CLIENT_ID}/grant`, {
             method: 'DELETE',
             headers: {
               'Accept': 'application/vnd.github+json',
@@ -118,8 +115,6 @@ export const userRouter = createTRPCRouter({
               access_token: accessToken
             })
           })
-          console.log(await res.json())
-
           break;
         }
       }
@@ -149,7 +144,7 @@ export const userRouter = createTRPCRouter({
     }
   }),
 
-  deleteSession: protectedProcedure.input(DeleteSessionSchema).mutation(async ({ ctx, input }): ProcedureStatusType<DeleteSessionType> => {
+  deleteSession: protectedProcedure.input(DeleteSessionSchema).mutation(async ({ ctx, input }): ProcedureStatus<DeleteSessionType> => {
     const [deleteSessionQuery] = await ctx.db
       .delete(SessionTable)
       .where(

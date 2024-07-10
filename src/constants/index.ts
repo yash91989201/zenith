@@ -29,3 +29,11 @@ export const PRICING_CARDS = [
 ]
 
 export const OAUTH_ACCOUNT_OPTIONS = ["github", "google"] as const
+
+export const ACCEPTED_FILE_MIME_TYPES = {
+  AGENCY_LOGO: ["image/webp", "image/jpg", "image/png", "image/svg"],
+};
+
+export const MAX_FILE_SIZE = {
+  API_ROUTE: 4 * 1024 * 1024
+}

@@ -28,7 +28,7 @@ CREATE TABLE `agency_sidebar_option` (
 	`updated_at` datetime NOT NULL,
 	`name` varchar(256) NOT NULL,
 	`link` text NOT NULL DEFAULT ('#'),
-	`icon` enum('settings','chart','calendar','check','chip','compass','database','flag','home','info','link','lock','messages','notification','payment','power','receipt','shield','star','tune','videorecorder','wallet','warning','headphone','send','pipelines','person','category','contact','clipboardIcon') NOT NULL DEFAULT 'info',
+	`icon` enum('settings','chart','calendar','check','chip','compass','database','flag','home','info','link','lock','messages','notification','payment','power','receipt','shield','star','tune','videorecorder','wallet','warning','headphone','send','pipelines','person','category','contact','clipboard') NOT NULL DEFAULT 'info',
 	`agency_id` varchar(48),
 	CONSTRAINT `agency_sidebar_option_id` PRIMARY KEY(`id`)
 );
@@ -40,11 +40,15 @@ CREATE TABLE `agency` (
 	`customer_id` varchar(48) NOT NULL DEFAULT '',
 	`connect_account_id` varchar(48) DEFAULT '',
 	`name` varchar(256) NOT NULL,
-	`agency_logo` varchar(128) NOT NULL,
+	`agency_logo` text NOT NULL,
 	`company_email` varchar(256) NOT NULL,
 	`company_phone` varchar(16) NOT NULL,
 	`white_label` boolean NOT NULL DEFAULT true,
-	`address` varchar(64) NOT NULL,
+	`address` varchar(512) NOT NULL,
+	`city` varchar(128) NOT NULL,
+	`zip_code` varchar(16) NOT NULL,
+	`state` varchar(128) NOT NULL,
+	`country` varchar(64) NOT NULL,
 	`goal` int NOT NULL DEFAULT 5,
 	CONSTRAINT `agency_id` PRIMARY KEY(`id`)
 );
@@ -145,7 +149,7 @@ CREATE TABLE `media` (
 	`created_at` datetime NOT NULL,
 	`updated_at` datetime NOT NULL,
 	`name` varchar(256) NOT NULL,
-	`type` varchar(128),
+	`type` varchar(128) NOT NULL,
 	`link` varchar(1024) NOT NULL,
 	`sub_account_id` varchar(48) NOT NULL,
 	CONSTRAINT `media_id` PRIMARY KEY(`id`)
@@ -207,7 +211,7 @@ CREATE TABLE `sub_account_sidebar_option` (
 	`updated_at` datetime NOT NULL,
 	`name` varchar(256) NOT NULL,
 	`link` text NOT NULL DEFAULT ('#'),
-	`icon` enum('settings','chart','calendar','check','chip','compass','database','flag','home','info','link','lock','messages','notification','payment','power','receipt','shield','star','tune','videorecorder','wallet','warning','headphone','send','pipelines','person','category','contact','clipboardIcon') NOT NULL DEFAULT 'info',
+	`icon` enum('settings','chart','calendar','check','chip','compass','database','flag','home','info','link','lock','messages','notification','payment','power','receipt','shield','star','tune','videorecorder','wallet','warning','headphone','send','pipelines','person','category','contact','clipboard') NOT NULL DEFAULT 'info',
 	`sub_account_id` varchar(48),
 	CONSTRAINT `sub_account_sidebar_option_id` PRIMARY KEY(`id`)
 );
@@ -221,7 +225,11 @@ CREATE TABLE `sub_account` (
 	`sub_account_logo` varchar(128) NOT NULL,
 	`company_email` varchar(256) NOT NULL,
 	`company_phone` varchar(16) NOT NULL,
-	`address` varchar(64) NOT NULL,
+	`address` varchar(512) NOT NULL,
+	`city` varchar(128) NOT NULL,
+	`zip_code` varchar(16) NOT NULL,
+	`state` varchar(128) NOT NULL,
+	`country` varchar(64) NOT NULL,
 	`goal` int NOT NULL DEFAULT 5,
 	`agency_id` varchar(48) NOT NULL,
 	CONSTRAINT `sub_account_id` PRIMARY KEY(`id`)

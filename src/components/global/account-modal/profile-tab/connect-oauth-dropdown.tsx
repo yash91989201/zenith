@@ -14,7 +14,7 @@ import {
 } from "@ui/dropdown-menu";
 // ICONS
 import { Plus } from "lucide-react";
-import { CustomIcons } from "@/components/global/icons";
+import { Icons } from "@/components/global/icons";
 // CONSTANTS
 import { OAUTH_ACCOUNT_OPTIONS } from "@/constants";
 
@@ -46,7 +46,7 @@ export function ConnectOauthDropdown() {
             onClick={OAuthAccountConnect[account].connect}
             className="gap-1.5 capitalize"
           >
-            {CustomIcons[account]}
+            {Icons[account]}
             <span>{account}</span>
           </DropdownMenuItem>
         ))}

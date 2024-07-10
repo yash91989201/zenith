@@ -36,6 +36,36 @@ import type {
   DeleteSessionSchema,
   DeleteOAuthAccountSchema,
   OAuthAccountSchema,
+  AgencyDetailsFormSchema,
+  UpdateAgencyGoalSchema,
+  SaveActivityLogSchema,
+  DeleteAgencySchema,
+  InitUserProcedureSchema,
+  UpsertAgencyProcedureSchema,
+  PermissionInsertSchema,
+  AgencyInsertSchema,
+  SubAccountInsertSchema,
+  TagInsertSchema,
+  PipelineInsertSchema,
+  LaneInsertSchema,
+  TicketInsertSchema,
+  TagsToTicketsInsertSchema,
+  TriggerInsertSchema,
+  AutomationInsertSchema,
+  AutomationInstanceInsertSchema,
+  ActionInsertSchema,
+  ContactInsertSchema,
+  MediaInsertSchema,
+  FunnelInsertSchema,
+  ClassNameInsertSchema,
+  FunnelPageInsertSchema,
+  AgencySidebarOptionInsertSchema,
+  SubAccountSidebarOptionInsertSchema,
+  InvitationInsertSchema,
+  NotificationInsertSchema,
+  SubscriptionInsertSchema,
+  AddOnInsertSchema,
+  OAuthAccountInsertSchema,
 } from "@lib/schema"
 
 // DB TABLE TYPES
@@ -66,7 +96,31 @@ export type AddOnType = z.infer<typeof AddOnSchema>
 export type OAuthAccountType = z.infer<typeof OAuthAccountSchema>
 
 // DB TABLE INSERT TYPES
-export type UserInsertType = Omit<z.infer<typeof UserInsertSchema>, "password">
+export type UserInsertType = z.infer<typeof UserInsertSchema>
+export type PermissionInsertType = z.infer<typeof PermissionInsertSchema>
+export type AgencyInsertType = z.infer<typeof AgencyInsertSchema>
+export type SubAccountInsertType = z.infer<typeof SubAccountInsertSchema>
+export type TagInsertType = z.infer<typeof TagInsertSchema>
+export type PipelineInsertType = z.infer<typeof PipelineInsertSchema>
+export type LaneInsertType = z.infer<typeof LaneInsertSchema>
+export type TicketInsertType = z.infer<typeof TicketInsertSchema>
+export type TagsToTicketsInsertType = z.infer<typeof TagsToTicketsInsertSchema>
+export type TriggerInsertType = z.infer<typeof TriggerInsertSchema>
+export type AutomationInsertType = z.infer<typeof AutomationInsertSchema>
+export type AutomationInstanceInsertType = z.infer<typeof AutomationInstanceInsertSchema>
+export type ActionInsertType = z.infer<typeof ActionInsertSchema>
+export type ContactInsertType = z.infer<typeof ContactInsertSchema>
+export type MediaInsertType = z.infer<typeof MediaInsertSchema>
+export type FunnelInsertType = z.infer<typeof FunnelInsertSchema>
+export type ClassNameInsertType = z.infer<typeof ClassNameInsertSchema>
+export type FunnelPageInsertType = z.infer<typeof FunnelPageInsertSchema>
+export type AgencySidebarOptionInsertType = z.infer<typeof AgencySidebarOptionInsertSchema>
+export type SubAccountSidebarOptionInsertType = z.infer<typeof SubAccountSidebarOptionInsertSchema>
+export type InvitationInsertType = z.infer<typeof InvitationInsertSchema>
+export type NotificationInsertType = z.infer<typeof NotificationInsertSchema>
+export type SubscriptionInsertType = z.infer<typeof SubscriptionInsertSchema>
+export type AddOnInsertType = z.infer<typeof AddOnInsertSchema>
+export type OAuthAccountInsertType = z.infer<typeof OAuthAccountInsertSchema>
 
 // AUTH TYPES
 export type CredsSignInType = z.infer<typeof CredsSignInSchema>
@@ -88,6 +142,16 @@ export type UpdateAvatarType = z.infer<typeof UpdateAvatarSchema>
 export type AddEmailType = z.infer<typeof AddEmailSchema>
 export type DeleteOAuthAccountType = z.infer<typeof DeleteOAuthAccountSchema>
 export type DeleteSessionType = z.infer<typeof DeleteSessionSchema>
+
+// agency form schema types
+export type UpsetAgencyProcedureType = z.infer<typeof UpsertAgencyProcedureSchema>
+export type AgencyDetailsFormType = z.infer<typeof AgencyDetailsFormSchema>
+export type UpdateAgencyGoalType = z.infer<typeof UpdateAgencyGoalSchema>
+export type DeleteAgencyType = z.infer<typeof DeleteAgencySchema>
+export type InitUserProcedureType = z.infer<typeof InitUserProcedureSchema>
+
+// notification
+export type SaveAvtivityLogType = z.infer<typeof SaveActivityLogSchema>
 
 // OAUTH USER TYPES
 export type GoogleUserType = {

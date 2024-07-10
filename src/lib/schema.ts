@@ -59,7 +59,30 @@ export const OAuthAccountSchema = createSelectSchema(OAuthAccountTable)
 
 // DB TABLES INSERT SCHEMAS
 export const UserInsertSchema = createInsertSchema(UserTable)
-
+export const AgencyInsertSchema = createInsertSchema(AgencyTable)
+export const PermissionInsertSchema = createInsertSchema(PermissionTable)
+export const SubAccountInsertSchema = createInsertSchema(SubAccountTable)
+export const TagInsertSchema = createInsertSchema(TagTable)
+export const PipelineInsertSchema = createInsertSchema(PipelineTable)
+export const LaneInsertSchema = createInsertSchema(LaneTable)
+export const TicketInsertSchema = createInsertSchema(TicketTable)
+export const TagsToTicketsInsertSchema = createInsertSchema(TagsToTicketsTable)
+export const TriggerInsertSchema = createInsertSchema(TriggerTable)
+export const AutomationInsertSchema = createInsertSchema(AutomationTable)
+export const AutomationInstanceInsertSchema = createInsertSchema(AutomationInstanceTable)
+export const ActionInsertSchema = createInsertSchema(ActionTable)
+export const ContactInsertSchema = createInsertSchema(ContactTable)
+export const MediaInsertSchema = createInsertSchema(MediaTable)
+export const FunnelInsertSchema = createInsertSchema(FunnelTable)
+export const ClassNameInsertSchema = createInsertSchema(ClassNameTable)
+export const FunnelPageInsertSchema = createInsertSchema(FunnelPageTable)
+export const AgencySidebarOptionInsertSchema = createInsertSchema(AgencySidebarOptionTable)
+export const SubAccountSidebarOptionInsertSchema = createInsertSchema(SubAccountSidebarOptionTable)
+export const InvitationInsertSchema = createInsertSchema(InvitationTable)
+export const NotificationInsertSchema = createInsertSchema(NotificationTable)
+export const SubscriptionInsertSchema = createInsertSchema(SubscriptionTable)
+export const AddOnInsertSchema = createInsertSchema(AddOnTable)
+export const OAuthAccountInsertSchema = createInsertSchema(OAuthAccountTable)
 
 // AUTH SCHEMAS
 export const CredsSignInSchema = z.object({
@@ -96,16 +119,37 @@ export const DeleteSessionSchema = z.object({
 })
 
 // AGENCY SCHEMA
+export const UpsertAgencyProcedureSchema = AgencyInsertSchema.extend({
+  price: SubscriptionSchema.pick({ price: true })
+})
+
 export const AgencyDetailsFormSchema = z.object({
   name: z.string().min(2, { message: "Agency name must be atleat 2 characters" }),
-  companyName: z.string().min(2, { message: "Agency name must be atleat 2 characters" }),
   companyEmail: z.string().email(),
-  companyPhone: z.string().min(9),
+  companyPhone: z.string(),
   whiteLabel: z.boolean().default(false),
   address: z.string().min(48),
   city: z.string().min(4),
   zipCode: z.string().min(4),
   state: z.string().min(4),
   country: z.string().min(4),
-  agencyLogo: z.string().url(),
+  agencyLogo: z.string().url()
+})
+
+export const UpdateAgencyGoalSchema = z.object({
+  agencyId: z.string(),
+  goal: z.number(),
+})
+
+export const DeleteAgencySchema = z.object({
+  agencyId: z.string(),
+})
+
+export const InitUserProcedureSchema = UserSchema.partial()
+
+// NOTIFICATION SCHEMAS
+export const SaveActivityLogSchema = z.object({
+  activity: z.string(),
+  agencyId: z.string().optional(),
+  subAccountId: z.string().optional()
 })
