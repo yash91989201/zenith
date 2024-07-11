@@ -2,6 +2,7 @@ import { toast } from "@ui/use-toast";
 import { createGithubAuthUrl, createGoogleAuthUrl } from "@/server/actions/auth";
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import type { STORE_ENDPOINTS } from "@/lib/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -133,7 +134,7 @@ export class ProcedureError<T> extends Error {
   }
 }
 
-export async function deleteFileFromStore(fileUrl: string) {
+export async function deleteFileFromStore(fileUrl: string, endpoint: STORE_ENDPOINTS) {
   const file = new URL(fileUrl)
   const fileName = file.searchParams.get("file")
   if (!fileName) return
@@ -141,10 +142,14 @@ export async function deleteFileFromStore(fileUrl: string) {
   const formData = new FormData()
   formData.append("file", fileName)
 
-  const res = await fetch("/api/file/agency-logo", {
+  const res = await fetch(endpoint, {
     method: "DELETE",
     body: formData
   })
 
   return res.status === 200
+}
+
+export function wait(second: number) {
+  return new Promise(resolve => setTimeout(resolve, second * 1000))
 }

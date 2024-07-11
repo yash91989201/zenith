@@ -31,6 +31,8 @@
       "@ui/*":["./src/components/ui/*"],
       "@lib/*":["./src/lib/*"],
       "@forms/*":["./src/components/forms/*"],
+      "@global/*":["./src/components/global/*"],
+      "@providers/*":["./src/providers/*"],
       "@icons":["./src/components/global/icons"],
       "@accountModal/*":["./src/components/global/account-modal/*"],
       "@hooks/*":["./src/hooks/*"]

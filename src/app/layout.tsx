@@ -1,7 +1,7 @@
 import "@/styles/globals.css";
 
 import { DM_Sans } from "next/font/google";
-import { ThemeProvider } from "@/providers/theme-provider";
+import { ThemeProvider } from "@providers/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { TRPCReactProvider } from "@/trpc/react";
 

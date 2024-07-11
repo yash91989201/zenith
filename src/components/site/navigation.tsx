@@ -6,8 +6,8 @@ import { validateRequest } from "@/lib/auth";
 // UI
 import { buttonVariants } from "@ui/button";
 // CUSTOM COMPONENTS
-import { UserButton } from "@/components/global/user-button";
-import { ThemeToggle } from "@/components/global/theme-toggle";
+import { UserButton } from "@global/user-button";
+import { ThemeToggle } from "@global/theme-toggle";
 
 export async function Navigation() {
   const { user } = await validateRequest();

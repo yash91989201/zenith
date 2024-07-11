@@ -3,7 +3,7 @@ import { use } from "react";
 // UTILS
 import { signOut } from "@/server/actions/auth";
 // CONTEXT
-import { SessionContext } from "@/providers/session-provider";
+import { SessionContext } from "@providers/session-provider";
 
 export function useAuth() {
   const { user, session } = use(SessionContext);

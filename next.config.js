@@ -6,6 +6,15 @@ await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
 const config = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "3000",
+      },
+    ],
+  },
   webpack: (config) => {
     // eslint-disable-next-line
     config.externals.push("@node-rs/argon2", "@node-rs/bcrypt");

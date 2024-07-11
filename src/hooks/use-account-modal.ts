@@ -1,6 +1,6 @@
 import { use } from "react";
 // CONTEXT
-import { AccountModalContext } from "@/providers/account-modal-provider";
+import { AccountModalContext } from "@providers/account-modal-provider";
 
 export function useAccountModal() {
   const context = use(AccountModalContext);

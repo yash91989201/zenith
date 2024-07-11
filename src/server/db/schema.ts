@@ -546,6 +546,7 @@ export const NotificationTable = mysqlTable("notification", {
   id: varchar("id", { length: 48 }).$defaultFn(() => createId()).primaryKey(),
   createdAt: datetime("created_at").notNull().$defaultFn(() => new Date()),
   updatedAt: datetime("updated_at").notNull().$defaultFn(() => new Date()).$onUpdateFn(() => new Date()),
+  read: boolean("read").notNull().default(false),
   text: text("text").notNull(),
   // FOREIGN KEY RELATIONS
   userId: varchar("user_id", { length: 48 }).notNull().references(() => UserTable.id),

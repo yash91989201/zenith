@@ -1,13 +1,35 @@
-import { and, eq, sql } from "drizzle-orm";
+import { and, desc, eq, sql } from "drizzle-orm";
+// DB SCHEMAS
+import {
+  UserTable,
+  SessionTable,
+  OAuthAccountTable,
+  NotificationTable,
+} from "@/server/db/schema";
 // SCHEMAS
-import { DeleteOAuthAccountSchema, DeleteSessionSchema, UpdateAvatarSchema, UpdateUsernameSchema } from "@/lib/schema";
+import {
+  UpdateAvatarSchema,
+  DeleteSessionSchema,
+  UpdateUsernameSchema,
+  DeleteOAuthAccountSchema,
+  GetUserNotificationsSchema,
+  UpdateUserByIdSchema,
+} from "@/lib/schema";
 // UTILS
 import { env } from "@/env";
-import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
-// DB SCHEMAS
-import { OAuthAccountTable, SessionTable, UserTable } from "@/server/db/schema";
+import {
+  createTRPCRouter,
+  protectedProcedure
+} from "@/server/api/trpc";
 // TYPES
-import type { DeleteOAuthAccountType, DeleteSessionType, UpdateAvatarType, UpdateUsernameType } from "@/lib/types";
+import type {
+  UpdateAvatarType,
+  DeleteSessionType,
+  UpdateUsernameType,
+  DeleteOAuthAccountType,
+  UpdateUserByIdType,
+} from "@/lib/types";
+import { procedureError } from "@/server/helpers";
 
 export const userRouter = createTRPCRouter({
   getSessionList: protectedProcedure.query(({ ctx }) => {
@@ -45,6 +67,13 @@ export const userRouter = createTRPCRouter({
     })
   }),
 
+  getNotifications: protectedProcedure.input(GetUserNotificationsSchema).query(({ ctx, input }) => {
+    return ctx.db.query.NotificationTable.findMany({
+      where: eq(NotificationTable.agencyId, input.agencyId),
+      orderBy: [desc(NotificationTable.createdAt)]
+    })
+  }),
+
   updateName: protectedProcedure.input(UpdateUsernameSchema).mutation(async ({ ctx, input }): ProcedureStatus<UpdateUsernameType> => {
     const [updateNameQuery] = await ctx.db.update(UserTable).set({
       name: input.name
@@ -76,6 +105,25 @@ export const userRouter = createTRPCRouter({
     return {
       status: "SUCCESS",
       message: "Avatar url updated for user"
+    }
+  }),
+
+  updateById: protectedProcedure.input(UpdateUserByIdSchema).mutation(async ({ ctx, input }): ProcedureStatus<UpdateUserByIdType> => {
+    try {
+      const userExists = await ctx.db.query.UserTable.findFirst({ where: eq(UserTable.id, input.id) })
+
+      if (!userExists) throw new Error("No user exists with this id")
+
+      const [updateUserQuery] = await ctx.db.update(UserTable).set(input).where(eq(UserTable.id, input.id))
+
+      if (updateUserQuery.affectedRows === 0) throw new Error("Unable to update user")
+
+      return {
+        status: "SUCCESS",
+        message: "User data updated"
+      }
+    } catch (error) {
+      return procedureError(error)
     }
   }),
 

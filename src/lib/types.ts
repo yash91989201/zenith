@@ -36,7 +36,7 @@ import type {
   DeleteSessionSchema,
   DeleteOAuthAccountSchema,
   OAuthAccountSchema,
-  AgencyDetailsFormSchema,
+  UpsertAgencySchema,
   UpdateAgencyGoalSchema,
   SaveActivityLogSchema,
   DeleteAgencySchema,
@@ -66,6 +66,12 @@ import type {
   SubscriptionInsertSchema,
   AddOnInsertSchema,
   OAuthAccountInsertSchema,
+  UpsertSubAccountSchema,
+  UpsertSubaccountProcedureSchema,
+  MarkNotificationsReadSchema,
+  UpdateUserDetailsSchema,
+  UpsertSubAccountPermissionSchema,
+  UpdateUserByIdSchema,
 } from "@lib/schema"
 
 // DB TABLE TYPES
@@ -142,16 +148,24 @@ export type UpdateAvatarType = z.infer<typeof UpdateAvatarSchema>
 export type AddEmailType = z.infer<typeof AddEmailSchema>
 export type DeleteOAuthAccountType = z.infer<typeof DeleteOAuthAccountSchema>
 export type DeleteSessionType = z.infer<typeof DeleteSessionSchema>
+export type UpdateUserDetailsType = z.infer<typeof UpdateUserDetailsSchema>
+export type UpdateUserByIdType = z.infer<typeof UpdateUserByIdSchema>
 
 // agency form schema types
 export type UpsetAgencyProcedureType = z.infer<typeof UpsertAgencyProcedureSchema>
-export type AgencyDetailsFormType = z.infer<typeof AgencyDetailsFormSchema>
+export type UpsertAgencyType = z.infer<typeof UpsertAgencySchema>
 export type UpdateAgencyGoalType = z.infer<typeof UpdateAgencyGoalSchema>
 export type DeleteAgencyType = z.infer<typeof DeleteAgencySchema>
 export type InitUserProcedureType = z.infer<typeof InitUserProcedureSchema>
 
+// SUBACCOUNT SCHEMA TYPES
+export type UpsertSubAccountType = z.infer<typeof UpsertSubAccountSchema>
+export type UpsertSubaccountProcedureType = z.infer<typeof UpsertSubaccountProcedureSchema>
+export type UpsertSubAccountPermissionType = z.infer<typeof UpsertSubAccountPermissionSchema>
+
 // notification
 export type SaveAvtivityLogType = z.infer<typeof SaveActivityLogSchema>
+export type MarkNotificationsReadType = z.infer<typeof MarkNotificationsReadSchema>
 
 // OAUTH USER TYPES
 export type GoogleUserType = {
@@ -200,4 +214,4 @@ export type CreateGithubOAuthUserResponseType = Promise<
 
 // S3 BUCKETS
 export type S3_BUCKETS = "profile" | "media"
-
+export type STORE_ENDPOINTS = "/api/file/agency-logo" | "/api/file/profile"

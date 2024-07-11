@@ -4,11 +4,11 @@ import { api, HydrateClient } from "@/trpc/server";
 // TYPES
 import type React from "react";
 // PROVIDERS
-import { SessionProvider } from "@/providers/session-provider";
-import { AccountModalProvider } from "@/providers/account-modal-provider";
+import { SessionProvider } from "@providers/session-provider";
+import { AccountModalProvider } from "@providers/account-modal-provider";
 // CUSTOM COMPONENTS
 import { Navigation } from "@/components/site/navigation";
-import { AccountModal } from "@/components/global/account-modal";
+import { AccountModal } from "@global/account-modal";
 
 export default async function SiteLayout({
   children,

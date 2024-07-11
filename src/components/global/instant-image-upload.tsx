@@ -9,10 +9,11 @@ import type { DropzoneOptions } from "react-dropzone";
 // CUSTOM HOOKS
 import { useFileUpload } from "@/hooks/use-file-upload";
 // UI
-import { toast } from "@ui/use-toast";
 import { Progress } from "@ui/progress";
 // ICONS
 import { CloudUpload, X } from "lucide-react";
+import type { STORE_ENDPOINTS } from "@/lib/types";
+import { toast } from "sonner";
 
 const variants = {
   base: "relative rounded-md flex justify-center items-center flex-col cursor-pointer min-h-[120px] min-w-[120px] border border-dashed border-gray-400 dark:border-gray-300 transition-colors duration-200 ease-in-out",
@@ -30,7 +31,7 @@ type InputProps = {
   height?: number;
   className?: string;
   value?: string;
-  uploadEndpoint: string;
+  uploadEndpoint: STORE_ENDPOINTS;
   onChange?: (url?: string) => void | Promise<void>;
   disabled?: boolean;
   dropzoneOptions?: Omit<DropzoneOptions, "disabled">;
@@ -68,7 +69,6 @@ const InstantImageUpload = React.forwardRef<HTMLInputElement, InputProps>(
     const { uploadFile, error, isUploading, progress } = useFileUpload({
       endpoint: uploadEndpoint,
     });
-
     // dropzone configuration
     const {
       getRootProps,
@@ -176,11 +176,12 @@ const InstantImageUpload = React.forwardRef<HTMLInputElement, InputProps>(
               onClick={async (e) => {
                 e.stopPropagation();
                 void onChange?.(undefined);
-                const success = await deleteFileFromStore(imageUrl);
+                const success = await deleteFileFromStore(
+                  imageUrl,
+                  uploadEndpoint,
+                );
                 if (success) {
-                  toast({
-                    title: "Image deleted",
-                  });
+                  toast.success("Image removed");
                 }
               }}
             >

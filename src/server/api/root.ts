@@ -1,7 +1,9 @@
+import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
+// UTILS
 import { agencyRouter } from "@/server/api/routers/agency";
 import { notificationRouter } from "@/server/api/routers/notification";
+import { subAccountRouter } from "@/server/api/routers/sub-account";
 import { userRouter } from "@/server/api/routers/user";
-import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 
 /**
  * This is the primary router for your server.
@@ -11,7 +13,8 @@ import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 export const appRouter = createTRPCRouter({
   user: userRouter,
   agency: agencyRouter,
-  notification: notificationRouter
+  subAccount: subAccountRouter,
+  notification: notificationRouter,
 });
 
 // export type definition of API

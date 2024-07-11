@@ -14,7 +14,7 @@ import {
 } from "@ui/dropdown-menu";
 // ICONS
 import { Plus } from "lucide-react";
-import { Icons } from "@/components/global/icons";
+import { Icons } from "@global/icons";
 // CONSTANTS
 import { OAUTH_ACCOUNT_OPTIONS } from "@/constants";
 

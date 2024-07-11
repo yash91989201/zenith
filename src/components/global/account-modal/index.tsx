@@ -6,8 +6,8 @@ import { useAccountModal } from "@/hooks/use-account-modal";
 // UI
 import { Button } from "@ui/button";
 // CUSTOM COMPONENTS
-import { ProfileTab } from "@/components/global/account-modal/profile-tab";
-import { SecurityTab } from "@/components/global/account-modal/security-tab";
+import { ProfileTab } from "@accountModal/profile-tab";
+import { SecurityTab } from "@accountModal/security-tab";
 // ICONS
 import { ShieldCheck, UserCircle2, X } from "lucide-react";
 

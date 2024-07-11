@@ -2,7 +2,7 @@ import type React from "react";
 // UTILS
 import { validateRequest } from "@/lib/auth";
 // CUSTOM COMPONENTS
-import { SessionProvider } from "@/providers/session-provider";
+import { SessionProvider } from "@providers/session-provider";
 
 export default async function MainLayout({
   children,

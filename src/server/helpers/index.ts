@@ -18,6 +18,7 @@ import {
 // TYPES
 import type { Readable } from "stream";
 import type { UserInsertType, UserType } from "@/lib/types";
+import { ProcedureError } from "@/lib/utils";
 
 const argon2id = new Argon2id();
 
@@ -84,6 +85,26 @@ export async function streamToBuffer(stream: Readable): Promise<Buffer> {
     stream.on('error', reject);
   });
 };
+
+export function procedureError<ProcedureType>(error: unknown): ProcedureFailType<ProcedureType> {
+  if (error instanceof ProcedureError) {
+    return {
+      status: "FAILED",
+      message: error.message,
+      errors: error.error as ProcedureType,
+    };
+  } else if (error instanceof Error) {
+    return {
+      status: "FAILED",
+      message: error.message,
+    };
+  } else {
+    return {
+      status: "FAILED",
+      message: "Error occurred on procedure.",
+    };
+  }
+}
 
 export async function saveActivityLog(
   {

@@ -24,7 +24,7 @@ import {
 import { Input } from "@ui/input";
 import { Button } from "@ui/button";
 // CUSTOM COMPONENTS
-import { AuthCardWrapper } from "@/components/global/auth-card-wrapper";
+import { AuthCardWrapper } from "@global/auth-card-wrapper";
 // ICONS
 import { Eye, EyeOff } from "lucide-react";
 

@@ -3,7 +3,7 @@ import { use } from "react";
 // UTILS
 import { api } from "@/trpc/react";
 // CONTEXT
-import { SessionContext } from "@/providers/session-provider";
+import { SessionContext } from "@providers/session-provider";
 
 export function useOAuthAccounts() {
   const { user, session } = use(SessionContext);

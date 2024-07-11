@@ -10,17 +10,34 @@ export interface InputProps
 }
 
 const NumberInput = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type = "number", isPending, ...props }, ref) => {
+  ({ className, type = "number", ...props }, ref) => {
     const [value, setValue] = React.useState<number>(
       props.value ? Number(props.value) : 1,
     );
 
     const handleIncrement = () => {
-      setValue((prevValue) => prevValue + 1);
+      setValue((prevValue) => {
+        const newValue = prevValue + 1;
+        triggerChange(newValue);
+        return newValue;
+      });
     };
 
     const handleDecrement = () => {
-      setValue((prevValue) => (prevValue > 1 ? prevValue - 1 : 1));
+      setValue((prevValue) => {
+        const newValue = prevValue > 1 ? prevValue - 1 : 1;
+        triggerChange(newValue);
+        return newValue;
+      });
+    };
+
+    const triggerChange = (newValue: number) => {
+      if (props?.onChange) {
+        const syntheticEvent = {
+          target: { value: newValue.toString() },
+        } as React.ChangeEvent<HTMLInputElement>;
+        props.onChange(syntheticEvent);
+      }
     };
 
     return (
@@ -34,6 +51,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, InputProps>(
           value={value.toString()}
           min={1}
           ref={ref}
+          readOnly
           {...props}
         />
         <Button

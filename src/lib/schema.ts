@@ -118,12 +118,34 @@ export const DeleteSessionSchema = z.object({
   current: z.boolean()
 })
 
+export const GetUserNotificationsSchema = z.object({
+  agencyId: z.string(),
+})
+
+export const UpdateUserByIdSchema = UserSchema.pick({
+  id: true,
+  name: true,
+  role: true,
+  avatarUrl: true,
+})
+
+export const UpdateUserDetailsSchema = UserSchema.pick({
+  name: true,
+  email: true,
+  avatarUrl: true,
+  role: true
+})
+
 // AGENCY SCHEMA
+export const GetAgencyById = z.object({
+  agencyId: z.string()
+})
+
 export const UpsertAgencyProcedureSchema = AgencyInsertSchema.extend({
   price: SubscriptionSchema.pick({ price: true })
 })
 
-export const AgencyDetailsFormSchema = z.object({
+export const UpsertAgencySchema = z.object({
   name: z.string().min(2, { message: "Agency name must be atleat 2 characters" }),
   companyEmail: z.string().email(),
   companyPhone: z.string(),
@@ -147,9 +169,34 @@ export const DeleteAgencySchema = z.object({
 
 export const InitUserProcedureSchema = UserSchema.partial()
 
+// SUBACCOUNT SCHEMAS
+export const UpsertSubAccountSchema = z.object({
+  name: z.string(),
+  companyEmail: z.string(),
+  companyPhone: z.string().min(1),
+  address: z.string(),
+  city: z.string(),
+  subAccountLogo: z.string().url(),
+  zipCode: z.string(),
+  state: z.string(),
+  country: z.string(),
+})
+
+export const UpsertSubaccountProcedureSchema = SubAccountInsertSchema
+export const UpsertSubAccountPermissionSchema = z.object({
+  access: z.boolean(),
+  subAccountId: z.string(),
+  email: z.string().email(),
+  permissionId: z.string().optional(),
+})
+
 // NOTIFICATION SCHEMAS
 export const SaveActivityLogSchema = z.object({
   activity: z.string(),
   agencyId: z.string().optional(),
   subAccountId: z.string().optional()
+})
+
+export const MarkNotificationsReadSchema = z.object({
+  notificationIds: z.array(z.string())
 })

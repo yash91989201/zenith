@@ -15,9 +15,21 @@ type FormFailType<ErrorsType> = {
   message: string;
 };
 
-type ProcedureStatus<SchemaType> = Promise<
-  FormSuccessType |
-  FormFailType<SchemaType>
+type ProcedureSuccessType<DataType> = {
+  status: "SUCCESS";
+  message: string;
+  data?: Partial<DataType>;
+};
+
+type ProcedureFailType<ErrorsType> = {
+  status: "FAILED";
+  errors?: Partial<ErrorsType>;
+  message: string;
+};
+
+type ProcedureStatus<ProcedureType> = Promise<
+  ProcedureSuccessType<ProcedureType> |
+  ProcedureFailType<ProcedureType>
 >
 
 type SimpleApiResType = {

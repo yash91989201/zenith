@@ -3,12 +3,12 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 // SCHEMAS
-import { AgencyDetailsFormSchema } from "@/lib/schema";
+import { UpsertAgencySchema } from "@/lib/schema";
 // UTILS
 import { api } from "@/trpc/react";
 // TYPES
 import type { SubmitHandler } from "react-hook-form";
-import type { AgencyDetailsFormType, AgencyType } from "@/lib/types";
+import type { UpsertAgencyType, AgencyType } from "@/lib/types";
 // CUSTOM HOOKS
 import { useToggle } from "@/hooks/use-toggle";
 // UI
@@ -45,7 +45,7 @@ import { toast } from "@ui/use-toast";
 import { PhoneInput } from "@ui/phone-input";
 import { NumberInput } from "@ui/number-input";
 // CUSTOM COMOPNENTS
-import { InstantImageUpload } from "@/components/global/instant-image-upload";
+import { InstantImageUpload } from "@global/instant-image-upload";
 // ICONS
 import { ReloadIcon } from "@radix-ui/react-icons";
 // CONSTANTS
@@ -71,26 +71,16 @@ export function AgencyDetails({ data }: AgencyDetailsProps) {
   const { mutateAsync: initUser } = api.agency.initUser.useMutation();
   const { mutateAsync: upsertAgency } = api.agency.upsertAgency.useMutation();
 
-  const agencyDetailsForm = useForm<AgencyDetailsFormType>({
-    defaultValues: {
-      name: data?.name,
-      companyEmail: data?.companyEmail,
-      companyPhone: data?.companyPhone,
-      whiteLabel: data?.whiteLabel,
-      address: data?.address,
-      city: data?.city,
-      state: data?.state,
-      zipCode: data?.zipCode,
-      country: data?.country,
-    },
-    resolver: zodResolver(AgencyDetailsFormSchema),
+  const agencyDetailsForm = useForm<UpsertAgencyType>({
+    defaultValues: data,
+    resolver: zodResolver(UpsertAgencySchema),
   });
 
   const { control, handleSubmit, formState } = agencyDetailsForm;
 
-  const agencyDetailsSubmitAction: SubmitHandler<
-    AgencyDetailsFormType
-  > = async (formData) => {
+  const agencyDetailsSubmitAction: SubmitHandler<UpsertAgencyType> = async (
+    formData,
+  ) => {
     try {
       if (!data?.id) {
         // create stripe data obj
@@ -119,7 +109,7 @@ export function AgencyDetails({ data }: AgencyDetailsProps) {
     evt: React.ChangeEvent<HTMLInputElement>,
   ) => {
     if (!data?.id) return;
-
+    console.log("update agency goal");
     await updateAgencyGoal({
       goal: Number(evt.target.value),
       agencyId: data.id,
@@ -326,14 +316,14 @@ export function AgencyDetails({ data }: AgencyDetailsProps) {
             />
 
             {data?.id && (
-              <div className="flex flex-col gap-3">
-                <FormLabel>Create A Goal</FormLabel>
+              <div className="flex flex-col gap-3 sm:w-full md:w-1/2 ">
+                <FormLabel>Agency Goal</FormLabel>
                 <FormDescription>
                   ✨ Create a goal for your agency. As your business grows your
                   goals grow too so dont forget to set the bar higher!
                 </FormDescription>
                 <NumberInput
-                  defaultValue={data?.goal}
+                  value={data?.goal}
                   disabled={updatingAgency}
                   onChange={updateAgencyGoalAction}
                   min={1}
