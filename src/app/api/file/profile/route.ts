@@ -95,7 +95,6 @@ export async function DELETE(req: NextRequest) {
     const profileImage = await profileRes.blob();
     const profileImageArrayBuffer = await profileImage.arrayBuffer()
 
-
     const fileName = `${createId()}.${profileImageExt}`
     const fileUrl = `${env.NEXT_PUBLIC_URL}/api/file/profile?file=${fileName}`
     await saveFileInBucket(

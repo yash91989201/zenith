@@ -9,13 +9,14 @@ import { env } from "@/env";
 import { db } from "@/server/db";
 import { lucia } from "@/lib/auth";
 import { googleOAuth } from "@/lib/auth";
+import { saveOAuthAccountImage } from "@/server/helpers";
 // TYPES
-import type { NextRequest } from "next/server";
 import type {
   GoogleUserType,
   UserInsertType,
   CreateGoogleOAuthUserResponseType,
 } from "@/lib/types";
+import type { NextRequest } from "next/server";
 
 export async function GET(req: NextRequest) {
 
@@ -23,6 +24,7 @@ export async function GET(req: NextRequest) {
 
   const code = url.searchParams.get("code")
   const state = url.searchParams.get("state")
+
   const savedState = cookies().get("state")?.value
   const codeVerifier = cookies().get("code-verifier")?.value
 
@@ -57,11 +59,14 @@ export async function GET(req: NextRequest) {
     });
 
     if (!user) {
+
+      const avatarUrl = await saveOAuthAccountImage(googleUserData.picture, googleUserData.name)
+
       const newUser: Omit<UserInsertType, "id"> & { id: string } = {
         id: googleUserData.id,
         name: googleUserData.name,
-        avatarUrl: googleUserData.picture,
         email: googleUserData.email,
+        avatarUrl,
         emailVerified: googleUserData.verified_email ? new Date() : null,
       };
       const [createUserRes] = await trx.insert(UserTable).values(newUser);
@@ -123,6 +128,12 @@ export async function GET(req: NextRequest) {
             error: "Unable to add google o auth try again",
             data: null
           };
+        }
+
+        return {
+          status: "success",
+          error: null,
+          data: user
         }
       }
 

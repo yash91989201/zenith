@@ -8,6 +8,7 @@ import { OAuthAccountTable, UserTable } from "@/server/db/schema";
 import { env } from "@/env";
 import { db } from "@/server/db";
 import { githubOAuth, lucia } from "@/lib/auth";
+import { saveOAuthAccountImage } from "@/server/helpers";
 // TYPES
 import type { NextRequest } from "next/server";
 import type { CreateGithubOAuthUserResponseType, GithubUserEmailType, GithubUserType, UserInsertType } from "@/lib/types";
@@ -59,11 +60,12 @@ export async function GET(req: NextRequest) {
     });
 
     if (!user) {
+      const avatarUrl = await saveOAuthAccountImage(githubUserData.avatar_url, githubUserData.name)
       const newUser: Omit<UserInsertType, "id"> & { id: string } = {
         id: githubUserData.id,
         name: githubUserData.name,
-        avatarUrl: githubUserData.avatar_url,
         email: githubUserEmailData[0]?.email ?? "",
+        avatarUrl,
         emailVerified: (githubUserEmailData[0]?.verified === undefined || !githubUserEmailData[0]?.verified) ? null : new Date(),
       };
       const [createUserRes] = await trx.insert(UserTable).values(newUser);

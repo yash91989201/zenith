@@ -94,29 +94,24 @@ export function MenuOptions({
             />
           </AspectRatio>
           <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="ghost"
-                className="my-6 flex h-fit w-full items-center justify-start gap-3"
-              >
-                <div className="flex items-center gap-3 text-left">
-                  <Compass />
-                  <div className="flex flex-col">
-                    <SheetTitle>{details.name}</SheetTitle>
-                    <SheetDescription className="text-xs text-muted-foreground">
-                      {details.address}
-                    </SheetDescription>
-                  </div>
+            <PopoverTrigger className="my-6 flex h-fit max-w-full items-center justify-start gap-3 rounded-md p-1.5 transition-colors hover:bg-accent hover:text-accent-foreground">
+              <div className="flex items-center gap-3 text-left">
+                <Compass className="shrink-0" />
+                <div className="flex flex-col gap-1 overflow-hidden">
+                  <SheetTitle>{details.name}</SheetTitle>
+                  <SheetDescription className="text-xs">
+                    {details.address}
+                  </SheetDescription>
                 </div>
-                <div>
-                  <ChevronsUpDown className="size-4 text-muted-foreground" />
-                </div>
-              </Button>
+              </div>
+              <div>
+                <ChevronsUpDown className="size-4 text-muted-foreground" />
+              </div>
             </PopoverTrigger>
             <PopoverContent className="mt-4 h-96 w-80" align="start">
               <Command className="rounded-lg ">
                 <CommandInput placeholder="Search accounts" />
-                <CommandList className="my-1.5 pb-16 ">
+                <CommandList className="my-1.5 pb-12">
                   <CommandEmpty>No accounts found</CommandEmpty>
                   {["AGENCY_OWNER", "AGENCY_ADMIN"].includes(
                     user?.role ?? "",

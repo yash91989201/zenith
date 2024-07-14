@@ -2,11 +2,14 @@ import "server-only";
 import { headers } from "next/headers";
 import { userAgent } from "next/server";
 import { Argon2id } from "oslo/password";
+import { createId } from "@paralleldrive/cuid2";
 import { and, eq, getTableColumns } from "drizzle-orm";
 // UTILS
+import { env } from "@/env";
 import { db } from "@/server/db";
 import { validateRequest } from "@/lib/auth";
 import { ProcedureError } from "@/lib/utils";
+import { saveFileInBucket } from "@/server/helpers/store";
 // SCHEMAS
 import {
   UserTable,
@@ -75,6 +78,67 @@ export function getUserDeviceInfo() {
     os: `${userAgentData.os.name ?? "unknown"} ${userAgentData.os.version}`.trim(),
     ip
   }
+}
+
+export function getImageExtension(contentType: string) {
+  let fileExtension = '';
+  if (contentType) {
+    if (contentType.includes('image/jpeg')) {
+      fileExtension = 'jpg';
+    } else if (contentType.includes('image/png')) {
+      fileExtension = 'png';
+    } else if (contentType.includes('image/gif')) {
+      fileExtension = 'gif';
+    } else if (contentType.includes('image/webp')) {
+      fileExtension = 'webp';
+    } else {
+      return null
+    }
+  } else {
+    return null
+  }
+  return fileExtension
+}
+
+export async function saveOAuthAccountImage(profileUrl: string, userName: string) {
+
+  // fetch image from google
+  const profileRes = await fetch(profileUrl)
+  const profileImage = await profileRes.blob();
+  const profileImageArrayBuffer = await profileImage.arrayBuffer()
+
+  const fileExtension = getImageExtension(profileImage.type)
+
+  if (fileExtension === null) {
+    const profileImageExt = "png"
+    // get random profile from dicebear
+    const profileRes = await fetch(`https://api.dicebear.com/8.x/avataaars/${profileImageExt}?seed=${userName}&backgroundColor=c0aede,d1d4f9,ffd5dc,ffdfbf&accessories=prescription01,prescription02,round,sunglasses&clothing=blazerAndSweater,collarAndSweater,graphicShirt,hoodie,overall,shirtCrewNeck,shirtScoopNeck,shirtVNeck,blazerAndShirt&eyebrows=default,defaultNatural,flatNatural,raisedExcited,raisedExcitedNatural,unibrowNatural,upDown,upDownNatural&eyes=default,happy,surprised&facialHair[]&mouth=default,smile&top=bigHair,bun,curly,curvy,dreads,dreads01,dreads02,frida,frizzle,fro,froBand,hat,longButNotTooLong,miaWallace,shaggy,shaggyMullet,shavedSides,shortCurly,shortFlat,shortRound,shortWaved,sides,straight01,straight02,straightAndStrand,theCaesar,theCaesarAndSidePart,turban,winterHat02,winterHat03,winterHat04,winterHat1`)
+    const profileImage = await profileRes.blob();
+    const profileImageArrayBuffer = await profileImage.arrayBuffer()
+
+    const fileName = `${createId()}.${profileImageExt}`
+    const fileUrl = `${env.NEXT_PUBLIC_URL}/api/file/profile?file=${fileName}`
+    await saveFileInBucket(
+      {
+        bucketName: "profile",
+        fileName,
+        file: Buffer.from(profileImageArrayBuffer)
+      }
+    )
+    return fileUrl
+  }
+
+  const fileName = `${createId()}.${fileExtension}`
+  const fileUrl = `${env.NEXT_PUBLIC_URL}/api/file/profile?file=${fileName}`
+  await saveFileInBucket(
+    {
+      bucketName: "profile",
+      fileName,
+      file: Buffer.from(profileImageArrayBuffer)
+    }
+  )
+
+  return fileUrl
 }
 
 export async function streamToBuffer(stream: Readable): Promise<Buffer> {

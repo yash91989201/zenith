@@ -70,8 +70,8 @@ export function SendInvitation({
         activity: `Invited | ${formData.email}`,
       });
       toast.success(`Invited | ${formData.email}`);
-      router.refresh();
       onClose?.();
+      router.refresh();
     } else {
       toast.error(actionRes.message);
     }
