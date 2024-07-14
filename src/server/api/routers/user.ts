@@ -1,10 +1,12 @@
-import { and, desc, eq, sql } from "drizzle-orm";
+import { and, asc, eq, getTableColumns, sql } from "drizzle-orm";
 // DB SCHEMAS
 import {
   UserTable,
   SessionTable,
   OAuthAccountTable,
   NotificationTable,
+  SubAccountSidebarOptionTable,
+  AgencySidebarOptionTable,
 } from "@/server/db/schema";
 // SCHEMAS
 import {
@@ -59,12 +61,12 @@ export const userRouter = createTRPCRouter({
         agency: {
           with: {
             sidebarOptions: {
-              orderBy: (fields, { asc }) => asc(fields.order),
+              orderBy: [asc(AgencySidebarOptionTable.order)],
             },
             subAccounts: {
               with: {
                 sidebarOptions: {
-                  orderBy: (fields, { asc }) => asc(fields.order),
+                  orderBy: [asc(SubAccountSidebarOptionTable.order)],
                 }
               }
             }
@@ -92,11 +94,34 @@ export const userRouter = createTRPCRouter({
     }).then((res) => res.filter((res) => res.agency?.id === input.agencyId));
   }),
 
-  getNotifications: protectedProcedure.input(GetUserNotificationsSchema).query(({ ctx, input }) => {
-    return ctx.db.query.NotificationTable.findMany({
-      where: eq(NotificationTable.agencyId, input.agencyId),
-      orderBy: [desc(NotificationTable.createdAt)]
-    })
+  getNotifications: protectedProcedure.input(GetUserNotificationsSchema).query(async ({ ctx, input }) => {
+    const notificationDynamicQuery = ctx.db
+      .select({
+        ...getTableColumns(NotificationTable),
+        user: {
+          ...getTableColumns(UserTable),
+        }
+      })
+      .from(NotificationTable)
+      .innerJoin(
+        UserTable,
+        eq(NotificationTable.agencyId, UserTable.agencyId)
+      )
+      .where(
+        eq(NotificationTable.agencyId, input.agencyId)
+      ).$dynamic()
+
+    if (input.subAccountId && !["AGENCY_OWNER", "AGENCY_ADMIN"].includes(ctx.session.user.role)) {
+      await notificationDynamicQuery.where(
+        and(
+          eq(NotificationTable.agencyId, input.agencyId),
+          eq(NotificationTable.subAccountId, input.subAccountId),
+        )
+      )
+    }
+
+    const notifications = await notificationDynamicQuery
+    return notifications
   }),
 
   updateName: protectedProcedure.input(UpdateUsernameSchema).mutation(async ({ ctx, input }): ProcedureStatus<UpdateUsernameType> => {

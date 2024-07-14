@@ -1,5 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 // UTILS
 import { api } from "@/trpc/react";
 import { renderOnClient } from "@/lib/utils";
@@ -32,7 +33,7 @@ type Props = {
 
 export const NotificationButton = renderOnClient(
   ({ subAccountId }: Props) => {
-    const { user, nameInitials } = useUser();
+    const { user } = useUser();
     const [showAll, setShowAll] = useState(true);
     const [showRead, setShowRead] = useState(false);
 
@@ -45,6 +46,9 @@ export const NotificationButton = renderOnClient(
       refetch: refetchNotifications,
     } = api.user.getNotifications.useQuery({
       agencyId: user?.agencyId ?? "",
+      subAccountId: ["AGENCY_OWNER", "AGENCY_ADMIN"].includes(user?.role ?? "")
+        ? subAccountId
+        : undefined,
     });
 
     const filteredNotifications = useMemo(() => {
@@ -99,14 +103,25 @@ export const NotificationButton = renderOnClient(
         <SheetContent className="mr-3 mt-3 flex h-[calc(100vh-1.5rem)] flex-col overflow-hidden rounded-lg">
           <SheetHeader className="text-left">
             <SheetTitle>Notifications</SheetTitle>
-            <SheetDescription>
-              {["AGENCY_ADMIN", "AGENCY_OWNER"].includes(user?.role ?? "") && (
-                <span className=" flex items-center justify-between rounded-xl border bg-card p-4 text-card-foreground shadow">
-                  Current Subaccount
-                  <Switch onCheckedChange={handleClick} />
-                </span>
-              )}
-            </SheetDescription>
+            {["AGENCY_OWNER", "AGENCY_ADMIN"].includes(user?.role ?? "") ? (
+              <SheetDescription>
+                {["AGENCY_ADMIN", "AGENCY_OWNER"].includes(
+                  user?.role ?? "",
+                ) && (
+                  <span className=" flex items-center justify-between rounded-xl border bg-card p-4 text-card-foreground shadow">
+                    Current Subaccount
+                    <Switch
+                      onCheckedChange={handleClick}
+                      disabled={subAccountId === undefined}
+                    />
+                  </span>
+                )}
+              </SheetDescription>
+            ) : (
+              <VisuallyHidden.Root>
+                <SheetDescription>Sub Account Notifications</SheetDescription>
+              </VisuallyHidden.Root>
+            )}
           </SheetHeader>
           <ScrollArea className="flex-1 space-y-1.5">
             {filteredNotifications?.map((notification) => (
@@ -116,9 +131,12 @@ export const NotificationButton = renderOnClient(
               >
                 <div className="flex gap-3">
                   <Avatar>
-                    <AvatarImage src={user?.avatarUrl} alt="Profile Picture" />
+                    <AvatarImage
+                      src={notification?.user.avatarUrl}
+                      alt="Profile Picture"
+                    />
                     <AvatarFallback className="bg-primary">
-                      {nameInitials}
+                      {notification?.user.name}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col gap-1.5">

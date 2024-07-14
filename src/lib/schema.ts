@@ -124,6 +124,7 @@ export const GetUserDetailsSchema = z.object({
 
 export const GetUserNotificationsSchema = z.object({
   agencyId: z.string(),
+  subAccountId: z.string().optional()
 })
 
 export const GetAgencyAndPermissionsSchema = z.object({

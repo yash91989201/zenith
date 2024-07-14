@@ -329,8 +329,8 @@ export function AgencyDetails({ data }: AgencyDetailsProps) {
               </div>
             )}
 
-            <Button disabled={formState.isLoading}>
-              {formState.isLoading ? (
+            <Button disabled={formState.isSubmitting}>
+              {formState.isSubmitting ? (
                 <>
                   <ReloadIcon className="mr-2 size-4 animate-spin" />
                   Saving ...
