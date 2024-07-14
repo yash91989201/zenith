@@ -58,10 +58,14 @@ export const userRouter = createTRPCRouter({
       with: {
         agency: {
           with: {
-            sidebarOptions: true,
+            sidebarOptions: {
+              orderBy: (fields, { asc }) => asc(fields.order),
+            },
             subAccounts: {
               with: {
-                sidebarOptions: true
+                sidebarOptions: {
+                  orderBy: (fields, { asc }) => asc(fields.order),
+                }
               }
             }
           }

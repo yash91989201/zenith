@@ -93,12 +93,12 @@ export const agencyRouter = createTRPCRouter({
           if (updateUserAgencyQuery.affectedRows === 0) throw new Error()
 
           const [insertAgencySidebarOptionsQuery] = await trx.insert(AgencySidebarOptionTable).values([
-            { name: "Dashboard", icon: "category", link: `/agency/${agencyId}/`, agencyId },
-            { name: "Launchpad", icon: "clipboard", link: `/agency/${agencyId}/launchpad`, agencyId },
-            { name: "Billing", icon: "payment", link: `/agency/${agencyId}/billing`, agencyId },
-            { name: "Settings", icon: "settings", link: `/agency/${agencyId}/settings`, agencyId },
-            { name: "Sub Accounts", icon: "person", link: `/agency/${agencyId}/all-subaccounts`, agencyId },
-            { name: "Team", icon: "shield", link: `/agency/${agencyId}/team`, agencyId },
+            { name: "Dashboard", icon: "category", link: `/agency/${agencyId}/`, agencyId, order: 1 },
+            { name: "Launchpad", icon: "clipboard", link: `/agency/${agencyId}/launchpad`, agencyId, order: 2 },
+            { name: "Team", icon: "shield", link: `/agency/${agencyId}/team`, agencyId, order: 3 },
+            { name: "Sub Accounts", icon: "person", link: `/agency/${agencyId}/all-subaccounts`, agencyId, order: 4 },
+            { name: "Billing", icon: "payment", link: `/agency/${agencyId}/billing`, agencyId, order: 5 },
+            { name: "Settings", icon: "settings", link: `/agency/${agencyId}/settings`, agencyId, order: 6 },
           ])
 
           if (insertAgencySidebarOptionsQuery.affectedRows === 0) throw new Error()

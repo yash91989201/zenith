@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 // SCHEMAS
 import { UpsertSubAccountSchema } from "@/lib/schema";
 // UTILS
-import { wait } from "@/lib/utils";
+import { cn, wait } from "@/lib/utils";
 import { api } from "@/trpc/react";
 // TYPES
 import type {
@@ -41,6 +41,7 @@ type SubAccountDetailsProps = {
   userId: string;
   userName: string;
   closeModal?: () => void;
+  modalChild?: boolean;
 };
 
 export function SubAccountDetails({
@@ -48,6 +49,7 @@ export function SubAccountDetails({
   details,
   userName,
   closeModal,
+  modalChild,
 }: SubAccountDetailsProps) {
   const router = useRouter();
 
@@ -91,8 +93,8 @@ export function SubAccountDetails({
   };
 
   return (
-    <Card className="w-full">
-      <CardContent>
+    <Card className={cn(modalChild ? "border-none shadow-none" : "")}>
+      <CardContent className={cn(modalChild ? "p-0" : "")}>
         <Form {...agencyDetailsForm}>
           <form
             className="my-3 space-y-3"

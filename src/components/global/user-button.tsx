@@ -5,6 +5,7 @@ import { buttonVariants } from "@ui/button";
 // CUSTOM HOOKS
 import { useAuth } from "@/hooks/use-auth";
 import { useUser } from "@/hooks/use-user";
+import { useAccountModal } from "@/hooks/use-account-modal";
 // UI
 import {
   DropdownMenu,
@@ -17,7 +18,6 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@ui/avatar";
 // ICONS
 import { LogOut, Settings } from "lucide-react";
-import { useAccountModal } from "@/hooks/use-account-modal";
 
 type UserButtonProps = {
   signedOutFallback?: "SignInButton" | "None";
@@ -27,9 +27,8 @@ export function UserButton({
   signedOutFallback = "SignInButton",
 }: UserButtonProps) {
   const { signOut } = useAuth();
-  const { isSignedIn, user, nameInitials } = useUser();
-
   const { openModal } = useAccountModal();
+  const { isSignedIn, user, nameInitials } = useUser();
 
   if (isSignedIn) {
     return (

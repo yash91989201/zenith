@@ -1,11 +1,22 @@
-import { createGithubAuthUrl, createGoogleAuthUrl } from "@/server/actions/auth";
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
-import type { STORE_ENDPOINTS } from "@/lib/types";
+import { clsx } from "clsx"
 import { toast } from "sonner";
+import dynamic from "next/dynamic";
+import { twMerge } from "tailwind-merge"
+// UTILS
+import { createGithubAuthUrl, createGoogleAuthUrl } from "@/server/actions/auth";
+// TYPES
+import type { ClassValue } from "clsx"
+import type { STORE_ENDPOINTS } from "@/lib/types";
+import type { FunctionComponent, ReactElement } from "react";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
+}
+
+export function renderOnClient<T>(Component: FunctionComponent<T>, Loading: ReactElement | null) {
+  return dynamic(() => Promise.resolve(Component), {
+    ssr: false, loading: () => Loading
+  });
 }
 
 export function parseZodValidationErrors(validationErrors: Record<string, string[] | undefined>): Record<string, string | undefined> {

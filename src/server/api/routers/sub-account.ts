@@ -83,14 +83,14 @@ export const subAccountRouter = createTRPCRouter({
           if (createPipelineQuery.affectedRows === 0) throw new Error()
 
           const [createSubAccountSidebarOptionsQuery] = await trx.insert(SubAccountSidebarOptionTable).values([
-            { name: 'Launchpad', icon: 'clipboard', link: `/subaccount/${subAccountId}/launchpad`, subAccountId },
-            { name: 'Settings', icon: 'settings', link: `/subaccount/${subAccountId}/settings`, subAccountId },
-            { name: 'Funnels', icon: 'pipelines', link: `/subaccount/${subAccountId}/funnels`, subAccountId },
-            { name: 'Media', icon: 'database', link: `/subaccount/${subAccountId}/media`, subAccountId },
-            { name: 'Automations', icon: 'chip', link: `/subaccount/${subAccountId}/automations`, subAccountId },
-            { name: 'Pipelines', icon: 'flag', link: `/subaccount/${subAccountId}/pipelines`, subAccountId },
-            { name: 'Contacts', icon: 'person', link: `/subaccount/${subAccountId}/contacts`, subAccountId },
-            { name: 'Dashboard', icon: 'category', link: `/subaccount/${subAccountId}`, subAccountId },
+            { name: 'Dashboard', icon: 'category', link: `/subaccount/${subAccountId}`, subAccountId, order: 1 },
+            { name: 'Launchpad', icon: 'clipboard', link: `/subaccount/${subAccountId}/launchpad`, subAccountId, order: 2 },
+            { name: 'Funnels', icon: 'pipelines', link: `/subaccount/${subAccountId}/funnels`, subAccountId, order: 3 },
+            { name: 'Automations', icon: 'chip', link: `/subaccount/${subAccountId}/automations`, subAccountId, order: 4 },
+            { name: 'Pipelines', icon: 'flag', link: `/subaccount/${subAccountId}/pipelines`, subAccountId, order: 5 },
+            { name: 'Media', icon: 'database', link: `/subaccount/${subAccountId}/media`, subAccountId, order: 6 },
+            { name: 'Contacts', icon: 'person', link: `/subaccount/${subAccountId}/contacts`, subAccountId, order: 7 },
+            { name: 'Settings', icon: 'settings', link: `/subaccount/${subAccountId}/settings`, subAccountId, order: 8 },
           ])
 
           if (createSubAccountSidebarOptionsQuery.affectedRows === 0) throw new Error()

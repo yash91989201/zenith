@@ -22,6 +22,20 @@
       "when": 1720750325768,
       "tag": "0002_melted_rocket_raccoon",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1720958714310,
+      "tag": "0003_conscious_lifeguard",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1720958971625,
+      "tag": "0004_brief_the_fallen",
+      "breakpoints": true
     }
   ]
 }

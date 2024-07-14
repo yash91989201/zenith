@@ -26,8 +26,8 @@ services:
     ports:
       - "3306:3306"
     environment:
-      - MYSQL_DATABASE="zenith"
-      - MYSQL_ROOT_PASSWORD="2z8FDa4zDw4zNh06KemsDyWFOu2lR2FJ"
+      - MYSQL_DATABASE=zenith
+      - MYSQL_ROOT_PASSWORD=2z8FDa4zDw4zNh06KemsDyWFOu2lR2FJ
 
   storage:
     image: bitnami/minio:latest

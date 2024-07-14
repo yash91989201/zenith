@@ -489,6 +489,7 @@ export const AgencySidebarOptionTable = mysqlTable("agency_sidebar_option", {
   name: varchar("name", { length: 256 }).notNull(),
   link: text("link").notNull().default("#"),
   icon: IconEnum.notNull().default("info"),
+  order: int("order").notNull(),
   // FOREIGN KEY RELATIONS
   agencyId: varchar("agency_id", { length: 48 }).references(() => AgencyTable.id)
 }, (table) => ({
@@ -509,6 +510,7 @@ export const SubAccountSidebarOptionTable = mysqlTable("sub_account_sidebar_opti
   name: varchar("name", { length: 256 }).notNull(),
   link: text("link").notNull().default("#"),
   icon: IconEnum.notNull().default("info"),
+  order: int("order").notNull(),
   // FOREIGN KEY RELATIONS
   subAccountId: varchar("sub_account_id", { length: 48 }).references(() => SubAccountTable.id)
 }, (table) => ({

@@ -137,9 +137,13 @@ export function MenuOptions({
                                   className="rounded-md object-contain"
                                 />
                               </div>
-                              <div className="flex flex-col">
-                                {user?.agency?.name}
-                                <span>{user?.agency?.address}</span>
+                              <div className="flex flex-col gap-1">
+                                <span className="font-medium">
+                                  {user?.agency?.name}
+                                </span>
+                                <span className="text-xs text-muted-foreground">
+                                  {user?.agency?.address}
+                                </span>
                               </div>
                             </Link>
                           ) : (
@@ -156,9 +160,13 @@ export function MenuOptions({
                                     className="rounded-md object-contain"
                                   />
                                 </div>
-                                <div className="flex flex-col">
-                                  {user?.agency?.name}
-                                  <span>{user?.agency?.address}</span>
+                                <div className="flex flex-col gap-1">
+                                  <span className="font-medium">
+                                    {user?.agency?.name}
+                                  </span>
+                                  <span className="text-xs text-muted-foreground">
+                                    {user?.agency?.address}
+                                  </span>
                                 </div>
                               </Link>
                             </SheetClose>
@@ -183,9 +191,13 @@ export function MenuOptions({
                                   className="rounded-md object-contain"
                                 />
                               </div>
-                              <div className="flex flex-col">
-                                {subAccount.name}
-                                <span>{subAccount.address}</span>
+                              <div className="flex flex-col gap-1">
+                                <span className="font-medium">
+                                  {subAccount.name}
+                                </span>
+                                <span className="text-xs text-muted-foreground">
+                                  {subAccount.address}
+                                </span>
                               </div>
                             </Link>
                           ) : (
@@ -202,9 +214,13 @@ export function MenuOptions({
                                     className="rounded-md object-contain"
                                   />
                                 </div>
-                                <div className="flex flex-col">
-                                  {subAccount.name}
-                                  <span>{subAccount.address}</span>
+                                <div className="flex flex-col gap-1">
+                                  <span className="font-medium">
+                                    {subAccount.name}
+                                  </span>
+                                  <span className="text-xs text-muted-foreground">
+                                    {subAccount.address}
+                                  </span>
                                 </div>
                               </Link>
                             </SheetClose>
