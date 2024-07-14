@@ -6,19 +6,19 @@ import { and, eq, getTableColumns } from "drizzle-orm";
 // UTILS
 import { db } from "@/server/db";
 import { validateRequest } from "@/lib/auth";
+import { ProcedureError } from "@/lib/utils";
 // SCHEMAS
 import {
   UserTable,
   AgencyTable,
   SubAccountTable,
   InvitationTable,
-  NotificationTable,
   OAuthAccountTable,
+  NotificationTable,
 } from "@/server/db/schema";
 // TYPES
 import type { Readable } from "stream";
 import type { UserInsertType, UserType } from "@/lib/types";
-import { ProcedureError } from "@/lib/utils";
 
 const argon2id = new Argon2id();
 
@@ -172,7 +172,7 @@ export async function createTeamUser(user: UserInsertType): Promise<{ status: "S
     }
   }
 
-  const [createTeamUserQuery] = await db.insert(UserTable).values(user)
+  const [createTeamUserQuery] = await db.update(UserTable).set(user).where(eq(UserTable.email, user.email))
   if (createTeamUserQuery.affectedRows === 0) {
     return {
       status: "FAILED",
@@ -206,7 +206,7 @@ export async function verifyAndAcceptInvitation(user: UserType) {
 
     await saveActivityLog({
       agencyId: userInvitation?.agencyId ?? "",
-      activity: "Joined",
+      activity: "New user joined",
     })
 
     if (createTeamUserRes.status === "SUCCESS") {

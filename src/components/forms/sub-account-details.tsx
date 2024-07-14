@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,7 +27,6 @@ import {
   FormMessage,
 } from "@ui/form";
 import { Input } from "@ui/input";
-import { toast } from "@ui/use-toast";
 import { PhoneInput } from "@ui/phone-input";
 // CUSTOM COMOPNENTS
 import { InstantImageUpload } from "@global/instant-image-upload";
@@ -79,21 +79,14 @@ export function SubAccountDetails({
         subAccountId: upsertSubAccountResponse?.data?.id,
       });
 
-      toast({
-        title: "Subaccount details saved",
-        description: "Successfully saved your subaccount details.",
-      });
+      toast.success("Subaccount details saved");
 
       void wait(3);
 
       closeModal?.();
       router.refresh();
     } else {
-      toast({
-        variant: "destructive",
-        title: "Oppsie!",
-        description: "Could not save sub account details.",
-      });
+      toast.error("Unable to save account details");
     }
   };
 
@@ -238,10 +231,10 @@ export function SubAccountDetails({
                 </FormItem>
               )}
             />
-            <Button disabled={formState.isLoading}>
-              {formState.isLoading ? (
+            <Button disabled={formState.isSubmitting}>
+              {formState.isSubmitting ? (
                 <>
-                  <ReloadIcon className="mr-2 size-4 animate-spin" />
+                  <ReloadIcon className="mr-3 size-4 animate-spin" />
                   Saving ...
                 </>
               ) : (

@@ -45,24 +45,27 @@ import { SubAccountsPermission } from "@/components/forms/user-details/sub-accou
 import { Loader2 } from "lucide-react";
 // CONSTANTS
 import { MAX_FILE_SIZE } from "@/constants";
+import { cn } from "@/lib/utils";
 
 type UserDetailsProps = {
   type: "agency" | "subaccount";
   subAccounts?: SubAccountType[];
-  userData: Partial<UserType>;
-  id: string | null;
+  user: Partial<UserType>;
+  onClose?: () => void;
+  modalChild?: boolean;
 };
 
 export function UserDetails({
-  id,
   type,
   subAccounts,
-  userData,
+  user,
+  onClose,
+  modalChild = false,
 }: UserDetailsProps) {
-  const { mutateAsync: updateById } = api.user.updateById.useMutation();
+  const { mutateAsync: updateUserById } = api.user.updateById.useMutation();
 
   const updateUserDetailsForm = useForm<UpdateUserDetailsType>({
-    defaultValues: userData,
+    defaultValues: user,
     resolver: zodResolver(UpdateUserDetailsSchema),
   });
 
@@ -71,27 +74,28 @@ export function UserDetails({
   const updateUserDetailsAction: SubmitHandler<UpdateUserDetailsType> = async (
     formData,
   ) => {
-    if (!id) return;
+    if (!user?.id) return;
 
-    const updateByIdRes = await updateById({
-      id,
+    const updateByIdRes = await updateUserById({
+      id: user.id,
       ...formData,
     });
 
     if (updateByIdRes.status === "SUCCESS") {
       toast.success(updateByIdRes.message);
+      modalChild && onClose?.();
     } else {
       toast.error(updateByIdRes.message);
     }
   };
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className={cn(modalChild ? "border-none shadow-none" : "")}>
+      <CardHeader className={cn(modalChild ? "p-3" : "")}>
         <CardTitle>User details</CardTitle>
         <CardDescription>update your information</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className={cn(modalChild ? "p-3" : "")}>
         <Form {...updateUserDetailsForm}>
           <form
             className="space-y-3"
@@ -105,6 +109,7 @@ export function UserDetails({
                   <FormLabel>Profile picture</FormLabel>
                   <FormControl>
                     <InstantImageUpload
+                      userId={user?.id}
                       value={field.value}
                       onChange={field.onChange}
                       uploadEndpoint="/api/file/profile"
@@ -118,7 +123,6 @@ export function UserDetails({
                 </FormItem>
               )}
             />
-
             <FormField
               control={control}
               name="name"
@@ -174,7 +178,7 @@ export function UserDetails({
                     disabled={field.value === "AGENCY_OWNER"}
                   >
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="min-w-48">
                         <SelectValue placeholder="Select user role" />
                       </SelectTrigger>
                     </FormControl>
@@ -200,7 +204,11 @@ export function UserDetails({
             </Button>
 
             {subAccounts && subAccounts?.length > 0 && (
-              <SubAccountsPermission subAccounts={subAccounts} type={type} />
+              <SubAccountsPermission
+                user={user}
+                type={type}
+                subAccounts={subAccounts}
+              />
             )}
           </form>
         </Form>

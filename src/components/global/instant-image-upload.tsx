@@ -34,6 +34,7 @@ type InputProps = {
   uploadEndpoint: STORE_ENDPOINTS;
   onChange?: (url?: string) => void | Promise<void>;
   disabled?: boolean;
+  userId?: string;
   dropzoneOptions?: Omit<DropzoneOptions, "disabled">;
 };
 
@@ -55,6 +56,7 @@ const ERROR_MESSAGES = {
 const InstantImageUpload = React.forwardRef<HTMLInputElement, InputProps>(
   (
     {
+      userId,
       dropzoneOptions,
       width,
       height,
@@ -68,6 +70,7 @@ const InstantImageUpload = React.forwardRef<HTMLInputElement, InputProps>(
   ) => {
     const { uploadFile, error, isUploading, progress } = useFileUpload({
       endpoint: uploadEndpoint,
+      userId,
     });
     // dropzone configuration
     const {

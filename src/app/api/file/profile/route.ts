@@ -42,6 +42,7 @@ export async function POST(req: NextRequest) {
 
     const formData = await req.formData()
     const profileImage = formData.get("file") as File
+    const userId = formData.get("userId") as string | null
     const profileImageArrayBuffer = await profileImage.arrayBuffer()
 
     const fileName = `${createId()}.${getFileExtension(profileImage)}`
@@ -56,7 +57,7 @@ export async function POST(req: NextRequest) {
 
     const [updateUserProfileQuery] = await db.update(UserTable).set({
       avatarUrl: fileUrl,
-    }).where(eq(UserTable.id, user.id))
+    }).where(eq(UserTable.id, userId ?? user.id))
 
     if (updateUserProfileQuery.affectedRows === 0) {
       throw new Error("Unable to upload profile image")
@@ -79,6 +80,7 @@ export async function DELETE(req: NextRequest) {
 
     const formData = await req.formData()
     const file = formData.get("file") as string | null
+    const userId = formData.get("userId") as string | null
 
     if (!file) throw new Error("File is required")
 
@@ -107,7 +109,7 @@ export async function DELETE(req: NextRequest) {
     await db.update(UserTable).set({
       avatarUrl: fileUrl
     })
-      .where(eq(UserTable.id, user.id))
+      .where(eq(UserTable.id, userId ?? user.id))
 
     return Response.json({ status: "SUCCESS", message: "Avatar image deleted", fileUrl }, { status: 200 })
   } catch (error) {

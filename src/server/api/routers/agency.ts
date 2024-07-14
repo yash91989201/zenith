@@ -1,14 +1,24 @@
 import { eq } from "drizzle-orm";
+import { createId } from "@paralleldrive/cuid2";
 // DB SCHEMAS
-import { AgencySidebarOptionTable, AgencyTable, UserTable } from "@/server/db/schema";
+import {
+  UserTable,
+  AgencyTable,
+  AgencySidebarOptionTable,
+} from "@/server/db/schema";
 // SCHEMAS
-import { DeleteAgencySchema, GetAgencyById, InitUserProcedureSchema, UpdateAgencyGoalSchema, UpsertAgencyProcedureSchema } from "@/lib/schema";
+import {
+  GetAgencyById,
+  DeleteAgencySchema,
+  UpdateAgencyGoalSchema,
+  InitUserProcedureSchema,
+  UpsertAgencyProcedureSchema,
+} from "@/lib/schema";
 // UTILS
+import { procedureError } from "@/server/helpers";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 // TYPES
 import type { DeleteAgencyType, InitUserProcedureType, UpdateAgencyGoalType, UpsetAgencyProcedureType } from "@/lib/types";
-import { createId } from "@paralleldrive/cuid2";
-import { procedureError } from "@/server/helpers";
 
 export const agencyRouter = createTRPCRouter({
 
@@ -88,6 +98,7 @@ export const agencyRouter = createTRPCRouter({
             { name: "Billing", icon: "payment", link: `/agency/${agencyId}/billing`, agencyId },
             { name: "Settings", icon: "settings", link: `/agency/${agencyId}/settings`, agencyId },
             { name: "Sub Accounts", icon: "person", link: `/agency/${agencyId}/all-subaccounts`, agencyId },
+            { name: "Team", icon: "shield", link: `/agency/${agencyId}/team`, agencyId },
           ])
 
           if (insertAgencySidebarOptionsQuery.affectedRows === 0) throw new Error()

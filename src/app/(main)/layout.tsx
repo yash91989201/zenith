@@ -2,6 +2,7 @@ import type React from "react";
 // UTILS
 import { validateRequest } from "@/lib/auth";
 // CUSTOM COMPONENTS
+import { HydrateClient } from "@/trpc/server";
 import { SessionProvider } from "@providers/session-provider";
 
 export default async function MainLayout({
@@ -11,5 +12,9 @@ export default async function MainLayout({
 }) {
   const user = await validateRequest();
 
-  return <SessionProvider user={user}>{children}</SessionProvider>;
+  return (
+    <SessionProvider user={user}>
+      <HydrateClient>{children}</HydrateClient>
+    </SessionProvider>
+  );
 }

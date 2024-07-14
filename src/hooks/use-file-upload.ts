@@ -7,6 +7,7 @@ import type { AxiosError, AxiosProgressEvent } from 'axios';
 
 type UseFileUploadProps = {
   endpoint: string;
+  userId?: string;
 }
 
 type UseFileUploadReturn = {
@@ -47,6 +48,7 @@ export const useFileUpload = (props: UseFileUploadProps): UseFileUploadReturn =>
 
     const formData = new FormData();
     formData.append('file', file);
+    props.userId && formData.append("userId", props.userId)
 
     try {
       const uploadResponse = await axios.post<FileUploadStatus>(`${env.NEXT_PUBLIC_URL}${endpoint}`, formData, {
@@ -85,7 +87,7 @@ export const useFileUpload = (props: UseFileUploadProps): UseFileUploadReturn =>
     } finally {
       setIsUploading(false);
     }
-  }, [endpoint]);
+  }, [endpoint, props.userId]);
 
   const reset = useCallback(() => {
     setProgress(0);

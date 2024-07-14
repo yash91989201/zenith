@@ -5,8 +5,8 @@ import { validateRequest } from "@/lib/auth";
 // TYPES
 import type { ReactNode } from "react";
 // CUSTOM COMPONENTS
-import InfoBar from "@global/Infobar";
 import BlurPage from "@global/blur-page";
+import { InfoBar } from "@global/info-bar";
 import { Sidebar } from "@/components/sidebar";
 import { AccountModal } from "@global/account-modal";
 import { AccountModalProvider } from "@providers/account-modal-provider";
@@ -29,16 +29,14 @@ export default async function AgencyLayout({
     return redirect("/agency/unauthorized");
   }
 
-  const notifications = await api.user.getNotifications({
-    agencyId,
-  });
+  void api.user.getNotifications.prefetch({ agencyId });
 
   return (
     <>
       <Sidebar id={agencyId} type="agency" />
       <main className="md:pl-80">
         <AccountModalProvider>
-          <InfoBar notifications={notifications} />
+          <InfoBar />
           <AccountModal />
         </AccountModalProvider>
         <div className="relative">

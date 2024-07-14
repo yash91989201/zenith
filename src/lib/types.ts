@@ -72,6 +72,9 @@ import type {
   UpdateUserDetailsSchema,
   UpsertSubAccountPermissionSchema,
   UpdateUserByIdSchema,
+  DeleteSubAccountByIdSchema,
+  DeleteUserSchema,
+  InviteUserSchema,
 } from "@lib/schema"
 
 // DB TABLE TYPES
@@ -150,6 +153,8 @@ export type DeleteOAuthAccountType = z.infer<typeof DeleteOAuthAccountSchema>
 export type DeleteSessionType = z.infer<typeof DeleteSessionSchema>
 export type UpdateUserDetailsType = z.infer<typeof UpdateUserDetailsSchema>
 export type UpdateUserByIdType = z.infer<typeof UpdateUserByIdSchema>
+export type InviteUserType = z.infer<typeof InviteUserSchema>
+export type DeleteUserType = z.infer<typeof DeleteUserSchema>
 
 // agency form schema types
 export type UpsetAgencyProcedureType = z.infer<typeof UpsertAgencyProcedureSchema>
@@ -162,10 +167,21 @@ export type InitUserProcedureType = z.infer<typeof InitUserProcedureSchema>
 export type UpsertSubAccountType = z.infer<typeof UpsertSubAccountSchema>
 export type UpsertSubaccountProcedureType = z.infer<typeof UpsertSubaccountProcedureSchema>
 export type UpsertSubAccountPermissionType = z.infer<typeof UpsertSubAccountPermissionSchema>
+export type DeleteSubAccountByIdType = z.infer<typeof DeleteSubAccountByIdSchema>
 
 // notification
 export type SaveAvtivityLogType = z.infer<typeof SaveActivityLogSchema>
 export type MarkNotificationsReadType = z.infer<typeof MarkNotificationsReadSchema>
+
+// TABLE TYPES
+export type TeamTableType = UserType & {
+  agency: AgencyType & {
+    subAccounts: SubAccountType[]
+  } | null;
+  permissions: (PermissionType & {
+    subAccount: SubAccountType | null
+  })[];
+}
 
 // OAUTH USER TYPES
 export type GoogleUserType = {

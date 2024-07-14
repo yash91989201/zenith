@@ -46,6 +46,17 @@ services:
       timeout: 20s
       retries: 3
 
+  ws:
+    image: quay.io/soketi/soketi:latest-16-alpine
+    container_name: ws
+    ports:
+      - "6001:6001"
+      - "9061:9061"
+    environment:
+      - DEFAULT_APP_ID=7Z1W9P4xg4C0sg
+      - DEFAULT_APP_KEY=f1f6LQMWJ0CLsR
+      - DEFAULT_APP_SECRET=DyWFOu2lR2FJ6LQMWJ07Z1W
+
 volumes:
   mysql_data:
   minio_data:

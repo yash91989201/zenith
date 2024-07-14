@@ -9,7 +9,7 @@ type SidebarProps = {
 };
 
 export async function Sidebar({ id, type }: SidebarProps) {
-  const user = await api.user.getDetails();
+  const user = await api.user.getDetails({});
 
   if (!user) return;
   if (!user.agencyId) return;

@@ -1,9 +1,11 @@
 import "@/styles/globals.css";
 
 import { DM_Sans } from "next/font/google";
-import { ThemeProvider } from "@providers/theme-provider";
-import { Toaster } from "@/components/ui/sonner";
+// PROVIDERS
 import { TRPCReactProvider } from "@/trpc/react";
+import { ThemeProvider } from "@providers/theme-provider";
+// UI
+import { Toaster } from "@ui/sonner";
 
 export const metadata = {
   title: "Zenith",
@@ -31,7 +33,7 @@ export default function RootLayout({
             {children}
           </ThemeProvider>
         </TRPCReactProvider>
-        <Toaster richColors theme="light" />
+        <Toaster />
       </body>
     </html>
   );

@@ -510,7 +510,7 @@ export const SubAccountSidebarOptionTable = mysqlTable("sub_account_sidebar_opti
   link: text("link").notNull().default("#"),
   icon: IconEnum.notNull().default("info"),
   // FOREIGN KEY RELATIONS
-  subAccountId: varchar("sub_account_id", { length: 48 }).references(() => AgencyTable.id)
+  subAccountId: varchar("sub_account_id", { length: 48 }).references(() => SubAccountTable.id)
 }, (table) => ({
   subAccountIdIdx: index("sub_account_id_idx").on(table.subAccountId)
 }))

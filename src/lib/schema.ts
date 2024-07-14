@@ -118,8 +118,16 @@ export const DeleteSessionSchema = z.object({
   current: z.boolean()
 })
 
+export const GetUserDetailsSchema = z.object({
+  id: z.string().optional(),
+})
+
 export const GetUserNotificationsSchema = z.object({
   agencyId: z.string(),
+})
+
+export const GetAgencyAndPermissionsSchema = z.object({
+  agencyId: z.string()
 })
 
 export const UpdateUserByIdSchema = UserSchema.pick({
@@ -134,6 +142,17 @@ export const UpdateUserDetailsSchema = UserSchema.pick({
   email: true,
   avatarUrl: true,
   role: true
+})
+
+export const InviteUserSchema = z.object({
+  agencyId: z.string(),
+  name: z.string().min(6, { message: "Full name is required" }),
+  email: z.string().email(),
+  role: z.enum(["AGENCY_ADMIN", "SUBACCOUNT_USER", "SUBACCOUNT_GUEST"]),
+})
+
+export const DeleteUserSchema = z.object({
+  userId: z.string(),
 })
 
 // AGENCY SCHEMA
@@ -170,6 +189,13 @@ export const DeleteAgencySchema = z.object({
 export const InitUserProcedureSchema = UserSchema.partial()
 
 // SUBACCOUNT SCHEMAS
+export const GetSubAccountByIdSchema = z.object({
+  id: z.string()
+})
+export const DeleteSubAccountByIdSchema = z.object({
+  id: z.string()
+})
+
 export const UpsertSubAccountSchema = z.object({
   name: z.string(),
   companyEmail: z.string(),

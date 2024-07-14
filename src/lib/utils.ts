@@ -1,8 +1,8 @@
-import { toast } from "@ui/use-toast";
 import { createGithubAuthUrl, createGoogleAuthUrl } from "@/server/actions/auth";
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 import type { STORE_ENDPOINTS } from "@/lib/types";
+import { toast } from "sonner";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -60,10 +60,7 @@ export const OAuthAccountConnect = {
       if (res.status === "success") {
         window.location.href = res.authorizationUrl;
       } else {
-        toast({
-          variant: "destructive",
-          description: res.error,
-        });
+        toast.success(res.error)
       }
     },
   },
@@ -73,10 +70,7 @@ export const OAuthAccountConnect = {
       if (res.status === "success") {
         window.location.href = res.authorizationUrl;
       } else {
-        toast({
-          variant: "destructive",
-          description: res.error,
-        });
+        toast.error(res.error)
       }
     },
   }

@@ -41,7 +41,7 @@ import {
 import { Input } from "@ui/input";
 import { Button } from "@ui/button";
 import { Switch } from "@ui/switch";
-import { toast } from "@ui/use-toast";
+import { toast } from "sonner";
 import { PhoneInput } from "@ui/phone-input";
 import { NumberInput } from "@ui/number-input";
 // CUSTOM COMOPNENTS
@@ -58,6 +58,7 @@ type AgencyDetailsProps = {
 export function AgencyDetails({ data }: AgencyDetailsProps) {
   const router = useRouter();
   const deleteAgencyDialog = useToggle(false);
+  const apiUtils = api.useUtils();
 
   const { mutateAsync: updateAgencyGoal, isPending: updatingAgency } =
     api.agency.updateAgencyGoal.useMutation();
@@ -87,19 +88,15 @@ export function AgencyDetails({ data }: AgencyDetailsProps) {
       }
       await initUser({ role: "AGENCY_OWNER" });
       if (!data?.id) {
-        const upsertAgencyActionRes = await upsertAgency({
+        const actionRes = await upsertAgency({
           ...formData,
           price: { price: "" },
         });
-        if (upsertAgencyActionRes.status === "SUCCESS") {
-          toast({
-            title: "Your agency has been created.",
-          });
+        if (actionRes.status === "SUCCESS") {
+          toast.success(actionRes.message);
           router.refresh();
         } else {
-          toast({
-            title: "Unable to create agency please try again.",
-          });
+          toast.error(actionRes.message);
         }
       }
     } catch (error) {}
@@ -109,17 +106,23 @@ export function AgencyDetails({ data }: AgencyDetailsProps) {
     evt: React.ChangeEvent<HTMLInputElement>,
   ) => {
     if (!data?.id) return;
-    console.log("update agency goal");
-    await updateAgencyGoal({
+    const actionRes = await updateAgencyGoal({
       goal: Number(evt.target.value),
       agencyId: data.id,
     });
 
-    await saveActivityLog({
-      agencyId: data.id,
-      activity: `Updated the agency goal to | ${evt.target.value} Sub Account`,
-    });
-    router.refresh();
+    if (actionRes.status === "SUCCESS") {
+      await saveActivityLog({
+        agencyId: data.id,
+        activity: `Updated the agency goal to | ${evt.target.value} Sub Account`,
+      });
+      toast.success(actionRes.message);
+
+      await apiUtils.user.getNotifications.invalidate();
+      router.refresh();
+    } else {
+      toast.error(actionRes.message);
+    }
   };
 
   const deleteAgencyAction = async (agencyId?: string) => {
@@ -127,21 +130,15 @@ export function AgencyDetails({ data }: AgencyDetailsProps) {
 
     const actionRes = await deleteAgency({ agencyId });
     if (actionRes.status === "SUCCESS") {
-      toast({
-        title: "Agency deleted",
-        description: "Delete your agency and all sub accounts",
-      });
+      toast.success(actionRes.message);
       router.refresh();
     } else if (actionRes.status === "FAILED") {
-      toast({
-        title: "Agency not deleted",
-        description: "Unable to delete your agency, try again",
-      });
+      toast.error(actionRes.message);
     }
   };
 
   return (
-    <Card className="w-full">
+    <Card>
       <CardHeader>
         <CardTitle>Agency information</CardTitle>
         <CardDescription>

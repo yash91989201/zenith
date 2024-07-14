@@ -9,14 +9,18 @@ import {
   SubAccountSidebarOptionTable,
 } from "@/server/db/schema";
 // SCHEMAS
-import { UpsertSubAccountPermissionSchema, UpsertSubaccountProcedureSchema } from "@/lib/schema";
+import { DeleteSubAccountByIdSchema, GetSubAccountByIdSchema, UpsertSubAccountPermissionSchema, UpsertSubaccountProcedureSchema } from "@/lib/schema";
 // UTILS
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 // TYPES
-import type { UpsertSubAccountPermissionType, UpsertSubaccountProcedureType } from "@/lib/types";
+import type { DeleteSubAccountByIdType, UpsertSubAccountPermissionType, UpsertSubaccountProcedureType } from "@/lib/types";
 import { procedureError } from "@/server/helpers";
 
 export const subAccountRouter = createTRPCRouter({
+  getById: protectedProcedure.input(GetSubAccountByIdSchema).query(({ ctx, input }) => {
+    return ctx.db.query.SubAccountTable.findFirst({ where: eq(SubAccountTable.id, input.id) })
+  }),
+
   upsertSubAccount: protectedProcedure.input(UpsertSubaccountProcedureSchema).mutation(async ({ ctx, input: subaccount }): ProcedureStatus<UpsertSubaccountProcedureType> => {
     try {
 
@@ -28,7 +32,6 @@ export const subAccountRouter = createTRPCRouter({
       })
 
       if (!agencyOwner) throw new Error("Un-authorized: not agency owner")
-
 
       const subAccountExists = await ctx.db
         .query.
@@ -60,6 +63,7 @@ export const subAccountRouter = createTRPCRouter({
           const subAccountId = createId()
           const permissionId = createId()
           const [createSubaccountQuery] = await trx.insert(SubAccountTable).values({ id: subAccountId, ...subaccount })
+
           if (createSubaccountQuery.affectedRows === 0) throw new Error()
 
           const [createPermissionQuery] = await trx.insert(PermissionTable).values({
@@ -92,7 +96,6 @@ export const subAccountRouter = createTRPCRouter({
           if (createSubAccountSidebarOptionsQuery.affectedRows === 0) throw new Error()
 
           return subAccountId;
-
         } catch (error) {
           trx.rollback()
           throw new Error("Unable to create subaccount")
@@ -137,7 +140,6 @@ export const subAccountRouter = createTRPCRouter({
 
       if (createPermissionQueery.affectedRows === 0) throw new Error("Unable to create sub account permission")
 
-
       return {
         status: "SUCCESS",
         message: "User sub account permission updated"
@@ -145,5 +147,59 @@ export const subAccountRouter = createTRPCRouter({
     } catch (error) {
       return procedureError(error)
     }
-  })
+  }),
+
+  deleteSubAccount: protectedProcedure.input(DeleteSubAccountByIdSchema).mutation(async ({ ctx, input }): ProcedureStatus<DeleteSubAccountByIdType> => {
+    try {
+
+      const deleteSubAccountRes = await ctx.db.transaction(async (trx): ProcedureStatus<DeleteSubAccountByIdType> => {
+        try {
+          const [deleteSubAccountQuery] = await trx.delete(SubAccountTable).where(eq(SubAccountTable.id, input.id))
+          if (deleteSubAccountQuery.affectedRows === 0) throw new Error("Unable to delete sub account")
+
+          // const [deleteSubAccountTags] = await trx.delete(TagTable).where(eq(TagTable.subAccountId, input.id))
+          // if (deleteSubAccountTags.affectedRows === 0) throw new Error("Unable to delete sub account")
+
+          // const [deleteSubAccountMedia] = await trx.delete(TagTable).where(eq(TagTable.subAccountId, input.id))
+          // if (deleteSubAccountMedia.affectedRows === 0) throw new Error("Unable to delete sub account")
+
+          // const [deleteSubAccountFunnels] = await trx.delete(TagTable).where(eq(TagTable.subAccountId, input.id))
+          // if (deleteSubAccountFunnels.affectedRows === 0) throw new Error("Unable to delete sub account")
+
+          // const [deleteSubAccountContacts] = await trx.delete(TagTable).where(eq(TagTable.subAccountId, input.id))
+          // if (deleteSubAccountContacts.affectedRows === 0) throw new Error("Unable to delete sub account")
+
+          // const [deleteSubAccountTriggers] = await trx.delete(TagTable).where(eq(TagTable.subAccountId, input.id))
+          // if (deleteSubAccountTriggers.affectedRows === 0) throw new Error("Unable to delete sub account")
+
+          // const [deleteSubAccountPipelines] = await trx.delete(TagTable).where(eq(TagTable.subAccountId, input.id))
+          // if (deleteSubAccountPipelines.affectedRows === 0) throw new Error("Unable to delete sub account")
+
+          // const [deleteSubAccountPermissions] = await trx.delete(TagTable).where(eq(TagTable.subAccountId, input.id))
+          // if (deleteSubAccountPermissions.affectedRows === 0) throw new Error("Unable to delete sub account")
+
+          // const [deleteSubAccountAutomations] = await trx.delete(TagTable).where(eq(TagTable.subAccountId, input.id))
+          // if (deleteSubAccountAutomations.affectedRows === 0) throw new Error("Unable to delete sub account")
+
+          // const [deleteSubAccountNotifications] = await trx.delete(TagTable).where(eq(TagTable.subAccountId, input.id))
+          // if (deleteSubAccountNotifications.affectedRows === 0) throw new Error("Unable to delete sub account")
+
+          // const [deleteSubAccountSidebarOptions] = await trx.delete(TagTable).where(eq(TagTable.subAccountId, input.id))
+          // if (deleteSubAccountSidebarOptions.affectedRows === 0) throw new Error("Unable to delete sub account")
+
+          return {
+            status: "SUCCESS",
+            message: "Deleted subaccount and related resources"
+          }
+        } catch (error) {
+          trx.rollback()
+          return procedureError(error)
+        }
+      })
+
+      return deleteSubAccountRes
+    } catch (error) {
+      return procedureError(error)
+    }
+  }),
 });

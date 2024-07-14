@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
 // TYPES
-import type { NotificationType, UserType } from "@/lib/types";
+import type { UserType } from "@/lib/types";
 // CUSTOM HOOKS
 import { useUser } from "@/hooks/use-user";
 // UI
@@ -27,19 +27,23 @@ import { ThemeToggle } from "@global/theme-toggle";
 import { Bell, Loader2 } from "lucide-react";
 
 type Props = {
-  notifications: NotificationType[];
   role?: UserType["role"];
   className?: string;
   subAccountId?: string;
 };
 
-const InfoBar = ({ notifications, subAccountId, className }: Props) => {
+export const InfoBar = ({ subAccountId, className }: Props) => {
   const { user, nameInitials } = useUser();
   const [showAll, setShowAll] = useState(true);
   const [showRead, setShowRead] = useState(false);
 
   const { mutateAsync: markAllAsRead, isPending: markingAllAsRead } =
     api.notification.markAllAsRead.useMutation();
+
+  const { data: notifications = [], refetch: refetchNotifications } =
+    api.user.getNotifications.useQuery({
+      agencyId: user?.agencyId ?? "",
+    });
 
   const filteredNotifications = useMemo(() => {
     const currentNotifications = showAll
@@ -53,20 +57,19 @@ const InfoBar = ({ notifications, subAccountId, className }: Props) => {
     );
   }, [showAll, notifications, subAccountId, showRead]);
 
-  const notificationIds = useMemo(() => {
-    const currentNotifications = showAll
-      ? notifications
-      : notifications?.filter((item) => item.subAccountId === subAccountId) ??
-        [];
-    return currentNotifications.map((notification) => notification.id);
-  }, [showAll, notifications, subAccountId]);
-
   const handleClick = () => {
     setShowAll((prev) => !prev);
   };
 
   const markAllAsReadAction = async () => {
-    await markAllAsRead({ notificationIds });
+    const markAllAsReadRes = await markAllAsRead({
+      notificationIds: notifications
+        .filter((notification) => !notification.read)
+        .map((notification) => notification.id),
+    });
+    if (markAllAsReadRes.status === "SUCCESS") {
+      await refetchNotifications();
+    }
   };
 
   const toggleShowReadNotifications = () => {
@@ -186,5 +189,3 @@ const InfoBar = ({ notifications, subAccountId, className }: Props) => {
     </div>
   );
 };
-
-export default InfoBar;

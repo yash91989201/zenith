@@ -20,12 +20,7 @@ export default async function SettingsPage({
 
   return (
     <div className="flex flex-col gap-3">
-      <UserDetails
-        type="agency"
-        id={params.agencyId}
-        subAccounts={agency.subAccounts}
-        userData={user}
-      />
+      <UserDetails type="agency" user={user} subAccounts={agency.subAccounts} />
       <AgencyDetails data={agency} />
     </div>
   );

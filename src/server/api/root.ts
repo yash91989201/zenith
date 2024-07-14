@@ -4,6 +4,7 @@ import { agencyRouter } from "@/server/api/routers/agency";
 import { notificationRouter } from "@/server/api/routers/notification";
 import { subAccountRouter } from "@/server/api/routers/sub-account";
 import { userRouter } from "@/server/api/routers/user";
+import { adminRouter } from "@/server/api/routers/admin";
 
 /**
  * This is the primary router for your server.
@@ -15,6 +16,7 @@ export const appRouter = createTRPCRouter({
   agency: agencyRouter,
   subAccount: subAccountRouter,
   notification: notificationRouter,
+  admin: adminRouter
 });
 
 // export type definition of API

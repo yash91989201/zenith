@@ -1,34 +1,22 @@
 import * as React from "react";
-
+// UTILS
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+// UI
+import { Button } from "@ui/button";
+// ICONS
 import { Minus, Plus } from "lucide-react";
 
 export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
-  isPending?: boolean;
-}
+  extends React.InputHTMLAttributes<HTMLInputElement> {}
 
 const NumberInput = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type = "number", ...props }, ref) => {
-    const [value, setValue] = React.useState<number>(
-      props.value ? Number(props.value) : 1,
-    );
-
     const handleIncrement = () => {
-      setValue((prevValue) => {
-        const newValue = prevValue + 1;
-        triggerChange(newValue);
-        return newValue;
-      });
+      triggerChange(Number(props.value) + 1);
     };
 
     const handleDecrement = () => {
-      setValue((prevValue) => {
-        const newValue = prevValue > 1 ? prevValue - 1 : 1;
-        triggerChange(newValue);
-        return newValue;
-      });
+      triggerChange(Number(props.value) - 1);
     };
 
     const triggerChange = (newValue: number) => {
@@ -48,7 +36,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, InputProps>(
             "hide-input-spinner flex w-full flex-1 border-none bg-transparent px-3 py-1 text-sm shadow-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
             className,
           )}
-          value={value.toString()}
+          value={props.value}
           min={1}
           ref={ref}
           readOnly
@@ -67,7 +55,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, InputProps>(
           variant="ghost"
           size="icon"
           type="button"
-          disabled={value === 1 || props.disabled === true}
+          disabled={props.value === 1 || props.disabled === true}
           onClick={handleDecrement}
         >
           <Minus className="size-4" />

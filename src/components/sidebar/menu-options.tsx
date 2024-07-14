@@ -103,7 +103,7 @@ export function MenuOptions({
                   <Compass />
                   <div className="flex flex-col">
                     <SheetTitle>{details.name}</SheetTitle>
-                    <SheetDescription className="w-full break-words text-xs text-muted-foreground">
+                    <SheetDescription className="text-xs text-muted-foreground">
                       {details.address}
                     </SheetDescription>
                   </div>

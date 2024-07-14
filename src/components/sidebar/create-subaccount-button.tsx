@@ -1,4 +1,6 @@
+"use client";
 // UTILS
+import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
 // TYPES
 import type { AgencyType } from "@/lib/types";
@@ -19,14 +21,17 @@ import { SubAccountDetails } from "@forms/sub-account-details";
 import { PlusCircleIcon } from "lucide-react";
 import { ReloadIcon } from "@radix-ui/react-icons";
 
-export function CreateSubAccountButton() {
+export function CreateSubAccountButton({ className }: { className?: string }) {
   const createSubAccountModal = useToggle(false);
 
-  const { data, isLoading } = api.user.getDetails.useQuery();
+  const { data, isLoading } = api.user.getDetails.useQuery({});
 
   return (
     <>
-      <Button className="gap-3" onClick={createSubAccountModal.open}>
+      <Button
+        className={cn("gap-3", className)}
+        onClick={createSubAccountModal.open}
+      >
         <PlusCircleIcon className="size-5 " />
         Create Subaccount
       </Button>

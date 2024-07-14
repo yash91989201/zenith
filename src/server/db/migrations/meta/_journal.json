@@ -15,6 +15,13 @@
       "when": 1720674908587,
       "tag": "0001_small_gamma_corps",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1720750325768,
+      "tag": "0002_melted_rocket_raccoon",
+      "breakpoints": true
     }
   ]
 }

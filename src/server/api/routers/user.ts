@@ -14,6 +14,9 @@ import {
   DeleteOAuthAccountSchema,
   GetUserNotificationsSchema,
   UpdateUserByIdSchema,
+  DeleteUserSchema,
+  GetUserDetailsSchema,
+  GetAgencyAndPermissionsSchema,
 } from "@/lib/schema";
 // UTILS
 import { env } from "@/env";
@@ -28,6 +31,7 @@ import type {
   UpdateUsernameType,
   DeleteOAuthAccountType,
   UpdateUserByIdType,
+  DeleteUserType,
 } from "@/lib/types";
 import { procedureError } from "@/server/helpers";
 
@@ -45,9 +49,9 @@ export const userRouter = createTRPCRouter({
     return ctx.db.query.OAuthAccountTable.findMany({ where: eq(OAuthAccountTable.userId, ctx.session.user.id) })
   }),
 
-  getDetails: protectedProcedure.query(({ ctx }) => {
+  getDetails: protectedProcedure.input(GetUserDetailsSchema).query(({ ctx, input }) => {
     return ctx.db.query.UserTable.findFirst({
-      where: eq(UserTable.id, ctx.session.user.id),
+      where: eq(UserTable.id, input.id ?? ctx.session.user.id),
       columns: {
         password: false
       },
@@ -65,6 +69,23 @@ export const userRouter = createTRPCRouter({
         permissions: true
       }
     })
+  }),
+
+  getAgencyAndPermissions: protectedProcedure.input(GetAgencyAndPermissionsSchema).query(({ ctx, input }) => {
+    return ctx.db.query.UserTable.findMany({
+      with: {
+        agency: {
+          with: {
+            subAccounts: true,
+          },
+        },
+        permissions: {
+          with: {
+            subAccount: true,
+          },
+        },
+      },
+    }).then((res) => res.filter((res) => res.agency?.id === input.agencyId));
   }),
 
   getNotifications: protectedProcedure.input(GetUserNotificationsSchema).query(({ ctx, input }) => {
@@ -211,6 +232,21 @@ export const userRouter = createTRPCRouter({
     return {
       status: "SUCCESS",
       message: "Session deleted successfully"
+    }
+  }),
+
+  delete: protectedProcedure.input(DeleteUserSchema).mutation(async ({ ctx, input }): ProcedureStatus<DeleteUserType> => {
+    try {
+      const [deleteUserQuery] = await ctx.db.delete(UserTable).where(eq(UserTable.id, input.userId))
+
+      if (deleteUserQuery.affectedRows === 0) throw new Error()
+
+      return {
+        status: "SUCCESS",
+        message: "Unable to delete user"
+      }
+    } catch (error) {
+      return procedureError(error)
     }
   })
 });
