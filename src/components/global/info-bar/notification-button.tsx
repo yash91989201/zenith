@@ -46,9 +46,11 @@ export const NotificationButton = renderOnClient(
       refetch: refetchNotifications,
     } = api.user.getNotifications.useQuery({
       agencyId: user?.agencyId ?? "",
-      subAccountId: ["AGENCY_OWNER", "AGENCY_ADMIN"].includes(user?.role ?? "")
-        ? subAccountId
-        : undefined,
+      subAccountId:
+        !["AGENCY_OWNER", "AGENCY_ADMIN"].includes(user?.role ?? "") &&
+        subAccountId
+          ? subAccountId
+          : undefined,
     });
 
     const filteredNotifications = useMemo(() => {
@@ -124,9 +126,9 @@ export const NotificationButton = renderOnClient(
             )}
           </SheetHeader>
           <ScrollArea className="flex-1 space-y-1.5">
-            {filteredNotifications?.map((notification) => (
+            {filteredNotifications?.map((notification, index) => (
               <div
-                key={notification.id}
+                key={index}
                 className="my-3 flex flex-col gap-3 text-ellipsis"
               >
                 <div className="flex gap-3">
@@ -152,7 +154,7 @@ export const NotificationButton = renderOnClient(
                       </span>
                     </p>
                     <small className="text-xs text-muted-foreground">
-                      {new Date(notification.createdAt).toLocaleDateString()}
+                      {new Date(notification.createdAt).toDateString()}
                     </small>
                   </div>
                 </div>

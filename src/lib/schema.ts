@@ -217,6 +217,18 @@ export const UpsertSubAccountPermissionSchema = z.object({
   permissionId: z.string().optional(),
 })
 
+// MEDIA SCHEMA
+export const GetSubAccountMediaSchema = z.object({
+  subAccountId: z.string()
+})
+
+export const SaveMediaDataSchema = z.object({
+  name: z.string(),
+  type: z.string(),
+  link: z.string().url(),
+  subAccountId: z.string()
+})
+
 // NOTIFICATION SCHEMAS
 export const SaveActivityLogSchema = z.object({
   activity: z.string(),

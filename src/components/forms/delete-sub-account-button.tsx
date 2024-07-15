@@ -30,7 +30,7 @@ export function DeleteSubAccountButton({
     if (deleteSubAccountRes.status === "SUCCESS") {
       await saveActivityLog({
         subAccountId,
-        activity: `Deleted '${subAccount.name}' sub account | ${user.name}`,
+        activity: `Deleted '${subAccount.name}' sub account`,
       });
       void wait(1);
       router.refresh();

@@ -39,7 +39,6 @@ type SubAccountDetailsProps = {
   agencyDetails: AgencyType;
   details?: Partial<SubAccountType>;
   userId: string;
-  userName: string;
   closeModal?: () => void;
   modalChild?: boolean;
 };
@@ -47,7 +46,6 @@ type SubAccountDetailsProps = {
 export function SubAccountDetails({
   agencyDetails,
   details,
-  userName,
   closeModal,
   modalChild,
 }: SubAccountDetailsProps) {
@@ -77,7 +75,7 @@ export function SubAccountDetails({
     if (upsertSubAccountResponse.status === "SUCCESS") {
       await saveActivityLog({
         agencyId: agencyDetails.id,
-        activity: `${userName} | updated sub account | ${formData.name}`,
+        activity: `Updated sub account | ${formData.name}`,
         subAccountId: upsertSubAccountResponse?.data?.id,
       });
 

@@ -56,7 +56,6 @@ export function CreateSubAccountButton({ className }: { className?: string }) {
             <SubAccountDetails
               modalChild
               userId={data?.id ?? ""}
-              userName={data?.name ?? ""}
               agencyDetails={data?.agency as AgencyType}
               closeModal={createSubAccountModal.close}
             />

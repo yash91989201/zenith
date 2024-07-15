@@ -75,6 +75,7 @@ import type {
   DeleteSubAccountByIdSchema,
   DeleteUserSchema,
   InviteUserSchema,
+  SaveMediaDataSchema,
 } from "@lib/schema"
 
 // DB TABLE TYPES
@@ -169,6 +170,9 @@ export type UpsertSubaccountProcedureType = z.infer<typeof UpsertSubaccountProce
 export type UpsertSubAccountPermissionType = z.infer<typeof UpsertSubAccountPermissionSchema>
 export type DeleteSubAccountByIdType = z.infer<typeof DeleteSubAccountByIdSchema>
 
+// MEDIA SCHEMA TYPES
+export type SaveMediaDataType = z.infer<typeof SaveMediaDataSchema>
+
 // notification
 export type SaveAvtivityLogType = z.infer<typeof SaveActivityLogSchema>
 export type MarkNotificationsReadType = z.infer<typeof MarkNotificationsReadSchema>
@@ -230,4 +234,4 @@ export type CreateGithubOAuthUserResponseType = Promise<
 
 // S3 BUCKETS
 export type S3_BUCKETS = "profile" | "media"
-export type STORE_ENDPOINTS = "/api/file/agency-logo" | "/api/file/profile"
+export type STORE_ENDPOINTS = "/api/file/agency-logo" | "/api/file/profile" | "/api/file/media"

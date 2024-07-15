@@ -1,4 +1,4 @@
-import { and, asc, eq, getTableColumns, sql } from "drizzle-orm";
+import { and, asc, desc, eq, getTableColumns, sql } from "drizzle-orm";
 // DB SCHEMAS
 import {
   UserTable,
@@ -109,7 +109,9 @@ export const userRouter = createTRPCRouter({
       )
       .where(
         eq(NotificationTable.agencyId, input.agencyId)
-      ).$dynamic()
+      )
+      .orderBy(desc(NotificationTable.createdAt))
+      .$dynamic()
 
     if (input.subAccountId && !["AGENCY_OWNER", "AGENCY_ADMIN"].includes(ctx.session.user.role)) {
       await notificationDynamicQuery.where(

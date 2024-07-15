@@ -225,7 +225,7 @@ export function TeamTable({ agencyId }: { agencyId: string }) {
                 });
                 if (deleteUserRes.status === "SUCCESS") {
                   await saveActivityLog({
-                    activity: ``,
+                    activity: `Removed user | ${actionRow.name}`,
                     agencyId: actionRow.agencyId ?? undefined,
                   });
                   userDeleteModal.close();
