@@ -101,7 +101,6 @@ export function getImageExtension(contentType: string) {
 }
 
 export async function saveOAuthAccountImage(profileUrl: string, userName: string) {
-
   // fetch image from google
   const profileRes = await fetch(profileUrl)
   const profileImage = await profileRes.blob();

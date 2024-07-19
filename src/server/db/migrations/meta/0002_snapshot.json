@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "977c954b-a1ca-47d6-ba2b-794f2989a73b",
-  "prevId": "3a2affa3-7992-41b9-b9ac-66e268cbf13f",
+  "id": "fec45740-459c-4395-bb9a-efdeb41a2e3d",
+  "prevId": "43d0c63d-853a-492c-b7a4-b65e7922fc4c",
   "tables": {
     "action": {
       "name": "action",
@@ -240,6 +240,13 @@
           "notNull": true,
           "autoincrement": false,
           "default": "'info'"
+        },
+        "order": {
+          "name": "order",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
         },
         "agency_id": {
           "name": "agency_id",
@@ -1751,6 +1758,13 @@
           "autoincrement": false,
           "default": "'info'"
         },
+        "order": {
+          "name": "order",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "sub_account_id": {
           "name": "sub_account_id",
           "type": "varchar(48)",
@@ -2148,64 +2162,6 @@
       },
       "uniqueConstraints": {}
     },
-    "tags_to_tickets": {
-      "name": "tags_to_tickets",
-      "columns": {
-        "tag_id": {
-          "name": "tag_id",
-          "type": "varchar(48)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "ticket_id": {
-          "name": "ticket_id",
-          "type": "varchar(48)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "tags_to_tickets_tag_id_tag_id_fk": {
-          "name": "tags_to_tickets_tag_id_tag_id_fk",
-          "tableFrom": "tags_to_tickets",
-          "tableTo": "tag",
-          "columnsFrom": [
-            "tag_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "tags_to_tickets_ticket_id_ticket_id_fk": {
-          "name": "tags_to_tickets_ticket_id_ticket_id_fk",
-          "tableFrom": "tags_to_tickets",
-          "tableTo": "ticket",
-          "columnsFrom": [
-            "ticket_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "tags_to_tickets_tag_id_ticket_id_pk": {
-          "name": "tags_to_tickets_tag_id_ticket_id_pk",
-          "columns": [
-            "tag_id",
-            "ticket_id"
-          ]
-        }
-      },
-      "uniqueConstraints": {}
-    },
     "ticket": {
       "name": "ticket",
       "columns": {
@@ -2350,6 +2306,64 @@
           "name": "ticket_id",
           "columns": [
             "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "tickets_to_tags": {
+      "name": "tickets_to_tags",
+      "columns": {
+        "tag_id": {
+          "name": "tag_id",
+          "type": "varchar(48)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ticket_id": {
+          "name": "ticket_id",
+          "type": "varchar(48)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "tickets_to_tags_tag_id_tag_id_fk": {
+          "name": "tickets_to_tags_tag_id_tag_id_fk",
+          "tableFrom": "tickets_to_tags",
+          "tableTo": "tag",
+          "columnsFrom": [
+            "tag_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "tickets_to_tags_ticket_id_ticket_id_fk": {
+          "name": "tickets_to_tags_ticket_id_ticket_id_fk",
+          "tableFrom": "tickets_to_tags",
+          "tableTo": "ticket",
+          "columnsFrom": [
+            "ticket_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "tickets_to_tags_tag_id_ticket_id_pk": {
+          "name": "tickets_to_tags_tag_id_ticket_id_pk",
+          "columns": [
+            "tag_id",
+            "ticket_id"
           ]
         }
       },
@@ -2564,5 +2578,9 @@
     "schemas": {},
     "tables": {},
     "columns": {}
+  },
+  "internal": {
+    "tables": {},
+    "indexes": {}
   }
 }

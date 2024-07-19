@@ -1,40 +1,26 @@
 {
-  "version": "6",
+  "version": "7",
   "dialect": "mysql",
   "entries": [
     {
       "idx": 0,
       "version": "5",
-      "when": 1720600921443,
-      "tag": "0000_salty_gravity",
+      "when": 1721232939610,
+      "tag": "0000_supreme_thor_girl",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "5",
-      "when": 1720674908587,
-      "tag": "0001_small_gamma_corps",
+      "when": 1721233320423,
+      "tag": "0001_previous_umar",
       "breakpoints": true
     },
     {
       "idx": 2,
       "version": "5",
-      "when": 1720750325768,
-      "tag": "0002_melted_rocket_raccoon",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1720958714310,
-      "tag": "0003_conscious_lifeguard",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "5",
-      "when": 1720958971625,
-      "tag": "0004_brief_the_fallen",
+      "when": 1721233377207,
+      "tag": "0002_equal_ultimatum",
       "breakpoints": true
     }
   ]

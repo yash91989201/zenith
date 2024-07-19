@@ -11,7 +11,7 @@ import type {
   PipelineSchema,
   LaneSchema,
   TicketSchema,
-  TagsToTicketsSchema,
+  TicketsToTagsSchema,
   TriggerSchema,
   AutomationSchema,
   AutomationInstanceSchema,
@@ -76,6 +76,17 @@ import type {
   DeleteUserSchema,
   InviteUserSchema,
   SaveMediaDataSchema,
+  CreateFunnelFormSchema,
+  CreateFunnelProcedureSchema,
+  UpsertPipelineFormSchema,
+  DeletePipelineByIdSchema,
+  UpdateLaneOrderSchema,
+  UpdateTicketOrderSchema,
+  DeleteLaneSchema,
+  GetTicketsWithTagsSchema,
+  TicketFormSchema,
+  UpsertTicketSchema,
+  TagByIdSchema,
 } from "@lib/schema"
 
 // DB TABLE TYPES
@@ -87,7 +98,7 @@ export type TagType = z.infer<typeof TagSchema>
 export type PipelineType = z.infer<typeof PipelineSchema>
 export type LaneType = z.infer<typeof LaneSchema>
 export type TicketType = z.infer<typeof TicketSchema>
-export type TagsToTicketsType = z.infer<typeof TagsToTicketsSchema>
+export type TicketsToTagsType = z.infer<typeof TicketsToTagsSchema>
 export type TriggerType = z.infer<typeof TriggerSchema>
 export type AutomationType = z.infer<typeof AutomationSchema>
 export type AutomationInstanceType = z.infer<typeof AutomationInstanceSchema>
@@ -176,6 +187,48 @@ export type SaveMediaDataType = z.infer<typeof SaveMediaDataSchema>
 // notification
 export type SaveAvtivityLogType = z.infer<typeof SaveActivityLogSchema>
 export type MarkNotificationsReadType = z.infer<typeof MarkNotificationsReadSchema>
+
+// PIPELINE SCHEMA TYPES
+export type UpsertPipelineFormType = z.infer<typeof UpsertPipelineFormSchema>
+export type DeletePipelineByIdType = z.infer<typeof DeletePipelineByIdSchema>
+
+// LANE SCHEMA TYPES
+export type UpdateLaneOrderType = z.infer<typeof UpdateLaneOrderSchema>
+export type DeleteLaneType = z.infer<typeof DeleteLaneSchema>
+
+// TICKET SCHEMA TYPES
+export type UpdateTicketOrdertype = z.infer<typeof UpdateTicketOrderSchema>
+export type GetTicketsWithTagsType = z.infer<typeof GetTicketsWithTagsSchema>
+export type TicketFormType = z.infer<typeof TicketFormSchema>
+export type UpsertTicketType = z.infer<typeof UpsertTicketSchema>
+
+// TAG SCHEMA TYPES
+export type TagByIdType = z.infer<typeof TagByIdSchema>
+
+// FUNNEL SCHEMA TYPES
+export type CreateFunnelFormType = z.infer<typeof CreateFunnelFormSchema>
+export type CreateFunnelProcedureType = z.infer<typeof CreateFunnelProcedureSchema>
+
+// CUSTOM TYPES
+export type TicketAndTagsType = TicketType & {
+  tags: TagType[];
+  assigned: UserType | null;
+  customer: ContactType | null
+}
+
+export type LaneDetailType = LaneType & {
+  tickets: TicketAndTagsType[]
+}
+
+export type TicketDetail = TicketType & {
+  assigned: UserType;
+  customer: ContactType;
+  lane: LaneType;
+  tags: TagType[]
+}
+
+const TagColors = ['BLUE', 'ORANGE', 'ROSE', 'PURPLE', 'GREEN'] as const
+export type TagColor = (typeof TagColors)[number]
 
 // TABLE TYPES
 export type TeamTableType = UserType & {

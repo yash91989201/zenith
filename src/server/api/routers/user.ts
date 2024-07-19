@@ -108,7 +108,7 @@ export const userRouter = createTRPCRouter({
         eq(NotificationTable.agencyId, UserTable.agencyId)
       )
       .where(
-        eq(NotificationTable.agencyId, input.agencyId)
+        eq(NotificationTable.agencyId, input.agencyId),
       )
       .orderBy(desc(NotificationTable.createdAt))
       .$dynamic()

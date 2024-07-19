@@ -25,6 +25,10 @@ services:
       - mysql_data:/var/lib/mysql
     ports:
       - "3306:3306"
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
     environment:
       - MYSQL_DATABASE=zenith
       - MYSQL_ROOT_PASSWORD=2z8FDa4zDw4zNh06KemsDyWFOu2lR2FJ
@@ -37,6 +41,10 @@ services:
     ports:
       - "9000:9000"
       - "9001:9001"
+    deploy:
+      resources:
+        limits:
+          memory: 1G
     environment:
       - MINIO_ROOT_USER=admin
       - MINIO_ROOT_PASSWORD=f1f6LQMWJ0CLsRP7Z1W9P4xg4C0sgCel

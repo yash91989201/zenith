@@ -1,24 +1,107 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, getTableColumns } from "drizzle-orm";
 import { createId } from "@paralleldrive/cuid2";
 // DB SCHEMAS
 import {
   UserTable,
+  AgencyTable,
   PipelineTable,
   SubAccountTable,
   PermissionTable,
   SubAccountSidebarOptionTable,
 } from "@/server/db/schema";
 // SCHEMAS
-import { DeleteSubAccountByIdSchema, GetSubAccountByIdSchema, UpsertSubAccountPermissionSchema, UpsertSubaccountProcedureSchema } from "@/lib/schema";
+import {
+  GetSubAccountByIdSchema,
+  DeleteSubAccountByIdSchema,
+  UpsertSubAccountPermissionSchema,
+  UpsertSubaccountProcedureSchema,
+} from "@/lib/schema";
 // UTILS
+import { procedureError } from "@/server/helpers";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 // TYPES
-import type { DeleteSubAccountByIdType, UpsertSubAccountPermissionType, UpsertSubaccountProcedureType } from "@/lib/types";
-import { procedureError } from "@/server/helpers";
+import type {
+  DeleteSubAccountByIdType,
+  UpsertSubaccountProcedureType,
+  UpsertSubAccountPermissionType,
+} from "@/lib/types";
 
 export const subAccountRouter = createTRPCRouter({
   getById: protectedProcedure.input(GetSubAccountByIdSchema).query(({ ctx, input }) => {
     return ctx.db.query.SubAccountTable.findFirst({ where: eq(SubAccountTable.id, input.id) })
+  }),
+
+  getTeamMembers: protectedProcedure.input(GetSubAccountByIdSchema).query(async ({ ctx, input }) => {
+    const ConnectedSubAccountAgencies = ctx.db
+      .select({
+        agencyId: SubAccountTable.agencyId
+      })
+      .from(AgencyTable)
+      .innerJoin(
+        SubAccountTable,
+        eq(SubAccountTable.agencyId, AgencyTable.id)
+      )
+      .where(eq(SubAccountTable.id, input.id))
+      .as("connected_sub_account_agencies")
+
+    const PermittedSubAccounts = ctx.db
+      .select({
+        agencyId: SubAccountTable.agencyId,
+        email: PermissionTable.email
+      })
+      .from(PermissionTable)
+      .innerJoin(
+        SubAccountTable,
+        eq(SubAccountTable.id, PermissionTable.subAccountId)
+      )
+      .where(eq(PermissionTable.access, true))
+      .as("permitted_sub_accounts")
+
+    // return ctx.db
+    //   .select({
+    //     ...getTableColumns(UserTable)
+    //   })
+    //   .from(UserTable)
+    //   .innerJoin(
+    //     ConnectedSubAccountAgencies,
+    //     eq(UserTable.agencyId, ConnectedSubAccountAgencies.agencyId)
+    //   )
+    //   .innerJoin(
+    //     PermittedSubAccounts,
+    //     eq(UserTable.agencyId, PermittedSubAccounts.agencyId)
+    //   )
+    //   .where(
+    //     eq(UserTable.role, "SUBACCOUNT_USER")
+    //   )
+
+    return ctx.db.select({
+      ...getTableColumns(UserTable)
+    })
+      .from(UserTable)
+      .innerJoin(
+        ConnectedSubAccountAgencies,
+        eq(UserTable.agencyId, ConnectedSubAccountAgencies.agencyId)
+      )
+      .innerJoin(
+        PermittedSubAccounts,
+        and(
+          eq(PermittedSubAccounts.email, UserTable.email),
+          eq(PermittedSubAccounts.agencyId, UserTable.agencyId),
+        )
+      ).groupBy(UserTable.id)
+  }),
+
+  getTags: protectedProcedure.input(GetSubAccountByIdSchema).query(async ({ ctx, input }) => {
+    return ctx.db.query.SubAccountTable.findFirst({
+      where: eq(SubAccountTable.id, input.id),
+      columns: {
+        id: true,
+        name: true,
+      },
+      with: {
+        tags: true
+      }
+    })
   }),
 
   upsertSubAccount: protectedProcedure.input(UpsertSubaccountProcedureSchema).mutation(async ({ ctx, input: subaccount }): ProcedureStatus<UpsertSubaccountProcedureType> => {

@@ -29,6 +29,7 @@ CREATE TABLE `agency_sidebar_option` (
 	`name` varchar(256) NOT NULL,
 	`link` text NOT NULL DEFAULT ('#'),
 	`icon` enum('settings','chart','calendar','check','chip','compass','database','flag','home','info','link','lock','messages','notification','payment','power','receipt','shield','star','tune','videorecorder','wallet','warning','headphone','send','pipelines','person','category','contact','clipboard') NOT NULL DEFAULT 'info',
+	`order` int NOT NULL,
 	`agency_id` varchar(48),
 	CONSTRAINT `agency_sidebar_option_id` PRIMARY KEY(`id`)
 );
@@ -159,6 +160,7 @@ CREATE TABLE `notification` (
 	`id` varchar(48) NOT NULL,
 	`created_at` datetime NOT NULL,
 	`updated_at` datetime NOT NULL,
+	`read` boolean NOT NULL DEFAULT false,
 	`text` text NOT NULL,
 	`user_id` varchar(48) NOT NULL,
 	`agency_id` varchar(48) NOT NULL,
@@ -212,6 +214,7 @@ CREATE TABLE `sub_account_sidebar_option` (
 	`name` varchar(256) NOT NULL,
 	`link` text NOT NULL DEFAULT ('#'),
 	`icon` enum('settings','chart','calendar','check','chip','compass','database','flag','home','info','link','lock','messages','notification','payment','power','receipt','shield','star','tune','videorecorder','wallet','warning','headphone','send','pipelines','person','category','contact','clipboard') NOT NULL DEFAULT 'info',
+	`order` int NOT NULL,
 	`sub_account_id` varchar(48),
 	CONSTRAINT `sub_account_sidebar_option_id` PRIMARY KEY(`id`)
 );
@@ -261,12 +264,6 @@ CREATE TABLE `tag` (
 	CONSTRAINT `tag_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
-CREATE TABLE `tags_to_tickets` (
-	`tag_id` varchar(48) NOT NULL,
-	`ticket_id` varchar(48) NOT NULL,
-	CONSTRAINT `tags_to_tickets_tag_id_ticket_id_pk` PRIMARY KEY(`tag_id`,`ticket_id`)
-);
---> statement-breakpoint
 CREATE TABLE `ticket` (
 	`id` varchar(48) NOT NULL,
 	`created_at` datetime NOT NULL,
@@ -279,6 +276,12 @@ CREATE TABLE `ticket` (
 	`customer_id` varchar(48),
 	`assigned_user_id` varchar(48),
 	CONSTRAINT `ticket_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
+CREATE TABLE `tickets_to_tags` (
+	`tag_id` varchar(48) NOT NULL,
+	`ticket_id` varchar(48) NOT NULL,
+	CONSTRAINT `tickets_to_tags_tag_id_ticket_id_pk` PRIMARY KEY(`tag_id`,`ticket_id`)
 );
 --> statement-breakpoint
 CREATE TABLE `trigger` (
@@ -328,15 +331,15 @@ ALTER TABLE `permission` ADD CONSTRAINT `permission_email_user_email_fk` FOREIGN
 ALTER TABLE `permission` ADD CONSTRAINT `permission_sub_account_id_sub_account_id_fk` FOREIGN KEY (`sub_account_id`) REFERENCES `sub_account`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `pipeline` ADD CONSTRAINT `pipeline_sub_account_id_sub_account_id_fk` FOREIGN KEY (`sub_account_id`) REFERENCES `sub_account`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `session` ADD CONSTRAINT `session_user_id_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `sub_account_sidebar_option` ADD CONSTRAINT `sub_account_sidebar_option_sub_account_id_agency_id_fk` FOREIGN KEY (`sub_account_id`) REFERENCES `agency`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `sub_account_sidebar_option` ADD CONSTRAINT `sub_account_sidebar_option_sub_account_id_sub_account_id_fk` FOREIGN KEY (`sub_account_id`) REFERENCES `sub_account`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `sub_account` ADD CONSTRAINT `sub_account_agency_id_agency_id_fk` FOREIGN KEY (`agency_id`) REFERENCES `agency`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `subscription` ADD CONSTRAINT `subscription_agency_id_agency_id_fk` FOREIGN KEY (`agency_id`) REFERENCES `agency`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `tag` ADD CONSTRAINT `tag_sub_account_id_sub_account_id_fk` FOREIGN KEY (`sub_account_id`) REFERENCES `sub_account`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `tags_to_tickets` ADD CONSTRAINT `tags_to_tickets_tag_id_tag_id_fk` FOREIGN KEY (`tag_id`) REFERENCES `tag`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `tags_to_tickets` ADD CONSTRAINT `tags_to_tickets_ticket_id_ticket_id_fk` FOREIGN KEY (`ticket_id`) REFERENCES `ticket`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `ticket` ADD CONSTRAINT `ticket_lane_id_lane_id_fk` FOREIGN KEY (`lane_id`) REFERENCES `lane`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `ticket` ADD CONSTRAINT `ticket_customer_id_contact_id_fk` FOREIGN KEY (`customer_id`) REFERENCES `contact`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `ticket` ADD CONSTRAINT `ticket_assigned_user_id_user_id_fk` FOREIGN KEY (`assigned_user_id`) REFERENCES `user`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `tickets_to_tags` ADD CONSTRAINT `tickets_to_tags_tag_id_tag_id_fk` FOREIGN KEY (`tag_id`) REFERENCES `tag`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `tickets_to_tags` ADD CONSTRAINT `tickets_to_tags_ticket_id_ticket_id_fk` FOREIGN KEY (`ticket_id`) REFERENCES `ticket`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `trigger` ADD CONSTRAINT `trigger_sub_account_id_sub_account_id_fk` FOREIGN KEY (`sub_account_id`) REFERENCES `sub_account`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `user` ADD CONSTRAINT `user_agency_id_agency_id_fk` FOREIGN KEY (`agency_id`) REFERENCES `agency`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 CREATE INDEX `automation_id_idx` ON `action` (`automation_id`);--> statement-breakpoint

@@ -9,6 +9,8 @@ import type { ClassValue } from "clsx"
 import type { STORE_ENDPOINTS } from "@/lib/types";
 import type { FunctionComponent, ReactElement } from "react";
 
+export const CURRENCY_NUMBER_REGEX = /^\d+(\.\d{1,2})?$/
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -31,6 +33,32 @@ export function parseZodValidationErrors(validationErrors: Record<string, string
   }
 
   return errors;
+}
+
+export const randomColor = {
+  pastel: () => {
+    const hue = Math.floor(Math.random() * 360)
+
+    return `hsl(${hue}deg, 100%, 90%)`
+  }
+}
+
+export function formatAmount(
+  price: number | string,
+  options?: {
+    currency?: "USD" | "EUR" | "GBP" | "BDT" | "INR";
+    notation?: Intl.NumberFormatOptions["notation"];
+  },
+) {
+  const { currency = "INR", notation = "compact" } = options ?? {};
+  const numericPrice = typeof price === "string" ? parseFloat(price) : price;
+
+  return new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency,
+    notation,
+    maximumFractionDigits: 2,
+  }).format(numericPrice);
 }
 
 export async function uploadAvatar(file: File) {
@@ -101,7 +129,7 @@ export function formatFileSize(bytes?: number) {
   const dm = 2;
   const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]} `;
 }
 
 /**

@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "d45e30a3-4be4-42ca-9ada-6961000fc0e2",
+  "id": "72c2d82c-1db9-4f04-8d5d-85dcd85fe361",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "action": {
@@ -240,6 +240,13 @@
           "notNull": true,
           "autoincrement": false,
           "default": "'info'"
+        },
+        "order": {
+          "name": "order",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
         },
         "agency_id": {
           "name": "agency_id",
@@ -1272,6 +1279,14 @@
           "notNull": true,
           "autoincrement": false
         },
+        "read": {
+          "name": "read",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
         "text": {
           "name": "text",
           "type": "text",
@@ -1743,6 +1758,13 @@
           "autoincrement": false,
           "default": "'info'"
         },
+        "order": {
+          "name": "order",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "sub_account_id": {
           "name": "sub_account_id",
           "type": "varchar(48)",
@@ -1761,10 +1783,10 @@
         }
       },
       "foreignKeys": {
-        "sub_account_sidebar_option_sub_account_id_agency_id_fk": {
-          "name": "sub_account_sidebar_option_sub_account_id_agency_id_fk",
+        "sub_account_sidebar_option_sub_account_id_sub_account_id_fk": {
+          "name": "sub_account_sidebar_option_sub_account_id_sub_account_id_fk",
           "tableFrom": "sub_account_sidebar_option",
-          "tableTo": "agency",
+          "tableTo": "sub_account",
           "columnsFrom": [
             "sub_account_id"
           ],
@@ -2140,64 +2162,6 @@
       },
       "uniqueConstraints": {}
     },
-    "tags_to_tickets": {
-      "name": "tags_to_tickets",
-      "columns": {
-        "tag_id": {
-          "name": "tag_id",
-          "type": "varchar(48)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "ticket_id": {
-          "name": "ticket_id",
-          "type": "varchar(48)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "tags_to_tickets_tag_id_tag_id_fk": {
-          "name": "tags_to_tickets_tag_id_tag_id_fk",
-          "tableFrom": "tags_to_tickets",
-          "tableTo": "tag",
-          "columnsFrom": [
-            "tag_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "tags_to_tickets_ticket_id_ticket_id_fk": {
-          "name": "tags_to_tickets_ticket_id_ticket_id_fk",
-          "tableFrom": "tags_to_tickets",
-          "tableTo": "ticket",
-          "columnsFrom": [
-            "ticket_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "tags_to_tickets_tag_id_ticket_id_pk": {
-          "name": "tags_to_tickets_tag_id_ticket_id_pk",
-          "columns": [
-            "tag_id",
-            "ticket_id"
-          ]
-        }
-      },
-      "uniqueConstraints": {}
-    },
     "ticket": {
       "name": "ticket",
       "columns": {
@@ -2342,6 +2306,64 @@
           "name": "ticket_id",
           "columns": [
             "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "tickets_to_tags": {
+      "name": "tickets_to_tags",
+      "columns": {
+        "tag_id": {
+          "name": "tag_id",
+          "type": "varchar(48)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ticket_id": {
+          "name": "ticket_id",
+          "type": "varchar(48)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "tickets_to_tags_tag_id_tag_id_fk": {
+          "name": "tickets_to_tags_tag_id_tag_id_fk",
+          "tableFrom": "tickets_to_tags",
+          "tableTo": "tag",
+          "columnsFrom": [
+            "tag_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "tickets_to_tags_ticket_id_ticket_id_fk": {
+          "name": "tickets_to_tags_ticket_id_ticket_id_fk",
+          "tableFrom": "tickets_to_tags",
+          "tableTo": "ticket",
+          "columnsFrom": [
+            "ticket_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "tickets_to_tags_tag_id_ticket_id_pk": {
+          "name": "tickets_to_tags_tag_id_ticket_id_pk",
+          "columns": [
+            "tag_id",
+            "ticket_id"
           ]
         }
       },
@@ -2556,5 +2578,9 @@
     "schemas": {},
     "tables": {},
     "columns": {}
+  },
+  "internal": {
+    "tables": {},
+    "indexes": {}
   }
 }

@@ -10,7 +10,7 @@ import {
   PipelineTable,
   LaneTable,
   TicketTable,
-  TagsToTicketsTable,
+  TicketsToTagsTable,
   TriggerTable,
   AutomationTable,
   AutomationInstanceTable,
@@ -28,6 +28,7 @@ import {
   AddOnTable,
   OAuthAccountTable,
 } from "@/server/db/schema"
+import { CURRENCY_NUMBER_REGEX } from "@/lib/utils"
 
 // DB TABLES SCHEMAS
 export const UserSchema = createSelectSchema(UserTable)
@@ -38,7 +39,7 @@ export const TagSchema = createSelectSchema(TagTable)
 export const PipelineSchema = createSelectSchema(PipelineTable)
 export const LaneSchema = createSelectSchema(LaneTable)
 export const TicketSchema = createSelectSchema(TicketTable)
-export const TagsToTicketsSchema = createSelectSchema(TagsToTicketsTable)
+export const TicketsToTagsSchema = createSelectSchema(TicketsToTagsTable)
 export const TriggerSchema = createSelectSchema(TriggerTable)
 export const AutomationSchema = createSelectSchema(AutomationTable)
 export const AutomationInstanceSchema = createSelectSchema(AutomationInstanceTable)
@@ -66,7 +67,7 @@ export const TagInsertSchema = createInsertSchema(TagTable)
 export const PipelineInsertSchema = createInsertSchema(PipelineTable)
 export const LaneInsertSchema = createInsertSchema(LaneTable)
 export const TicketInsertSchema = createInsertSchema(TicketTable)
-export const TagsToTicketsInsertSchema = createInsertSchema(TagsToTicketsTable)
+export const TagsToTicketsInsertSchema = createInsertSchema(TicketsToTagsTable)
 export const TriggerInsertSchema = createInsertSchema(TriggerTable)
 export const AutomationInsertSchema = createInsertSchema(AutomationTable)
 export const AutomationInstanceInsertSchema = createInsertSchema(AutomationInstanceTable)
@@ -227,6 +228,88 @@ export const SaveMediaDataSchema = z.object({
   type: z.string(),
   link: z.string().url(),
   subAccountId: z.string()
+})
+
+// PIPELINE SCHEMAS
+export const GetPipelineByIdSchema = z.object({
+  id: z.string()
+})
+
+export const GetPipelineBySubAccountIdSchema = z.object({
+  subAccountId: z.string()
+})
+
+export const UpsertPipelineFormSchema = z.object({
+  name: z.string()
+})
+
+export const DeletePipelineByIdSchema = z.object({
+  id: z.string()
+})
+
+// LANE SCHEMAS
+export const GetLaneDetailSchema = z.object({
+  pipelineId: z.string()
+})
+
+export const UpdateLaneOrderSchema = z.object({
+  lanes: z.array(LaneSchema)
+})
+
+export const DeleteLaneSchema = z.object({
+  laneId: z.string()
+})
+
+// TICKET SCHEMAS
+export const GetTicketsWithTagsSchema = z.object({
+  pipelineId: z.string()
+})
+
+export const UpdateTicketOrderSchema = z.object({
+  tickets: z.array(TicketSchema)
+})
+
+export const TicketFormSchema = z.object({
+  name: z.string().min(1),
+  description: z.string().optional(),
+  value: z.string().refine(value => CURRENCY_NUMBER_REGEX.test(value), {
+    message: "Value must be valid price"
+  })
+})
+
+export const UpsertTicketSchema = z.object({
+  ticket: TicketInsertSchema,
+  tags: z.array(TagSchema)
+})
+
+// TAGS SCHEMA
+export const GetAllTagsSchema = z.object({
+  subAccountId: z.string()
+})
+
+export const TagByIdSchema = z.object({
+  tagId: z.string()
+})
+
+// FUNNEL SCHEMAS
+export const CreateFunnelFormSchema = z.object({
+  name: z.string(),
+  description: z.string(),
+  subDomainName: z.string().optional(),
+  favicon: z.string().optional(),
+})
+
+export const CreateFunnelProcedureSchema = z.object({
+  subAccountId: z.string(),
+  funnel: CreateFunnelFormSchema.extend({
+    liveProduces: z.string()
+  }),
+  funnelId: z.string(),
+})
+
+// CONTACT SCHEMA
+export const GetContactByNameSchema = z.object({
+  name: z.string().min(1)
 })
 
 // NOTIFICATION SCHEMAS

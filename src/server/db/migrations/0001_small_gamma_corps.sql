@@ -1,1 +1,0 @@
-ALTER TABLE `notification` ADD `read` boolean DEFAULT false NOT NULL;

@@ -194,7 +194,7 @@ export const TagTableRelations = relations(TagTable, ({ one, many }) => ({
     fields: [TagTable.subAccountId],
     references: [SubAccountTable.id]
   }),
-  tickets: many(TagsToTicketsTable),
+  tickets: many(TicketsToTagsTable),
 }))
 
 export const PipelineTable = mysqlTable("pipeline", {
@@ -263,27 +263,27 @@ export const TicketTableRelations = relations(TicketTable, ({ one, many }) => ({
     fields: [TicketTable.assignedUserId],
     references: [UserTable.id]
   }),
-  tags: many(TagsToTicketsTable),
-  contact: one(ContactTable, {
+  customer: one(ContactTable, {
     fields: [TicketTable.customerId],
     references: [ContactTable.id]
-  })
+  }),
+  tags: many(TicketsToTagsTable),
 }))
 
-export const TagsToTicketsTable = mysqlTable("tags_to_tickets", {
+export const TicketsToTagsTable = mysqlTable("tickets_to_tags", {
   tagId: varchar("tag_id", { length: 48 }).notNull().references(() => TagTable.id),
-  ticketId: varchar("ticket_id", { length: 48 }).notNull().references(() => TicketTable.id)
+  ticketId: varchar("ticket_id", { length: 48 }).notNull().references(() => TicketTable.id, { onDelete: "cascade" }),
 }, (table) => ({
   pk: primaryKey({ columns: [table.tagId, table.ticketId] })
 }))
 
-export const TagsToTicketsTableRelations = relations(TagsToTicketsTable, ({ one }) => ({
+export const TagsToTicketsTableRelations = relations(TicketsToTagsTable, ({ one }) => ({
   tag: one(TagTable, {
-    fields: [TagsToTicketsTable.tagId],
+    fields: [TicketsToTagsTable.tagId],
     references: [TagTable.id],
   }),
   ticket: one(TicketTable, {
-    fields: [TagsToTicketsTable.tagId],
+    fields: [TicketsToTagsTable.ticketId],
     references: [TicketTable.id],
   })
 }))

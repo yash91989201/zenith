@@ -127,7 +127,7 @@ export function MenuOptions({
                               <div className="relative w-16">
                                 <Image
                                   src={user?.agency?.agencyLogo ?? ""}
-                                  alt="agency logo"
+                                  alt="sidebar logo"
                                   fill
                                   className="rounded-md object-contain"
                                 />
@@ -181,7 +181,7 @@ export function MenuOptions({
                               <div className="relative w-16">
                                 <Image
                                   src={subAccount.subAccountLogo}
-                                  alt="agency logo"
+                                  alt="subaccount logo"
                                   fill
                                   className="rounded-md object-contain"
                                 />
