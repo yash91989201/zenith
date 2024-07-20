@@ -4,24 +4,15 @@ import { useState } from "react";
 export function useToggle(initialValue = false) {
   const [state, setState] = useState(initialValue);
 
-  const isOn = state == true;
-  const isOff = state == false;
-  const on = () => setState(true);
-  const off = () => setState(false);
+  const isOpen = state == true;
+  const open = () => setState(true);
+  const close = () => setState(false);
   const toggle = () => setState(!state);
+
   return {
-    isOn,
-    isOpen: isOn,
-    isShowing: isOn,
-    isOff,
-    isClosed: isOff,
-    isHidden: isOff,
-    on,
-    off,
-    open: on,
-    close: off,
-    show: on,
-    hide: off,
+    isOpen,
+    open,
+    close,
     toggle,
   };
 }

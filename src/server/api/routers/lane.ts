@@ -85,7 +85,6 @@ export const laneRouter = createTRPCRouter({
         message: "Lane created successfully"
       }
     } catch (error) {
-      console.log(error)
       return procedureError(error)
     }
   }),
@@ -125,6 +124,8 @@ export const laneRouter = createTRPCRouter({
         message: "Lane deleted"
       }
     } catch (error) {
+      console.log("laneid", input.laneId)
+      console.log(error)
       return procedureError(error)
     }
   })

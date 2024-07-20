@@ -30,7 +30,7 @@ export default async function PipelinePage({ params }: Props) {
 
   return (
     <Tabs defaultValue="view" className="w-full">
-      <TabsList className="mb-4 h-16 w-full justify-between border-b-2 bg-transparent">
+      <TabsList className="mb-4 h-16 w-full justify-between rounded-none border-b-2 bg-transparent px-0">
         <PipelineInfoBar
           pipelineId={params.pipelineId}
           subAccountId={params.subaccountId}

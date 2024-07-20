@@ -22,6 +22,13 @@
       "when": 1721233377207,
       "tag": "0002_equal_ultimatum",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1721455862411,
+      "tag": "0003_stale_blazing_skull",
+      "breakpoints": true
     }
   ]
 }

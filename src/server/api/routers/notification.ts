@@ -28,29 +28,35 @@ export const notificationRouter = createTRPCRouter({
       }
 
       if (subAccountId) {
-        await ctx.db.insert(NotificationTable).values({
+        const [createNotificationQuery] = await ctx.db.insert(NotificationTable).values({
           text: `${userData.name} | ${activity}`,
           userId: userData.id,
           agencyId: foundAgencyId,
           subAccountId: subAccountId,
         })
-      } else {
-        await ctx.db.insert(NotificationTable).values({
-          text: `${userData.name} | ${activity}`,
-          userId: userData.id,
-          agencyId: foundAgencyId,
-        })
+
+        if (createNotificationQuery.affectedRows === 0) throw new Error("Unable to log activity")
+
+        return {
+          status: "SUCCESS",
+          message: "Activity log saved"
+        }
       }
+      const [createNotificationQuery] = await ctx.db.insert(NotificationTable).values({
+        text: `${userData.name} | ${activity}`,
+        userId: userData.id,
+        agencyId: foundAgencyId,
+      })
+
+      if (createNotificationQuery.affectedRows === 0) throw new Error("Unable to log activity")
+
 
       return {
         status: "SUCCESS",
         message: "Activity log saved"
       }
     } catch (error) {
-      return {
-        status: "FAILED",
-        message: "Unable to save activity log"
-      }
+      return procedureError(error)
     }
   }),
 

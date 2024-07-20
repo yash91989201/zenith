@@ -2,12 +2,12 @@ import { count, eq, inArray } from "drizzle-orm";
 // DB SCHEMAS
 import { LaneTable, TagTable, TicketsToTagsTable, TicketTable } from "@/server/db/schema";
 // SCHEMAS
-import { GetTicketsWithTagsSchema, UpdateTicketOrderSchema, UpsertTicketSchema } from "@/lib/schema";
+import { GetTicketsWithTagsSchema, TicketSchema, UpdateTicketOrderSchema, UpsertTicketSchema } from "@/lib/schema";
 // UTILS
 import { procedureError } from "@/server/helpers";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 // TYPES
-import type { UpdateTicketOrdertype, UpsertTicketType } from "@/lib/types";
+import type { TicketType, UpdateTicketOrdertype, UpsertTicketType } from "@/lib/types";
 import { createId } from "@paralleldrive/cuid2";
 
 export const ticketRouter = createTRPCRouter({
@@ -35,11 +35,11 @@ export const ticketRouter = createTRPCRouter({
 
   updateOrder: protectedProcedure.input(UpdateTicketOrderSchema).mutation(async ({ ctx, input: { tickets } }): ProcedureStatus<UpdateTicketOrdertype> => {
     try {
-
+      console.log(tickets.map(({ name, order }) => ({ name, order })))
       await ctx.db.transaction(async (trx) => {
         try {
           await Promise.all(tickets.map(async (ticket) => {
-            await trx.update(TicketTable).set(ticket).where(eq(LaneTable.id, ticket.id));
+            await trx.update(TicketTable).set(ticket).where(eq(TicketTable.id, ticket.id));
           }));
         } catch (error) {
           trx.rollback()
@@ -89,7 +89,7 @@ export const ticketRouter = createTRPCRouter({
         })
         .from(TicketTable)
         .where(
-          eq(TicketTable.id, input.ticket?.id ?? "")
+          eq(TicketTable.laneId, input.ticket.laneId)
         )
 
       const createTicketAndTagsTransactionResult = await ctx.db.transaction(async (trx): ProcedureStatus<UpsertTicketType> => {
@@ -125,6 +125,40 @@ export const ticketRouter = createTRPCRouter({
       return createTicketAndTagsTransactionResult
     } catch (error) {
       return procedureError<UpsertTicketType>(error)
+    }
+  }),
+
+  deleteTicket: protectedProcedure.input(TicketSchema).mutation(async ({ ctx, input }): ProcedureStatus<TicketType> => {
+    try {
+      const tickets = await ctx.db.query.TicketTable.findMany({
+        where: eq(TicketTable.laneId, input.laneId)
+      })
+
+      if ((tickets.length - 1) === input.order) {
+        const [deleteTicketQuery] = await ctx.db.delete(TicketTable).where(eq(TicketTable.id, input.id))
+        if (deleteTicketQuery.affectedRows === 0) throw new Error("Unable to delete ticket")
+
+        return {
+          status: "SUCCESS",
+          message: `'${input.name}' ticket deleted`
+        }
+      }
+
+      const updatedTicketsOrder = tickets.filter(ticket => ticket.id === input.id).map((ticket, index) => ({ ...ticket, order: index }))
+
+      const [deleteTicketQuery] = await ctx.db.delete(TicketTable).where(eq(TicketTable.id, input.id))
+      if (deleteTicketQuery.affectedRows === 0) throw new Error("Unable to delete ticket")
+
+      await Promise.all(updatedTicketsOrder.map(async (ticket) => {
+        await ctx.db.update(TicketTable).set({ order: ticket.order }).where(eq(TicketTable.id, ticket.id))
+      }))
+
+      return {
+        status: "SUCCESS",
+        message: "Ticket deleted"
+      }
+    } catch (error) {
+      return procedureError<TicketType>(error)
     }
   })
 });

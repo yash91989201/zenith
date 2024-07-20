@@ -1,36 +1,18 @@
-import { CSS } from "@dnd-kit/utilities";
-import { useSortable } from "@dnd-kit/sortable";
 // UTILS
-import { cn, formatAmount } from "@/lib/utils";
+import { formatAmount } from "@/lib/utils";
 // TYPES
 import type { TagColor, TicketAndTagsType } from "@/lib/types";
 // CUSTOM HOOKS
-import { useToggle } from "@/hooks/use-toggle";
 // UI
+import { Avatar, AvatarFallback, AvatarImage } from "@ui/avatar";
 import {
   Card,
+  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@ui/dialog";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@ui/alert-dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,69 +21,57 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@ui/avatar";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@ui/hover-card";
 // CUSTOM COMPONENTS
 import { Tag } from "@global/tag";
-import { UpsertTicketForm } from "@/components/pipeline/upsert-ticket-form";
 // ICONS
+import { Button } from "@/components/ui/button";
+import { usePipelineDnd } from "@/hooks/use-pipeline-dnd";
 import {
+  Contact2,
   Edit,
+  GripVertical,
+  LinkIcon,
+  MoreHorizontalIcon,
   Trash,
   User2,
-  LinkIcon,
-  Contact2,
-  MoreHorizontalIcon,
 } from "lucide-react";
 
 type Props = {
-  laneId: string;
-  pipelineId: string;
-  subAccountId: string;
   ticket: TicketAndTagsType;
 };
 
-export function PipelineTicket({
-  laneId,
-  pipelineId,
-  subAccountId,
-  ticket,
-}: Props) {
-  const {
-    attributes,
-    transform,
-    transition,
-    isDragging,
-    setNodeRef,
-    listeners,
-  } = useSortable({
-    id: ticket.id,
-  });
-
-  const editTicket = useToggle(false);
-  const deleteTicket = useToggle(false);
+export function PipelineTicket({ ticket }: Props) {
+  const { openDeleteTicketModal, openUpdateTicketModal } = usePipelineDnd();
 
   return (
-    <div
-      {...listeners}
-      {...attributes}
-      ref={setNodeRef}
-      className={cn(isDragging ? "opacity-75" : "", "h-full")}
-      style={{ transition, transform: CSS.Translate.toString(transform) }}
-    >
+    <div>
       <DropdownMenu>
-        <Card className="bg-white shadow-none transition-all dark:bg-slate-900">
-          <CardHeader className="p-3">
-            <CardTitle className="flex items-center justify-between">
-              <span className="w-full">{ticket.name}</span>
-              <DropdownMenuTrigger onClick={(e) => e.stopPropagation()}>
-                <MoreHorizontalIcon className="size-5 text-muted-foreground" />
+        <Card className="select-none bg-white shadow-none transition-all dark:bg-slate-900">
+          <CardHeader className="space-y-3 p-3">
+            <CardTitle className="flex items-center justify-between gap-3">
+              <Button
+                variant="secondary"
+                size="icon"
+                className="size-7 cursor-grab"
+              >
+                <GripVertical className="size-4" />
+              </Button>
+              <p className="flex flex-1 flex-col gap-1">
+                <span>{ticket.name}</span>
+                <span className="text-[0.65rem] text-muted-foreground">
+                  {new Date().toLocaleDateString()}
+                </span>
+              </p>
+              <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                <Button variant="ghost" size="icon" className="size-6">
+                  <MoreHorizontalIcon className="size-4 text-muted-foreground" />
+                </Button>
               </DropdownMenuTrigger>
             </CardTitle>
-            <span className="text-xs text-muted-foreground">
-              {new Date().toLocaleDateString()}
-            </span>
-            <div className="flex flex-wrap items-center gap-3">
+          </CardHeader>
+          <CardContent className="space-y-3 p-3 pt-0">
+            <div className="flex flex-wrap items-center gap-1.5">
               {ticket.tags.map((tag) => (
                 <Tag
                   key={tag.id}
@@ -116,8 +86,8 @@ export function PipelineTicket({
             <HoverCard>
               <HoverCardTrigger asChild>
                 <div className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-1.5 text-muted-foreground transition-all hover:bg-muted">
-                  <LinkIcon className="size-4" />
-                  <span className="text-sm font-bold">Contact</span>
+                  <LinkIcon className="size-3" />
+                  <span className="text-xs font-bold">Contact</span>
                 </div>
               </HoverCardTrigger>
               <HoverCardContent side="right" className="w-fit">
@@ -146,10 +116,10 @@ export function PipelineTicket({
                 </div>
               </HoverCardContent>
             </HoverCard>
-          </CardHeader>
+          </CardContent>
           <CardFooter className="m-0 flex items-center justify-between border-t-[1px] border-muted-foreground/20 p-3">
-            <div className="item-center flex gap-3">
-              <Avatar className="size-9">
+            <div className="flex items-center gap-3">
+              <Avatar className="size-8">
                 <AvatarImage alt="contact" src={ticket.assigned?.avatarUrl} />
                 <AvatarFallback className="bg-primary text-sm text-white">
                   {ticket.assigned?.name}
@@ -161,7 +131,7 @@ export function PipelineTicket({
                   {ticket.assignedUserId ? "Assigned to" : "Not Assigned"}
                 </span>
                 {ticket.assignedUserId && (
-                  <span className="w-24 overflow-hidden  overflow-ellipsis whitespace-nowrap text-xs text-muted-foreground">
+                  <span className="w-24 overflow-ellipsis whitespace-nowrap text-xs text-muted-foreground">
                     {ticket.assigned?.name}
                   </span>
                 )}
@@ -176,14 +146,19 @@ export function PipelineTicket({
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="flex items-center gap-3"
-              onClick={editTicket.open}
+              onClick={() =>
+                openUpdateTicketModal({
+                  ticket: ticket,
+                  tags: ticket.tags,
+                })
+              }
             >
               <Edit className="size-4" />
               Edit Ticket
             </DropdownMenuItem>
             <DropdownMenuItem
               className="flex items-center gap-3"
-              onClick={deleteTicket.open}
+              onClick={() => openDeleteTicketModal(ticket)}
             >
               <Trash className="size-4" />
               Delete Ticket
@@ -191,42 +166,6 @@ export function PipelineTicket({
           </DropdownMenuContent>
         </Card>
       </DropdownMenu>
-
-      <AlertDialog
-        open={deleteTicket.isOpen}
-        onOpenChange={deleteTicket.toggle}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the
-              ticket and remove it from our servers.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter className="flex items-center">
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction className="bg-destructive">
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      <Dialog open={editTicket.isOpen} onOpenChange={editTicket.toggle}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Save ticket</DialogTitle>
-            <DialogDescription>add ticket and tags</DialogDescription>
-          </DialogHeader>
-          <UpsertTicketForm
-            modalChild
-            laneId={laneId}
-            pipelineId={pipelineId}
-            subAccountId={subAccountId}
-          />
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

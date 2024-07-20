@@ -8,7 +8,6 @@ import {
   index,
   int,
   boolean,
-  decimal,
   primaryKey,
   json,
   timestamp,
@@ -242,7 +241,7 @@ export const TicketTable = mysqlTable("ticket", {
   updatedAt: datetime("updated_at").notNull().$defaultFn(() => new Date()).$onUpdateFn(() => new Date()),
   name: varchar("name", { length: 256 }).notNull(),
   order: int("order").notNull().default(0),
-  value: decimal("value"),
+  value: int("value"),
   description: varchar("description", { length: 512 }),
   // FOREIGN KEY RELATIONS
   laneId: varchar("lane_id", { length: 48 }).notNull().references(() => LaneTable.id),

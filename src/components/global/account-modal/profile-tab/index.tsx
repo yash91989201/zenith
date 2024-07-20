@@ -37,12 +37,12 @@ export function ProfileTab() {
       <div className="flex items-start border-b py-6 dark:border-gray-400">
         <h6 className="w-2/5 shrink-0 text-sm font-medium">Profile</h6>
         {/* user profile */}
-        {profileUpdateCard.isShowing ? (
+        {profileUpdateCard.isOpen ? (
           <ProfileUpdateCard
             username={user?.name}
             nameInitials={nameInitials ?? ""}
             avatarUrl={user?.avatarUrl ?? ""}
-            hideCard={profileUpdateCard.hide}
+            hideCard={profileUpdateCard.close}
           />
         ) : (
           <div className="flex flex-1 items-center gap-3">
@@ -55,7 +55,7 @@ export function ProfileTab() {
               variant="ghost"
               size="sm"
               className="text-primary"
-              onClick={profileUpdateCard.show}
+              onClick={profileUpdateCard.open}
             >
               Update profile
             </Button>
@@ -93,14 +93,14 @@ export function ProfileTab() {
               </DropdownMenu>
             </div>
           </div>
-          {addEmailCard.isShowing ? (
-            <AddEmailAddressCard hideCard={addEmailCard.hide} />
+          {addEmailCard.isOpen ? (
+            <AddEmailAddressCard hideCard={addEmailCard.close} />
           ) : (
             <Button
               variant="ghost"
               size="sm"
               className="w-full justify-start gap-3 text-primary"
-              onClick={addEmailCard.show}
+              onClick={addEmailCard.open}
             >
               <Plus className="size-4" />
               <span>Add email address</span>

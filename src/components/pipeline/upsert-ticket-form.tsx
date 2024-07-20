@@ -1,7 +1,6 @@
 "use client";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import { useDebounceValue } from "usehooks-ts";
 import { zodResolver } from "@hookform/resolvers/zod";
 // SCHEMAS
@@ -54,20 +53,21 @@ type Props = {
   subAccountId: string;
   modalChild?: boolean;
   onClose?: () => void;
+  ticketData?: UpsertTicketType;
   pipelineId: string;
 };
 
 export function UpsertTicketForm({
   laneId,
+  ticketData,
   pipelineId,
   modalChild,
   subAccountId,
   onClose,
 }: Props) {
-  const router = useRouter();
   const apiUtils = api.useUtils();
   const [contact, setContact] = useDebounceValue("", 500);
-
+  console.log(subAccountId);
   const { data: contacts = [] } = api.contact.getByName.useQuery(
     {
       name: contact,
@@ -84,11 +84,12 @@ export function UpsertTicketForm({
 
   const { mutateAsync: saveActivityLog } =
     api.notification.saveActivityLog.useMutation();
+
   const { mutateAsync: upsertTicket } = api.ticket.upsertTicket.useMutation();
 
   const ticketForm = useForm<UpsertTicketType>({
     resolver: zodResolver(UpsertTicketSchema),
-    defaultValues: {
+    defaultValues: ticketData ?? {
       ticket: {
         laneId,
       },
@@ -112,7 +113,6 @@ export function UpsertTicketForm({
       await apiUtils.user.getNotifications.invalidate({ subAccountId });
       onClose?.();
       toast.success(actionRes.message);
-      router.refresh();
     } else {
       toast.error(actionRes.message);
     }
@@ -156,6 +156,10 @@ export function UpsertTicketForm({
                     <Input
                       {...field}
                       value={field.value ?? undefined}
+                      onChange={(e) => {
+                        field.onChange(Number(e.target.value));
+                      }}
+                      type="number hide-input-spinner"
                       placeholder="Ticket value"
                     />
                   </FormControl>

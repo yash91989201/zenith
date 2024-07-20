@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   app:
     build:
@@ -28,7 +26,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1.5G
+          memory: 0.75G
     environment:
       - MYSQL_DATABASE=zenith
       - MYSQL_ROOT_PASSWORD=2z8FDa4zDw4zNh06KemsDyWFOu2lR2FJ
@@ -44,7 +42,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1G
+          memory: 0.5G
     environment:
       - MINIO_ROOT_USER=admin
       - MINIO_ROOT_PASSWORD=f1f6LQMWJ0CLsRP7Z1W9P4xg4C0sgCel

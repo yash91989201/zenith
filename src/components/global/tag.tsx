@@ -23,7 +23,7 @@ export function Tag({ colorName, title, children }: Props) {
         colorName === "ROSE" && !title && "border-[1px] border-rose-500",
         colorName === "GREEN" && !title && "border-[1px] border-emerald-400",
         colorName === "PURPLE" && !title && "border-[1px] border-purple-400",
-        "inline-flex flex-shrink-0 cursor-pointer items-center rounded-sm p-2 text-xs",
+        "inline-flex flex-shrink-0 cursor-pointer items-center rounded-sm p-1 px-2 text-xs",
       )}
     >
       {title}

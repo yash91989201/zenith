@@ -27,7 +27,6 @@ export async function GET(req: Request) {
     return new Response(imageBuffer)
 
   } catch (error) {
-    console.log(error)
     if (error instanceof Error) {
       return Response.json({ status: "FAILED", message: error.message }, { status: 400 })
     } else {

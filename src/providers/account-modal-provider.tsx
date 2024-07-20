@@ -31,8 +31,8 @@ export const AccountModalProvider: React.FC<ModalProviderProps> = ({
       value={{
         open: modal.isOpen,
         onOpenChange: modal.toggle,
-        openModal: modal.show,
-        closeModal: modal.hide,
+        openModal: modal.open,
+        closeModal: modal.close,
       }}
     >
       {children}

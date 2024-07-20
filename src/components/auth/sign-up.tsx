@@ -99,13 +99,13 @@ export function SignUp() {
                   <div className="flex items-center gap-3 [&>svg]:size-4 md:[&>svg]:size-5">
                     <Input
                       {...field}
-                      type={showPasswordToggle.isOn ? "text" : "password"}
+                      type={showPasswordToggle.isOpen ? "text" : "password"}
                       placeholder="********"
                     />
-                    {showPasswordToggle.isOn ? (
+                    {showPasswordToggle.isOpen ? (
                       <Eye
                         className="cursor-pointer select-none"
-                        onClick={showPasswordToggle.off}
+                        onClick={showPasswordToggle.close}
                       />
                     ) : (
                       <EyeOff

@@ -1,0 +1,1 @@
+ALTER TABLE `ticket` MODIFY COLUMN `value` int;
