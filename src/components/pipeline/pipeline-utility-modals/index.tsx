@@ -22,6 +22,7 @@ import {
 // CUSTOM COMPONENTS
 import { UpsertLaneForm } from "@/components/pipeline/pipeline-utility-modals/upsert-lane-form";
 import { UpsertTicketForm } from "@/components/pipeline/pipeline-utility-modals/upsert-ticket-form";
+import { UpsertPipelineForm } from "@/components/forms/upsert-pipeline-form";
 
 export function PipelineUtilityModals() {
   const {
@@ -39,10 +40,31 @@ export function PipelineUtilityModals() {
     deleteTicketAction,
     deletingTicket,
     deletingLane,
+    createPipelineModal,
   } = usePipelineDndUtilityModals();
 
   return (
     <>
+      {/*  CREATE PIPELINE MODAL */}
+      <Dialog
+        open={createPipelineModal.isOpen}
+        onOpenChange={createPipelineModal.toggle}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create Pipeline</DialogTitle>
+            <DialogDescription>
+              Create pipeline and add funnel
+            </DialogDescription>
+          </DialogHeader>
+          <UpsertPipelineForm
+            modalChild
+            subAccountId={subAccountId}
+            onClose={createPipelineModal.close}
+          />
+        </DialogContent>
+      </Dialog>
+
       {/* CREATE LANE MODAL */}
       <Dialog
         open={createLaneModal.isOpen}

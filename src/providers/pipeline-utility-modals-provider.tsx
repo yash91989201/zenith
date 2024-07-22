@@ -7,6 +7,7 @@ import type { LaneDetailType, TicketType, UpsertTicketType } from "@/lib/types";
 import { useToggle } from "@/hooks/use-toggle";
 
 type PipelineUtilityModalsContextProps = {
+  createPipelineModal: ReturnType<typeof useToggle>;
   createLaneModal: ReturnType<typeof useToggle>;
   updateLaneModal: ReturnType<typeof useToggle>;
   deleteLaneModal: ReturnType<typeof useToggle>;
@@ -35,11 +36,12 @@ type PipelineUtilityModalsProviderProps = {
 export const PipelineUtilityModalsProvider: React.FC<
   PipelineUtilityModalsProviderProps
 > = ({ pipelineId, subAccountId, children }) => {
+  const ticketModal = useToggle(false);
   const createLaneModal = useToggle(false);
   const updateLaneModal = useToggle(false);
   const deleteLaneModal = useToggle(false);
-  const ticketModal = useToggle(false);
   const deleteTicketModal = useToggle(false);
+  const createPipelineModal = useToggle(false);
 
   const [lane, setLane] = useState<LaneDetailType | undefined>();
   const [ticket, setTicket] = useState<TicketType | undefined>();
@@ -47,6 +49,7 @@ export const PipelineUtilityModalsProvider: React.FC<
 
   const value = useMemo(
     () => ({
+      createPipelineModal,
       createLaneModal,
       updateLaneModal,
       deleteLaneModal,
@@ -62,6 +65,7 @@ export const PipelineUtilityModalsProvider: React.FC<
       setTicketData,
     }),
     [
+      createPipelineModal,
       createLaneModal,
       updateLaneModal,
       deleteLaneModal,

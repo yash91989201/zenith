@@ -25,6 +25,7 @@ export function usePipelineDndUtilityModals() {
     deleteLaneModal,
     updateLaneModal,
     deleteTicketModal,
+    createPipelineModal,
     setLane,
     setTicket,
     setTicketData,
@@ -100,5 +101,6 @@ export function usePipelineDndUtilityModals() {
     deletingLane,
     deletingTicket,
     openDeleteLaneModal,
+    createPipelineModal
   };
 }

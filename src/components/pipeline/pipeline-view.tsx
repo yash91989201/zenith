@@ -4,7 +4,7 @@ import { api } from "@/trpc/react";
 // TYPES
 import type { PipelineType } from "@/lib/types";
 // CUSTOM HOOKS
-import { PipelineDnd } from "@pipelineDnd/index";
+import { PipelineDnd, PipelineDndSkeleton } from "@pipelineDnd/index";
 import { CreateLaneButton } from "@/components/pipeline/pipeline-utility-modals/create-lane-button";
 // ICONS
 import { Flag } from "lucide-react";
@@ -27,7 +27,7 @@ export function PipelineView({ pipeline, pipelineId, subAccountId }: Props) {
         <CreateLaneButton />
       </div>
       {isLoading ? (
-        <>loading skeleton here</>
+        <PipelineDndSkeleton />
       ) : (
         <PipelineDnd
           lanes={lanes}

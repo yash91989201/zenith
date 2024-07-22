@@ -577,3 +577,7 @@ export const PipelineDnd = memo(
 );
 
 PipelineDnd.displayName = "Pipeline Drag & Drop";
+
+export const PipelineDndSkeleton = () => {
+  return <div></div>;
+};
