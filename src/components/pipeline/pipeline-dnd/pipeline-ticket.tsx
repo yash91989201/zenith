@@ -20,7 +20,6 @@ import type { TagColor, TicketAndTagsType } from "@/lib/types";
 import type { Edge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
 // CUSTOM HOOKS
 import { usePipelineDnd } from "@/hooks/use-pipeline-dnd";
-import { usePipelineDndUtilityModals } from "@/hooks/use-pipeline-utility-modals";
 // UI
 import {
   Card,
@@ -30,29 +29,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@ui/dropdown-menu";
 import { Button } from "@ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@ui/avatar";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@ui/hover-card";
 // CUSTOM COMPONENTS
 import { Tag } from "@global/tag";
+import { TicketMenu } from "@/components/pipeline/pipeline-dnd/ticket-menu";
 // ICONS
-import {
-  Edit,
-  Trash,
-  User2,
-  LinkIcon,
-  Contact2,
-  GripVertical,
-  MoreHorizontalIcon,
-} from "lucide-react";
+import { User2, LinkIcon, Contact2, GripVertical } from "lucide-react";
 
 type State =
   | { type: "idle" }
@@ -75,8 +59,6 @@ export const PipelineTicket = memo(({ ticket }: Props) => {
   const [closestEdge, setClosestEdge] = useState<Edge | null>(null);
 
   const { instanceId, registerTicket } = usePipelineDnd();
-  const { openDeleteTicketModal, openUpdateTicketModal } =
-    usePipelineDndUtilityModals();
 
   useEffect(() => {
     const element = ticketRef.current;
@@ -178,36 +160,7 @@ export const PipelineTicket = memo(({ ticket }: Props) => {
               {new Date().toLocaleDateString()}
             </span>
           </p>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="size-6">
-                <MoreHorizontalIcon className="size-4 text-muted-foreground" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuLabel>Options</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                className="flex items-center gap-3"
-                onClick={() =>
-                  openUpdateTicketModal({
-                    ticket: ticket,
-                    tags: ticket.tags,
-                  })
-                }
-              >
-                <Edit className="size-4" />
-                Edit Ticket
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="flex items-center gap-3"
-                onClick={() => openDeleteTicketModal(ticket)}
-              >
-                <Trash className="size-4" />
-                Delete Ticket
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <TicketMenu ticket={ticket} />
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3 p-3 pt-0">

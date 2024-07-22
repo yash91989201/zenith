@@ -552,6 +552,7 @@ export const PipelineDnd = memo(
 
     return (
       <PipelineDndProvider
+        lanes={laneState.lanes}
         instanceId={instanceId}
         registerLane={registry.registerLane}
         registerTicket={registry.registerTicket}

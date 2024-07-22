@@ -2,9 +2,11 @@ import { createContext, useMemo } from "react";
 // TYPES
 import type { ReactNode } from "react";
 import type { CleanupFn } from "@atlaskit/pragmatic-drag-and-drop/types";
+import type { LaneDetailType } from "@/lib/types";
 
 export type PipelineDndContextType = {
   instanceId: symbol;
+  lanes: LaneDetailType[];
 
   registerTicket: (args: {
     ticketId: string;
@@ -53,9 +55,11 @@ export function PipelineDndProvider({
   moveTicket,
   reorderTicket,
   children,
+  lanes,
 }: PipelineDndProviderProps) {
   const contextValue: PipelineDndContextType = useMemo(() => {
     return {
+      lanes,
       instanceId,
       registerTicket,
       registerLane,
@@ -64,6 +68,7 @@ export function PipelineDndProvider({
       reorderTicket,
     };
   }, [
+    lanes,
     reorderLane,
     registerLane,
     registerTicket,

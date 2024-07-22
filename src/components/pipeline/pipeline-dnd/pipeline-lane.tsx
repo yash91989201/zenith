@@ -1,5 +1,4 @@
 "use client";
-import { toast } from "sonner";
 import invariant from "tiny-invariant";
 import {
   draggable,
@@ -17,7 +16,6 @@ import { centerUnderPointer } from "@atlaskit/pragmatic-drag-and-drop/element/ce
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
 // UTILS
 import { cn, formatAmount, randomColor } from "@/lib/utils";
-import { api } from "@/trpc/react";
 // TYPES
 import type { LaneDetailType, TicketAndTagsType } from "@/lib/types";
 import type { Edge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
@@ -25,33 +23,12 @@ import type { Edge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge
 import { LaneProvider } from "@/providers/lane-provider";
 // CUSTOM HOOKS
 import { usePipelineDnd } from "@/hooks/use-pipeline-dnd";
-import { usePipelineDndUtilityModals } from "@/hooks/use-pipeline-utility-modals";
 // UI
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from "@ui/dropdown-menu";
 import { Badge } from "@ui/badge";
-import { Button } from "@ui/button";
 import { ScrollArea } from "@ui/scroll-area";
 // CUSTOM COMPONENTS
 import { PipelineTicket } from "@pipelineDnd/pipeline-ticket";
-// ICONS
-import {
-  Edit,
-  Trash,
-  MoreVertical,
-  ArrowRightLeft,
-  PlusCircleIcon,
-} from "lucide-react";
+import { LaneMenu } from "@/components/pipeline/pipeline-dnd/lane-menu";
 
 type Props = {
   pipelineId: string;
@@ -89,35 +66,6 @@ export const PipelineLane = memo(
     const [isDragging, setIsDragging] = useState<boolean>(false);
 
     const { instanceId, registerLane } = usePipelineDnd();
-    const { openUpdateLaneModal, openDeleteLaneModal, openCreateTicketModal } =
-      usePipelineDndUtilityModals();
-
-    const apiUtils = api.useUtils();
-    const { data: pipelines = [] } =
-      api.pipeline.getSubAccountPipelines.useQuery({
-        subAccountId,
-      });
-
-    const { mutateAsync: changeLanePipeline } =
-      api.lane.changePipeline.useMutation();
-
-    const switchablePipelines = pipelines.filter(
-      (pipeline) => pipeline.id !== pipelineId,
-    );
-
-    const changeLanePipelineAction = async (pipelineId: string) => {
-      const actionRes = await changeLanePipeline({
-        laneId,
-        pipelineId,
-      });
-      if (actionRes.status === "SUCCESS") {
-        toast.success(actionRes.message);
-
-        await apiUtils.lane.getDetail.refetch({ pipelineId: lane.pipelineId });
-      } else {
-        toast.error(actionRes.message);
-      }
-    };
 
     useEffect(() => {
       stableTickets.current = tickets;
@@ -269,12 +217,12 @@ export const PipelineLane = memo(
           ref={laneRef}
           className={cn(
             isDragging ? "opacity-75" : "",
-            "h-[700px] w-96 shrink-0  bg-slate-200/30 dark:bg-background/20",
+            "h-[700px] w-96 shrink-0 overflow-hidden  rounded-lg bg-slate-200/30 dark:bg-background/20",
           )}
         >
           <div ref={laneInnerRef} className="flex h-full flex-col">
             <div
-              className="flex cursor-grab select-none items-center justify-between gap-3 rounded-t-lg border-b bg-slate-200/60 p-3 backdrop-blur-lg dark:bg-background/40"
+              className="flex cursor-grab select-none items-center justify-between gap-3  bg-slate-200/60 p-3 backdrop-blur-lg dark:bg-background/40"
               ref={laneHeaderRef}
             >
               <span
@@ -285,64 +233,20 @@ export const PipelineLane = memo(
               <Badge className="bg-white text-black">
                 {formatAmount(laneAmount)}
               </Badge>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button size="icon" variant="ghost" className="size-7">
-                    <MoreVertical className="size-4 cursor-pointer text-muted-foreground" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuLabel>Options</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    className="flex items-center gap-3"
-                    onClick={() => openUpdateLaneModal(lane)}
-                  >
-                    <Edit className="size-4" />
-                    Edit
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="flex items-center gap-3"
-                    onClick={() => openDeleteLaneModal(lane)}
-                  >
-                    <Trash className="size-4" />
-                    Delete
-                  </DropdownMenuItem>
-                  <DropdownMenuSub>
-                    <DropdownMenuSubTrigger>
-                      <ArrowRightLeft className="mr-2 h-4 w-4" />
-                      <span>Change pipeline</span>
-                    </DropdownMenuSubTrigger>
-                    <DropdownMenuPortal>
-                      <DropdownMenuSubContent>
-                        <DropdownMenuLabel>Move to</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        {switchablePipelines.map((pipeline) => (
-                          <DropdownMenuItem
-                            key={pipeline.id}
-                            onClick={() =>
-                              changeLanePipelineAction(pipeline.id)
-                            }
-                          >
-                            {pipeline.name}
-                          </DropdownMenuItem>
-                        ))}
-                      </DropdownMenuSubContent>
-                    </DropdownMenuPortal>
-                  </DropdownMenuSub>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    className="flex items-center gap-3"
-                    onClick={() => openCreateTicketModal(lane)}
-                  >
-                    <PlusCircleIcon className="size-4" />
-                    Create Ticket
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <LaneMenu
+                lane={lane}
+                pipelineId={pipelineId}
+                subAccountId={subAccountId}
+              />
             </div>
 
-            <ScrollArea className="flex-1" ref={scrollableRef}>
+            <ScrollArea
+              className={cn(
+                "flex-1",
+                state.type === "is-ticket-over" && "bg-primary/10",
+              )}
+              ref={scrollableRef}
+            >
               <div className="m-4 space-y-3">
                 {tickets.map((ticket) => (
                   <PipelineTicket key={ticket.id} ticket={ticket} />
