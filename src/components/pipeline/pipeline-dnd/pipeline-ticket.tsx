@@ -192,17 +192,17 @@ export const PipelineTicket = memo(({ ticket }: Props) => {
                     {ticket.customer.name.slice(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                <div className="space-y-1">
+                <div className="space-y-1.5">
                   <h4 className="text-sm font-semibold">
                     {ticket.customer.name}
                   </h4>
                   <p className="text-sm text-muted-foreground">
                     {ticket.customer.email}
                   </p>
-                  <div className="flex items-center pt-2">
-                    <Contact2 className="mr-2 h-4 w-4 opacity-70" />
-                    <span className="text-xs text-muted-foreground">
-                      Joined
+                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <Contact2 className="size-3.5" />
+                    <span>Joined</span>
+                    <span>
                       {ticket.customer.createdAt.toLocaleDateString()}
                     </span>
                   </div>

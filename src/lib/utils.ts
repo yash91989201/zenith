@@ -6,7 +6,7 @@ import { twMerge } from "tailwind-merge"
 import { createGithubAuthUrl, createGoogleAuthUrl } from "@/server/actions/auth";
 // TYPES
 import type { ClassValue } from "clsx"
-import type { STORE_ENDPOINTS } from "@/lib/types";
+import type { STORE_ENDPOINTS, TicketType } from "@/lib/types";
 import type { FunctionComponent, ReactElement } from "react";
 
 export const CURRENCY_NUMBER_REGEX = /^\d+(\.\d{1,2})?$/
@@ -59,6 +59,14 @@ export function formatAmount(
     notation,
     maximumFractionDigits: 2,
   }).format(numericPrice);
+}
+
+export function totalTicketValue(tickets: TicketType[]) {
+  if (tickets.length === 0) return null
+
+  const totalAmount = tickets.reduce((total, ticket) => total + (ticket.value ?? 0), 0)
+
+  return formatAmount(totalAmount)
 }
 
 export async function uploadAvatar(file: File) {

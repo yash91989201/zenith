@@ -118,26 +118,6 @@ export const LaneMenu = memo(({ pipelineId, subAccountId, lane }: Props) => {
         <DropdownMenuSeparator />
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>
-            <ArrowRightLeft className="mr-2 h-4 w-4" />
-            <span>Change pipeline</span>
-          </DropdownMenuSubTrigger>
-          <DropdownMenuPortal>
-            <DropdownMenuSubContent>
-              <DropdownMenuLabel>Move to</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {switchablePipelines.map((pipeline) => (
-                <DropdownMenuItem
-                  key={pipeline.id}
-                  onClick={() => changeLanePipelineAction(pipeline.id)}
-                >
-                  {pipeline.name}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuSubContent>
-          </DropdownMenuPortal>
-        </DropdownMenuSub>
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger>
             <BringToFront className="mr-2 h-4 w-4" />
             <span>Reorder</span>
           </DropdownMenuSubTrigger>
@@ -155,6 +135,26 @@ export const LaneMenu = memo(({ pipelineId, subAccountId, lane }: Props) => {
               >
                 Move right
               </DropdownMenuItem>
+            </DropdownMenuSubContent>
+          </DropdownMenuPortal>
+        </DropdownMenuSub>
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger>
+            <ArrowRightLeft className="mr-2 h-4 w-4" />
+            <span>Change pipeline</span>
+          </DropdownMenuSubTrigger>
+          <DropdownMenuPortal>
+            <DropdownMenuSubContent>
+              <DropdownMenuLabel>Move to</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {switchablePipelines.map((pipeline) => (
+                <DropdownMenuItem
+                  key={pipeline.id}
+                  onClick={() => changeLanePipelineAction(pipeline.id)}
+                >
+                  {pipeline.name}
+                </DropdownMenuItem>
+              ))}
             </DropdownMenuSubContent>
           </DropdownMenuPortal>
         </DropdownMenuSub>

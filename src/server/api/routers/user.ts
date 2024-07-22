@@ -7,6 +7,7 @@ import {
   NotificationTable,
   SubAccountSidebarOptionTable,
   AgencySidebarOptionTable,
+  SubAccountTable,
 } from "@/server/db/schema";
 // SCHEMAS
 import {
@@ -21,11 +22,12 @@ import {
   GetAgencyAndPermissionsSchema,
 } from "@/lib/schema";
 // UTILS
-import { env } from "@/env";
 import {
   createTRPCRouter,
   protectedProcedure
 } from "@/server/api/trpc";
+import { env } from "@/env";
+import { procedureError } from "@/server/helpers";
 // TYPES
 import type {
   UpdateAvatarType,
@@ -35,7 +37,6 @@ import type {
   UpdateUserByIdType,
   DeleteUserType,
 } from "@/lib/types";
-import { procedureError } from "@/server/helpers";
 
 export const userRouter = createTRPCRouter({
   getSessionList: protectedProcedure.query(({ ctx }) => {
@@ -74,6 +75,12 @@ export const userRouter = createTRPCRouter({
         },
         permissions: true
       }
+    })
+  }),
+
+  getAccessibleSubAccounts: protectedProcedure.query(async ({ ctx }) => {
+    return ctx.db.query.SubAccountTable.findMany({
+      where: eq(SubAccountTable.agencyId, ctx.session.user?.agencyId ?? "")
     })
   }),
 

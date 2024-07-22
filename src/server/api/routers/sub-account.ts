@@ -57,23 +57,6 @@ export const subAccountRouter = createTRPCRouter({
       .where(eq(PermissionTable.access, true))
       .as("permitted_sub_accounts")
 
-    // return ctx.db
-    //   .select({
-    //     ...getTableColumns(UserTable)
-    //   })
-    //   .from(UserTable)
-    //   .innerJoin(
-    //     ConnectedSubAccountAgencies,
-    //     eq(UserTable.agencyId, ConnectedSubAccountAgencies.agencyId)
-    //   )
-    //   .innerJoin(
-    //     PermittedSubAccounts,
-    //     eq(UserTable.agencyId, PermittedSubAccounts.agencyId)
-    //   )
-    //   .where(
-    //     eq(UserTable.role, "SUBACCOUNT_USER")
-    //   )
-
     return ctx.db.select({
       ...getTableColumns(UserTable)
     })

@@ -331,6 +331,12 @@ export const GetContactByNameSchema = z.object({
   name: z.string().min(1)
 })
 
+export const GetContactSubAccountSchema = z.object({
+  subAccountId: z.string()
+})
+
+export const CreateContactSchema = ContactInsertSchema
+
 // NOTIFICATION SCHEMAS
 export const SaveActivityLogSchema = z.object({
   activity: z.string(),

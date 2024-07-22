@@ -57,12 +57,12 @@ export function SubAccountDetails({
   const { mutateAsync: saveActivityLog } =
     api.notification.saveActivityLog.useMutation();
 
-  const agencyDetailsForm = useForm<UpsertSubAccountType>({
+  const subAccountDetailsForm = useForm<UpsertSubAccountType>({
     defaultValues: details,
     resolver: zodResolver(UpsertSubAccountSchema),
   });
 
-  const { control, handleSubmit, formState } = agencyDetailsForm;
+  const { control, handleSubmit, formState } = subAccountDetailsForm;
 
   const subAccountDetailsSubmitAction: SubmitHandler<
     UpsertSubAccountType
@@ -93,7 +93,7 @@ export function SubAccountDetails({
   return (
     <Card className={cn(modalChild ? "border-none shadow-none" : "")}>
       <CardContent className={cn(modalChild ? "p-0" : "")}>
-        <Form {...agencyDetailsForm}>
+        <Form {...subAccountDetailsForm}>
           <form
             className="my-3 space-y-3"
             onSubmit={handleSubmit(subAccountDetailsSubmitAction)}

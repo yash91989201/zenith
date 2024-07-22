@@ -89,6 +89,7 @@ import type {
   TagByIdSchema,
   ChangeLanePipelineSchema,
   ChangeTicketLaneSchema,
+  CreateContactSchema,
 } from "@lib/schema"
 
 // DB TABLE TYPES
@@ -213,6 +214,9 @@ export type TagByIdType = z.infer<typeof TagByIdSchema>
 export type CreateFunnelFormType = z.infer<typeof CreateFunnelFormSchema>
 export type CreateFunnelProcedureType = z.infer<typeof CreateFunnelProcedureSchema>
 
+// CONTACT SCHEMA TYPES
+export type CreateContactType = z.infer<typeof CreateContactSchema>
+
 // CUSTOM TYPES
 export type TicketAndTagsType = TicketType & {
   tags: TagType[];
@@ -229,6 +233,12 @@ export type TicketDetail = TicketType & {
   customer: ContactType;
   lane: LaneType;
   tags: TagType[]
+}
+
+export type SubAccountContactsType = SubAccountType & {
+  contact: (ContactType & {
+    ticket: TicketType[]
+  })[]
 }
 
 const TagColors = ['BLUE', 'ORANGE', 'ROSE', 'PURPLE', 'GREEN'] as const
