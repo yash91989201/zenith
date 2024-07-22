@@ -1,9 +1,12 @@
-import { Button } from "@/components/ui/button";
-import { usePipelineDnd } from "@/hooks/use-pipeline-dnd";
+// ICONS
+import { Button } from "@ui/button";
+// CUSTOM HOOKS
+import { usePipelineDndUtilityModals } from "@/hooks/use-pipeline-utility-modals";
+// ICONS
 import { Plus } from "lucide-react";
 
 export function CreateLaneButton() {
-  const { createLaneModal } = usePipelineDnd();
+  const { createLaneModal } = usePipelineDndUtilityModals();
 
   return (
     <Button className="gap-3" onClick={createLaneModal.open}>

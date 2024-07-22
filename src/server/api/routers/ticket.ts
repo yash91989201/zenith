@@ -35,7 +35,6 @@ export const ticketRouter = createTRPCRouter({
 
   updateOrder: protectedProcedure.input(UpdateTicketOrderSchema).mutation(async ({ ctx, input: { tickets } }): ProcedureStatus<UpdateTicketOrdertype> => {
     try {
-      console.log(tickets.map(({ name, order }) => ({ name, order })))
       await ctx.db.transaction(async (trx) => {
         try {
           await Promise.all(tickets.map(async (ticket) => {

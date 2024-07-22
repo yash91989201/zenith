@@ -253,7 +253,20 @@ export const GetLaneDetailSchema = z.object({
 })
 
 export const UpdateLaneOrderSchema = z.object({
-  lanes: z.array(LaneSchema)
+  lanes: z.array(LaneSchema.extend({
+    tickets: z.array(
+      TicketSchema.extend({
+        tags: z.array(TagSchema),
+        assigned: UserSchema.omit({ password: true }).nullable(),
+        customer: ContactSchema.nullable()
+      })
+    )
+  }))
+})
+
+export const ChangeLanePipelineSchema = z.object({
+  laneId: z.string(),
+  pipelineId: z.string()
 })
 
 export const DeleteLaneSchema = z.object({
@@ -266,6 +279,7 @@ export const GetTicketsWithTagsSchema = z.object({
 })
 
 export const UpdateTicketOrderSchema = z.object({
+  laneId: z.string(),
   tickets: z.array(TicketSchema)
 })
 

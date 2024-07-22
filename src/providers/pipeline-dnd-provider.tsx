@@ -1,85 +1,80 @@
-import { useToggle } from "@/hooks/use-toggle";
-import type { LaneDetailType, TicketType, UpsertTicketType } from "@/lib/types";
-import { createContext, useMemo, useState } from "react";
-import type { Dispatch, ReactNode, SetStateAction } from "react";
+import { createContext, useMemo } from "react";
+// TYPES
+import type { ReactNode } from "react";
+import type { CleanupFn } from "@atlaskit/pragmatic-drag-and-drop/types";
 
-type PipelineDndContextProps = {
-  createLaneModal: ReturnType<typeof useToggle>;
-  updateLaneModal: ReturnType<typeof useToggle>;
-  deleteLaneModal: ReturnType<typeof useToggle>;
-  ticketModal: ReturnType<typeof useToggle>;
-  deleteTicketModal: ReturnType<typeof useToggle>;
-  lane?: LaneDetailType;
-  setLane: Dispatch<SetStateAction<LaneDetailType | undefined>>;
-  pipelineId: string;
-  subAccountId: string;
-  ticket?: TicketType;
-  setTicket: Dispatch<SetStateAction<TicketType | undefined>>;
-  ticketData?: UpsertTicketType;
-  setTicketData: Dispatch<SetStateAction<UpsertTicketType | undefined>>;
+export type PipelineDndContextType = {
+  instanceId: symbol;
+
+  registerTicket: (args: {
+    ticketId: string;
+    entry: {
+      element: HTMLElement;
+      // actionMenuTrigger: HTMLElement;
+    };
+  }) => CleanupFn;
+
+  registerLane: (args: {
+    laneId: string;
+    entry: {
+      element: HTMLElement;
+    };
+  }) => CleanupFn;
+
+  reorderTicket: (args: {
+    laneId: string;
+    startIndex: number;
+    finishIndex: number;
+  }) => void;
+
+  moveTicket: (args: {
+    startLaneId: string;
+    finishLaneId: string;
+    ticketIndexInStartLane: number;
+    ticketIndexInFinishLane?: number;
+  }) => void;
+
+  reorderLane: (args: { startIndex: number; finishIndex: number }) => void;
 };
 
-export const PipelineDndContext = createContext<
-  PipelineDndContextProps | undefined
->(undefined);
+export const PipelineDndContext = createContext<PipelineDndContextType | null>(
+  null,
+);
 
-type PipelineDndProviderProps = {
+export type PipelineDndProviderProps = PipelineDndContextType & {
   children: ReactNode;
-  pipelineId: string;
-  subAccountId: string;
 };
 
-export const PipelineDndProvider: React.FC<PipelineDndProviderProps> = ({
-  pipelineId,
-  subAccountId,
+export function PipelineDndProvider({
+  reorderLane,
+  instanceId,
+  registerLane,
+  registerTicket,
+  moveTicket,
+  reorderTicket,
   children,
-}) => {
-  const createLaneModal = useToggle(false);
-  const updateLaneModal = useToggle(false);
-  const deleteLaneModal = useToggle(false);
-  const ticketModal = useToggle(false);
-  const deleteTicketModal = useToggle(false);
-
-  const [lane, setLane] = useState<LaneDetailType | undefined>();
-  const [ticket, setTicket] = useState<TicketType | undefined>();
-  const [ticketData, setTicketData] = useState<UpsertTicketType | undefined>();
-
-  const value = useMemo(
-    () => ({
-      createLaneModal,
-      updateLaneModal,
-      deleteLaneModal,
-      ticketModal,
-      deleteTicketModal,
-      lane,
-      setLane,
-      pipelineId,
-      subAccountId,
-      ticket,
-      setTicket,
-      ticketData,
-      setTicketData,
-    }),
-    [
-      createLaneModal,
-      updateLaneModal,
-      deleteLaneModal,
-      ticketModal,
-      deleteTicketModal,
-      lane,
-      setLane,
-      pipelineId,
-      subAccountId,
-      ticket,
-      setTicket,
-      ticketData,
-      setTicketData,
-    ],
-  );
+}: PipelineDndProviderProps) {
+  const contextValue: PipelineDndContextType = useMemo(() => {
+    return {
+      instanceId,
+      registerTicket,
+      registerLane,
+      moveTicket,
+      reorderLane,
+      reorderTicket,
+    };
+  }, [
+    reorderLane,
+    registerLane,
+    registerTicket,
+    instanceId,
+    moveTicket,
+    reorderTicket,
+  ]);
 
   return (
-    <PipelineDndContext.Provider value={value}>
+    <PipelineDndContext.Provider value={contextValue}>
       {children}
     </PipelineDndContext.Provider>
   );
-};
+}

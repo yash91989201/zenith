@@ -16,9 +16,9 @@ import {
 } from "@ui/command";
 import { Label } from "@ui/label";
 import { Tag } from "@global/tag";
+import { FormMessage } from "@ui/form";
 // ICONS
 import { X } from "lucide-react";
-import { FormMessage } from "@ui/form";
 
 type Props = {
   subAccountId: string;

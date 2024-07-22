@@ -42,8 +42,8 @@ import { Textarea } from "@ui/textarea";
 import { Separator } from "@ui/separator";
 import { Popover, PopoverContent, PopoverTrigger } from "@ui/popover";
 // CUSTOM COMPONENTS
-import { TagsForm } from "@/components/pipeline/tags-form";
-import { TicketTagsForm } from "@/components/pipeline/ticket-tags-form";
+import { TagsForm } from "@/components/pipeline/pipeline-utility-modals/tags-form";
+import { TicketTagsForm } from "@/components/pipeline/pipeline-utility-modals/ticket-tags-form";
 // ICONS
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { Check, ChevronsUpDown } from "lucide-react";
@@ -67,7 +67,7 @@ export function UpsertTicketForm({
 }: Props) {
   const apiUtils = api.useUtils();
   const [contact, setContact] = useDebounceValue("", 500);
-  console.log(subAccountId);
+
   const { data: contacts = [] } = api.contact.getByName.useQuery(
     {
       name: contact,

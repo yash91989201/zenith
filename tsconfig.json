@@ -36,7 +36,8 @@
       "@providers/*":["./src/providers/*"],
       "@icons":["./src/components/global/icons"],
       "@accountModal/*":["./src/components/global/account-modal/*"],
-      "@hooks/*":["./src/hooks/*"]
+      "@hooks/*":["./src/hooks/*"],
+      "@pipelineDnd/*":["./src/components/pipeline/pipeline-dnd/*"]
     }
   },
   "include": [

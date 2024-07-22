@@ -1,5 +1,6 @@
+"use client";
 // CUSTOM HOOKS
-import { usePipelineDnd } from "@/hooks/use-pipeline-dnd";
+import { usePipelineDndUtilityModals } from "@/hooks/use-pipeline-utility-modals";
 // UI
 import {
   Dialog,
@@ -19,8 +20,8 @@ import {
   AlertDialogTitle,
 } from "@ui/alert-dialog";
 // CUSTOM COMPONENTS
-import { UpsertLaneForm } from "@/components/pipeline/upsert-lane-form";
-import { UpsertTicketForm } from "@/components/pipeline/upsert-ticket-form";
+import { UpsertLaneForm } from "@/components/pipeline/pipeline-utility-modals/upsert-lane-form";
+import { UpsertTicketForm } from "@/components/pipeline/pipeline-utility-modals/upsert-ticket-form";
 
 export function PipelineUtilityModals() {
   const {
@@ -38,7 +39,7 @@ export function PipelineUtilityModals() {
     deleteTicketAction,
     deletingTicket,
     deletingLane,
-  } = usePipelineDnd();
+  } = usePipelineDndUtilityModals();
 
   return (
     <>
@@ -60,6 +61,7 @@ export function PipelineUtilityModals() {
           />
         </DialogContent>
       </Dialog>
+
       {/* UPDATE LANE MODAL */}
       <Dialog
         open={updateLaneModal.isOpen}
@@ -79,6 +81,7 @@ export function PipelineUtilityModals() {
           />
         </DialogContent>
       </Dialog>
+
       {/* DELETE LANE MODAL */}
       <AlertDialog
         open={deleteLaneModal.isOpen}

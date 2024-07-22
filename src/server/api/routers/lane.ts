@@ -2,12 +2,12 @@ import { asc, count, eq } from "drizzle-orm";
 // DB SCHEMAS
 import { LaneTable, TicketTable } from "@/server/db/schema";
 // SCHEMAS
-import { DeleteLaneSchema, GetLaneDetailSchema, LaneInsertSchema, UpdateLaneOrderSchema } from "@/lib/schema";
+import { ChangeLanePipelineSchema, DeleteLaneSchema, GetLaneDetailSchema, LaneInsertSchema, UpdateLaneOrderSchema } from "@/lib/schema";
 // UTILS
 import { procedureError } from "@/server/helpers";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 // TYPES
-import type { DeleteLaneType, LaneDetailType, LaneInsertType, UpdateLaneOrderType } from "@/lib/types";
+import type { ChangeLanePipelineType, DeleteLaneType, LaneDetailType, LaneInsertType, UpdateLaneOrderType } from "@/lib/types";
 
 export const laneRouter = createTRPCRouter({
   getDetail: protectedProcedure.input(GetLaneDetailSchema).query(async ({ ctx, input }) => {
@@ -109,6 +109,25 @@ export const laneRouter = createTRPCRouter({
       }
     } catch (error) {
       return procedureError(error)
+    }
+  }),
+
+  changePipeline: protectedProcedure.input(ChangeLanePipelineSchema).mutation(async ({ ctx, input }): ProcedureStatus<ChangeLanePipelineType> => {
+    try {
+
+      const [changeLanePipelineQuery] = await ctx.db.update(LaneTable).set({
+        pipelineId: input.pipelineId
+      }).where(eq(LaneTable.id, input.laneId))
+
+      if (changeLanePipelineQuery.affectedRows === 0) throw new Error("Unable to change lane")
+
+      return {
+        status: "SUCCESS",
+        message: "Moved lane to another pipeline"
+      }
+
+    } catch (error) {
+      return procedureError<ChangeLanePipelineType>(error)
     }
   }),
 

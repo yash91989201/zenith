@@ -1,17 +1,15 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
-// UTILS
-import { validateRequest } from "@/lib/auth";
-// UI
-import { buttonVariants } from "@ui/button";
 // CUSTOM COMPONENTS
+import {
+  UserAgencyLink,
+  UserAgencyLinkSkeleton,
+} from "@global/user-agency-link";
 import { UserButton } from "@global/user-button";
 import { ThemeToggle } from "@global/theme-toggle";
 
-export async function Navigation() {
-  const { user } = await validateRequest();
-
+export function Navigation() {
   return (
     <header className="relative flex items-center justify-between p-4 ">
       <div className="flex items-center gap-2 ">
@@ -33,14 +31,9 @@ export async function Navigation() {
         </ul>
       </nav>
       <div className="flex items-center gap-3">
-        {user && (
-          <Link
-            href="/agency"
-            className={buttonVariants({ variant: "outline" })}
-          >
-            My agency
-          </Link>
-        )}
+        <Suspense fallback={<UserAgencyLinkSkeleton />}>
+          <UserAgencyLink />
+        </Suspense>
         <UserButton />
         <ThemeToggle />
       </div>

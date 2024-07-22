@@ -1,14 +1,17 @@
 "use client"
 import { useContext, useCallback } from "react";
-import { PipelineDndContext } from "@providers/pipeline-dnd-provider";
+// utils
 import { api } from "@/trpc/react";
+// TYPES
 import type { LaneDetailType, TicketType, UpsertTicketType } from "@/lib/types";
+// CONTEXT
+import { PipelineUtilityModalsContext } from "@/providers/pipeline-utility-modals-provider";
 
-export function usePipelineDnd() {
+export function usePipelineDndUtilityModals() {
   // TODO: find better way to implement this 
-  const context = useContext(PipelineDndContext);
+  const context = useContext(PipelineUtilityModalsContext);
   if (!context) {
-    throw new Error("usePipelineDnd must be used within a PipelineDndProvider");
+    throw new Error("usePipelineDnd must be used within a PipelineUtilityModalsProvider");
   }
 
   const apiUtils = api.useUtils();
@@ -45,6 +48,11 @@ export function usePipelineDnd() {
     setTicketData(ticketData);
     ticketModal.open();
   }, [setTicketData, ticketModal]);
+
+  const openCreateTicketModal = useCallback((lane: LaneDetailType) => {
+    setLane(lane);
+    ticketModal.open();
+  }, [setLane, ticketModal]);
 
   const openDeleteTicketModal = useCallback((ticket: TicketType) => {
     setTicket(ticket);
@@ -88,6 +96,7 @@ export function usePipelineDnd() {
     openUpdateLaneModal,
     deleteTicketAction,
     openDeleteTicketModal,
+    openCreateTicketModal,
     deletingLane,
     deletingTicket,
     openDeleteLaneModal,
