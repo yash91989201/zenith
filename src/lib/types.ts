@@ -88,6 +88,7 @@ import type {
   UpsertTicketSchema,
   TagByIdSchema,
   ChangeLanePipelineSchema,
+  ChangeTicketLaneSchema,
 } from "@lib/schema"
 
 // DB TABLE TYPES
@@ -203,6 +204,7 @@ export type UpdateTicketOrdertype = z.infer<typeof UpdateTicketOrderSchema>
 export type GetTicketsWithTagsType = z.infer<typeof GetTicketsWithTagsSchema>
 export type TicketFormType = z.infer<typeof TicketFormSchema>
 export type UpsertTicketType = z.infer<typeof UpsertTicketSchema>
+export type ChangeTicketLaneType = z.infer<typeof ChangeTicketLaneSchema>
 
 // TAG SCHEMA TYPES
 export type TagByIdType = z.infer<typeof TagByIdSchema>

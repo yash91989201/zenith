@@ -2,12 +2,12 @@ import { count, eq, inArray } from "drizzle-orm";
 // DB SCHEMAS
 import { LaneTable, TagTable, TicketsToTagsTable, TicketTable } from "@/server/db/schema";
 // SCHEMAS
-import { GetTicketsWithTagsSchema, TicketSchema, UpdateTicketOrderSchema, UpsertTicketSchema } from "@/lib/schema";
+import { ChangeTicketLaneSchema, GetTicketsWithTagsSchema, TicketSchema, UpdateTicketOrderSchema, UpsertTicketSchema } from "@/lib/schema";
 // UTILS
 import { procedureError } from "@/server/helpers";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 // TYPES
-import type { TicketType, UpdateTicketOrdertype, UpsertTicketType } from "@/lib/types";
+import type { ChangeTicketLaneType, TicketType, UpdateTicketOrdertype, UpsertTicketType } from "@/lib/types";
 import { createId } from "@paralleldrive/cuid2";
 
 export const ticketRouter = createTRPCRouter({
@@ -127,6 +127,32 @@ export const ticketRouter = createTRPCRouter({
     }
   }),
 
+  changeLane: protectedProcedure.input(ChangeTicketLaneSchema).mutation(async ({ ctx, input }): ProcedureStatus<ChangeTicketLaneType> => {
+    try {
+
+      const laneTickets = await ctx.db.select({
+        count: count()
+      })
+        .from(TicketTable)
+        .where(eq(TicketTable.laneId, input.laneId))
+
+      const [changeTicketLaneQuery] = await ctx.db.update(TicketTable)
+        .set({
+          order: laneTickets[0]?.count,
+          laneId: input.laneId
+        })
+        .where(eq(TicketTable.id, input.ticketId))
+
+      if (changeTicketLaneQuery.affectedRows === 0) throw new Error("Unable to change ticket lane")
+
+      return {
+        status: "SUCCESS",
+        message: "Ticket lane changed"
+      }
+    } catch (error) {
+      return procedureError<ChangeTicketLaneType>(error)
+    }
+  }),
   deleteTicket: protectedProcedure.input(TicketSchema).mutation(async ({ ctx, input }): ProcedureStatus<TicketType> => {
     try {
       const tickets = await ctx.db.query.TicketTable.findMany({

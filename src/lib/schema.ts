@@ -296,6 +296,11 @@ export const UpsertTicketSchema = z.object({
   tags: z.array(TagSchema)
 })
 
+export const ChangeTicketLaneSchema = z.object({
+  laneId: z.string(),
+  ticketId: z.string(),
+})
+
 // TAGS SCHEMA
 export const GetAllTagsSchema = z.object({
   subAccountId: z.string()

@@ -21,6 +21,8 @@ import {
 import { Button } from "@ui/button";
 // ICONS
 import { Edit, Trash, MoreHorizontalIcon, BringToFront } from "lucide-react";
+import { api } from "@/trpc/react";
+import { toast } from "sonner";
 
 type Props = {
   ticket: TicketAndTagsType;
@@ -28,15 +30,33 @@ type Props = {
 
 export const TicketMenu = memo(({ ticket }: Props) => {
   const ticketId = ticket.id;
+  const apiUtils = api.useUtils();
 
-  const { openDeleteTicketModal, openUpdateTicketModal } =
+  const { openDeleteTicketModal, openUpdateTicketModal, pipelineId } =
     usePipelineDndUtilityModals();
 
-  const { reorderTicket } = usePipelineDnd();
+  const { lanes, reorderTicket } = usePipelineDnd();
   const { laneId, getNumTickets, getTicketIndex } = useLane();
 
   const numCards = getNumTickets();
   const startIndex = getTicketIndex(ticketId);
+  const switchableLanes = lanes.filter((lane) => lane.id !== laneId);
+
+  const { mutateAsync: changeTicketLane } = api.ticket.changeLane.useMutation();
+
+  const changeTicketLaneAction = async (laneId: string) => {
+    const actionRes = await changeTicketLane({
+      laneId,
+      ticketId,
+    });
+    if (actionRes.status === "SUCCESS") {
+      toast.success(actionRes.message);
+
+      await apiUtils.lane.getDetail.refetch({ pipelineId });
+    } else {
+      toast.error(actionRes.message);
+    }
+  };
 
   const moveToTop = useCallback(() => {
     reorderTicket({ laneId, startIndex, finishIndex: 0 });
@@ -111,6 +131,27 @@ export const TicketMenu = memo(({ ticket }: Props) => {
               >
                 Move to bottom
               </DropdownMenuItem>
+            </DropdownMenuSubContent>
+          </DropdownMenuPortal>
+        </DropdownMenuSub>
+
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger>
+            <BringToFront className="mr-2 h-4 w-4" />
+            <span>Change lane</span>
+          </DropdownMenuSubTrigger>
+          <DropdownMenuPortal>
+            <DropdownMenuSubContent>
+              <DropdownMenuLabel>Move to</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {switchableLanes.map((lane) => (
+                <DropdownMenuItem
+                  key={lane.id}
+                  onClick={() => changeTicketLaneAction(lane.id)}
+                >
+                  {lane.name}
+                </DropdownMenuItem>
+              ))}
             </DropdownMenuSubContent>
           </DropdownMenuPortal>
         </DropdownMenuSub>
