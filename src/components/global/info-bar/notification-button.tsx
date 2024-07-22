@@ -46,11 +46,7 @@ export const NotificationButton = renderOnClient(
       refetch: refetchNotifications,
     } = api.user.getNotifications.useQuery({
       agencyId: user?.agencyId ?? "",
-      subAccountId:
-        !["AGENCY_OWNER", "AGENCY_ADMIN"].includes(user?.role ?? "") &&
-        subAccountId
-          ? subAccountId
-          : undefined,
+      subAccountId,
     });
 
     const filteredNotifications = useMemo(() => {
@@ -85,7 +81,7 @@ export const NotificationButton = renderOnClient(
     };
 
     if (notificationsLoading) {
-      return <Skeleton className="h-9 w-9 rounded-full" />;
+      return <Skeleton className="h-10 w-10 rounded-full" />;
     }
 
     return (
@@ -201,5 +197,5 @@ export const NotificationButton = renderOnClient(
       </Sheet>
     );
   },
-  <Skeleton className="h-9 w-9 rounded-full" />,
+  <Skeleton className="h-10 w-10 rounded-full" />,
 );

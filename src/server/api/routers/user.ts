@@ -99,17 +99,16 @@ export const userRouter = createTRPCRouter({
       .select({
         ...getTableColumns(NotificationTable),
         user: {
-          ...getTableColumns(UserTable),
+          name: UserTable.name,
+          avatarUrl: UserTable.avatarUrl,
         }
       })
       .from(NotificationTable)
       .innerJoin(
         UserTable,
-        eq(NotificationTable.agencyId, UserTable.agencyId)
+        eq(NotificationTable.userId, UserTable.id)
       )
-      .where(
-        eq(NotificationTable.agencyId, input.agencyId),
-      )
+      .where(eq(NotificationTable.agencyId, input.agencyId))
       .orderBy(desc(NotificationTable.createdAt))
       .$dynamic()
 
