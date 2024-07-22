@@ -176,39 +176,41 @@ export const PipelineTicket = memo(({ ticket }: Props) => {
         <CardDescription className="w-full">
           {ticket.description}
         </CardDescription>
-        <HoverCard>
-          <HoverCardTrigger asChild>
-            <div className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-1.5 text-muted-foreground transition-all hover:bg-muted">
-              <LinkIcon className="size-3" />
-              <span className="text-xs font-bold">Contact</span>
-            </div>
-          </HoverCardTrigger>
-          <HoverCardContent side="right" className="w-fit">
-            <div className="flex justify-between space-x-4">
-              <Avatar>
-                <AvatarImage />
-                <AvatarFallback className="bg-primary">
-                  {ticket.customer?.name.slice(0, 2).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              <div className="space-y-1">
-                <h4 className="text-sm font-semibold">
-                  {ticket.customer?.name}
-                </h4>
-                <p className="text-sm text-muted-foreground">
-                  {ticket.customer?.email}
-                </p>
-                <div className="flex items-center pt-2">
-                  <Contact2 className="mr-2 h-4 w-4 opacity-70" />
-                  <span className="text-xs text-muted-foreground">
-                    Joined
-                    {ticket.customer?.createdAt.toLocaleDateString()}
-                  </span>
+        {ticket.customer && (
+          <HoverCard>
+            <HoverCardTrigger asChild>
+              <div className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-1.5 text-muted-foreground transition-all hover:bg-muted">
+                <LinkIcon className="size-3" />
+                <span className="text-xs font-bold">Contact</span>
+              </div>
+            </HoverCardTrigger>
+            <HoverCardContent side="right" className="w-fit">
+              <div className="flex justify-between space-x-4">
+                <Avatar>
+                  <AvatarImage />
+                  <AvatarFallback className="bg-primary">
+                    {ticket.customer.name.slice(0, 2).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="space-y-1">
+                  <h4 className="text-sm font-semibold">
+                    {ticket.customer.name}
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    {ticket.customer.email}
+                  </p>
+                  <div className="flex items-center pt-2">
+                    <Contact2 className="mr-2 h-4 w-4 opacity-70" />
+                    <span className="text-xs text-muted-foreground">
+                      Joined
+                      {ticket.customer.createdAt.toLocaleDateString()}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          </HoverCardContent>
-        </HoverCard>
+            </HoverCardContent>
+          </HoverCard>
+        )}
       </CardContent>
       <CardFooter className="m-0 flex items-center justify-between border-t-[1px] border-muted-foreground/20 p-3">
         <div className="flex items-center gap-3">
