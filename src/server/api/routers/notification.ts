@@ -4,10 +4,11 @@ import { NotificationTable, SubAccountTable } from "@/server/db/schema";
 // SCHEMAS
 import { MarkNotificationsReadSchema, SaveActivityLogSchema } from "@/lib/schema";
 // UTILS
+import { procedureError } from "@/server/helpers";
+import { wsServer } from "@/server/helpers/ws-server";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 // TYPES
 import type { MarkNotificationsReadType, SaveAvtivityLogType } from "@/lib/types";
-import { procedureError } from "@/server/helpers";
 
 export const notificationRouter = createTRPCRouter({
   saveActivityLog: protectedProcedure.input(SaveActivityLogSchema).mutation(async ({ ctx, input }): ProcedureStatus<SaveAvtivityLogType> => {
@@ -37,11 +38,17 @@ export const notificationRouter = createTRPCRouter({
 
         if (createNotificationQuery.affectedRows === 0) throw new Error("Unable to log activity")
 
+        await wsServer.trigger("zenith", "notification", {
+          activity: `${userData.name} | ${activity}`,
+          userId: ctx.session.user.id
+        })
+
         return {
           status: "SUCCESS",
           message: "Activity log saved"
         }
       }
+
       const [createNotificationQuery] = await ctx.db.insert(NotificationTable).values({
         text: `${userData.name} | ${activity}`,
         userId: userData.id,
@@ -50,6 +57,10 @@ export const notificationRouter = createTRPCRouter({
 
       if (createNotificationQuery.affectedRows === 0) throw new Error("Unable to log activity")
 
+      await wsServer.trigger("zenith", "notification", {
+        activity: `${userData.name} | ${activity}`,
+        userId: ctx.session.user.id
+      })
 
       return {
         status: "SUCCESS",

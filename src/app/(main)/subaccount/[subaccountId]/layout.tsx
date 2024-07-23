@@ -12,6 +12,7 @@ import { Sidebar } from "@/components/sidebar";
 import { Unauthorized } from "@global/unauthorized";
 import { AccountModal } from "@global/account-modal";
 import BlurPage from "@/components/global/blur-page";
+import { LiveNotification } from "@global/live-notification";
 import { AccountModalProvider } from "@/providers/account-modal-provider";
 
 type Props = {
@@ -59,6 +60,7 @@ export default async function SubAccountLayout({ params, children }: Props) {
           <BlurPage>{children}</BlurPage>
         </div>
       </main>
+      <LiveNotification />
     </>
   );
 }

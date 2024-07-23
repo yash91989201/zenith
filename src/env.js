@@ -19,7 +19,9 @@ export const env = createEnv({
     S3_PORT: z.string(),
     S3_ACCESS_KEY: z.string(),
     S3_SECRET_KEY: z.string(),
-    S3_BUCKET_NAME: z.string(),
+    PUSHER_APP_ID: z.string(),
+    PUSHER_APP_KEY: z.string(),
+    PUSHER_APP_SECRET: z.string(),
   },
 
   /**
@@ -29,6 +31,7 @@ export const env = createEnv({
    */
   client: {
     NEXT_PUBLIC_URL: z.string(),
+    NEXT_PUBLIC_PUSHER_APP_KEY: z.string(),
   },
 
   /**
@@ -38,6 +41,7 @@ export const env = createEnv({
   runtimeEnv: {
     // CLIENT SIDE ENV'S
     NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
+    NEXT_PUBLIC_PUSHER_APP_KEY: process.env.NEXT_PUBLIC_PUSHER_APP_KEY,
     // SERVER SIDE ENV'S
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
@@ -49,7 +53,9 @@ export const env = createEnv({
     S3_PORT: process.env.S3_PORT,
     S3_ACCESS_KEY: process.env.S3_ACCESS_KEY,
     S3_SECRET_KEY: process.env.S3_SECRET_KEY,
-    S3_BUCKET_NAME: process.env.S3_BUCKET_NAME,
+    PUSHER_APP_ID: process.env.PUSHER_APP_ID,
+    PUSHER_APP_KEY: process.env.PUSHER_APP_KEY,
+    PUSHER_APP_SECRET: process.env.PUSHER_APP_SECRET,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
