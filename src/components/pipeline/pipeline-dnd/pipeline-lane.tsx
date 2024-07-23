@@ -245,9 +245,8 @@ export const PipelineLane = memo(
                 "flex-1",
                 state.type === "is-ticket-over" && "bg-primary/10",
               )}
-              ref={scrollableRef}
             >
-              <div className="m-4 space-y-3">
+              <div className="m-4 space-y-3" ref={scrollableRef}>
                 {tickets.map((ticket) => (
                   <PipelineTicket key={ticket.id} ticket={ticket} />
                 ))}

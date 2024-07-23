@@ -443,8 +443,6 @@ export const PipelineDnd = memo(
                 (ticket) => ticket.id === ticketId,
               );
 
-              console.log(location.current);
-
               if (location.current.dropTargets.length === 1) {
                 const [destinationLaneRecord] = location.current.dropTargets;
                 if (!destinationLaneRecord) return;

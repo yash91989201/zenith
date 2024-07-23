@@ -54,9 +54,9 @@ import {
 } from "@ui/dialog";
 // CUSTOM COMPONENTS
 import { UserDetails } from "@forms/user-details";
+import { SendInvitation } from "@/components/agency/team/send-invitation";
 // ICONS
 import { MoreVertical, Plus, Search } from "lucide-react";
-import { SendInvitation } from "@/components/agency/team/send-invitation";
 
 export function TeamTable({ agencyId }: { agencyId: string }) {
   const { user } = useUser();

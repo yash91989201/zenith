@@ -6,9 +6,10 @@ import { validateRequest } from "@/lib/auth";
 import type { ReactNode } from "react";
 // CUSTOM COMPONENTS
 import BlurPage from "@global/blur-page";
-import { InfoBar } from "@/components/global/info-bar";
 import { Sidebar } from "@/components/sidebar";
 import { AccountModal } from "@global/account-modal";
+import { InfoBar } from "@/components/global/info-bar";
+import { LiveNotification } from "@global/live-notification";
 import { AccountModalProvider } from "@providers/account-modal-provider";
 
 export default async function AgencyLayout({
@@ -43,6 +44,7 @@ export default async function AgencyLayout({
           <BlurPage>{children}</BlurPage>
         </div>
       </main>
+      <LiveNotification />
     </>
   );
 }
