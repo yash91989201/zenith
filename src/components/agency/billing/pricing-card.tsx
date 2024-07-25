@@ -43,7 +43,7 @@ export function PricingCard({
 }: Props) {
   const searchParams = useSearchParams();
   const plan = searchParams.get("plan");
-  console.log(prices);
+
   return (
     <Card className="flex flex-col justify-between lg:w-1/2">
       <div>

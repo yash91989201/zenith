@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
     ) {
       throw new Error('SKIPPED FROM WEBHOOK 💳 because subscription was from a connected account not for the application')
     }
-    console.log(subscription)
+
     switch (stripeEvent.type) {
       case 'customer.subscription.created':
       case 'customer.subscription.updated': {
@@ -54,17 +54,9 @@ export async function POST(req: NextRequest) {
             subscription,
             customerId: subscription.customer as string
           })
-          console.log('CREATED FROM WEBHOOK 💳', subscription)
-        } else {
-          console.log(
-            'SKIPPED AT CREATED FROM WEBHOOK 💳 because subscription status is not active',
-            subscription
-          )
-          break
+          break;
         }
       }
-      default:
-        console.log('👉🏻 Unhandled relevant event!', stripeEvent.type)
     }
 
     return NextResponse.json(
@@ -76,10 +68,6 @@ export async function POST(req: NextRequest) {
       }
     )
   } catch (error) {
-    if (error instanceof Error) {
-      console.log(error.message)
-    }
-    // console.log(error)
     return new NextResponse('🔴 Webhook Error', { status: 400 })
   }
 }

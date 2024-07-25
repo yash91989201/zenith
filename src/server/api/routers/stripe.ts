@@ -183,7 +183,6 @@ export const stripeRouter = createTRPCRouter({
         }
       }
     } catch (error) {
-      console.log(error)
       return {
         status: "FAILED",
         message: "Unable to create subscription, try again"

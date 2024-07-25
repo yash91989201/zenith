@@ -62,15 +62,11 @@ export async function subscriptionCreated({ subscription, customerId }: {
 
     if (updateAgencySubscriptionQuery.affectedRows === 0) throw new Error("")
 
-    console.log(`🟢 Created Subscription for ${subscription.id}`)
-
     return {
       status: "SUCCESS",
       message: "Stripe subscription created"
     }
   } catch (error) {
-    console.log('🔴 Error from Create action', error)
-
     return {
       status: "FAILED",
       message: "Unable to create subscription"
