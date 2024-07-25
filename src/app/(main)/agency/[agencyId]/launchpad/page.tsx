@@ -14,9 +14,14 @@ import {
 import { Button } from "@ui/button";
 // ICONS
 import { CheckCircle } from "lucide-react";
+import { getStripeOAuthLink, stripe } from "@/lib/stripe";
+import { db } from "@/server/db";
+import { AgencyTable } from "@/server/db/schema";
+import { eq } from "drizzle-orm";
 
 export default async function LaunchpadPage({
   params,
+  searchParams,
 }: {
   params: { agencyId: string };
   searchParams: { code: string };
@@ -38,6 +43,33 @@ export default async function LaunchpadPage({
     agency.zipCode;
 
   if (!agencyDetails) return;
+
+  const stripeOAuthLink = getStripeOAuthLink({
+    accountType: "agency",
+    state: `launchpad___${agency.id}`,
+  });
+
+  let connectedStripeAccount = agency.connectAccountId === null;
+
+  if (searchParams.code) {
+    if (!connectedStripeAccount) {
+      try {
+        const response = await stripe.oauth.token({
+          grant_type: "authorization_code",
+          code: searchParams.code,
+        });
+
+        await db
+          .update(AgencyTable)
+          .set({ connectAccountId: response.stripe_user_id })
+          .where(eq(AgencyTable.id, agency.id));
+
+        connectedStripeAccount = true;
+      } catch (error) {
+        console.log("🔴 Could not connect stripe account");
+      }
+    }
+  }
 
   return (
     <div className="flex flex-col items-center justify-center">
@@ -77,7 +109,13 @@ export default async function LaunchpadPage({
                   your dashboard
                 </p>
               </div>
-              <Button>Start</Button>
+              {agency.connectAccountId ? (
+                <CheckCircle className="size-12 shrink-0 p-2 text-primary" />
+              ) : (
+                <Link href={stripeOAuthLink} className={buttonVariants()}>
+                  Update agency
+                </Link>
+              )}
             </div>
             <div className="flex items-center justify-between gap-3 rounded-lg border p-3">
               <div className="flex flex-col gap-3 md:flex-row md:items-center">

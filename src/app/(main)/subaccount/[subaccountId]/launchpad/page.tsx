@@ -1,7 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
+import { eq } from "drizzle-orm";
+// DB TABLES
+import { SubAccountTable } from "@/server/db/schema";
 // UTILS
+import { db } from "@/server/db";
 import { api } from "@/trpc/server";
+import { stripe } from "@/lib/stripe";
 // UI
 import {
   Card,
@@ -26,7 +31,7 @@ type Props = {
   };
 };
 
-export default async function LaunchPadPage({ params }: Props) {
+export default async function LaunchPadPage({ params, searchParams }: Props) {
   const subAccount = await api.subAccount.getById({ id: params.subaccountId });
 
   if (!subAccount) return;
@@ -41,9 +46,27 @@ export default async function LaunchPadPage({ params }: Props) {
     subAccount.name &&
     subAccount.state;
 
-  // todo wireup stripe
+  let connectedStripeAccount = subAccount.connectAccountId === null;
 
-  const connectedStripeAccount = false;
+  if (searchParams.code) {
+    if (!connectedStripeAccount) {
+      try {
+        const response = await stripe.oauth.token({
+          grant_type: "authorization_code",
+          code: searchParams.code,
+        });
+
+        await db
+          .update(SubAccountTable)
+          .set({ connectAccountId: response.stripe_user_id })
+          .where(eq(SubAccountTable.id, subAccount.id));
+
+        connectedStripeAccount = true;
+      } catch (error) {
+        console.log("🔴 Could not connect stripe account");
+      }
+    }
+  }
 
   return (
     <BlurPage>
@@ -84,7 +107,7 @@ export default async function LaunchPadPage({ params }: Props) {
                     used to run payouts.
                   </p>
                 </div>
-                {subAccount.connectAccountId ?? connectedStripeAccount ? (
+                {(subAccount.connectAccountId ?? connectedStripeAccount) ? (
                   <CheckCircleIcon
                     size={50}
                     className=" flex-shrink-0 p-2 text-primary"

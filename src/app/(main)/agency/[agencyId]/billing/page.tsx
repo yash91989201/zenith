@@ -54,7 +54,7 @@ export default async function BillingPage({ params }: Props) {
     ...charges.data.map((charge) => ({
       description: charge.description,
       id: charge.id,
-      date: format(new Date(charge.created * 1000), "M y "),
+      date: format(new Date(charge.created * 1000), "DD,MMM,yy"),
       status: "Paid",
       amount: formatAmount(charge.amount * 100),
     })),
