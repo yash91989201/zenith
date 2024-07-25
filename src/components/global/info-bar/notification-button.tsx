@@ -121,13 +121,10 @@ export const NotificationButton = renderOnClient(
               </VisuallyHidden.Root>
             )}
           </SheetHeader>
-          <ScrollArea className="flex-1 space-y-1.5">
+          <ScrollArea className="flex-1 px-3">
             {filteredNotifications?.map((notification, index) => (
-              <div
-                key={index}
-                className="my-3 flex flex-col gap-3 text-ellipsis"
-              >
-                <div className="flex gap-3">
+              <div key={index} className="flex flex-col gap-3 text-ellipsis">
+                <div className="my-1.5 flex gap-3">
                   <Avatar>
                     <AvatarImage
                       src={notification?.user.avatarUrl}

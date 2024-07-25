@@ -1,10 +1,17 @@
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { createId } from "@paralleldrive/cuid2";
 // DB SCHEMAS
 import {
   UserTable,
   AgencyTable,
   AgencySidebarOptionTable,
+  AddOnTable,
+  InvitationTable,
+  NotificationTable,
+  SubAccountTable,
+  TagTable,
+  MediaTable,
+  FunnelTable,
 } from "@/server/db/schema";
 // SCHEMAS
 import {
@@ -19,6 +26,7 @@ import { procedureError } from "@/server/helpers";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 // TYPES
 import type { DeleteAgencyType, InitUserProcedureType, UpdateAgencyGoalType, UpsetAgencyProcedureType } from "@/lib/types";
+import { deleteFileFromBucket } from "@/server/helpers/store";
 
 export const agencyRouter = createTRPCRouter({
 
@@ -33,6 +41,15 @@ export const agencyRouter = createTRPCRouter({
         }
       },
       )
+  }),
+
+  getSubscription: protectedProcedure.input(GetAgencyById).query(({ ctx, input }) => {
+    return ctx.db.query.AgencyTable.findFirst({
+      where: eq(AgencyTable.id, input.agencyId),
+      with: {
+        subscription: true
+      }
+    })
   }),
 
   initUser: protectedProcedure.input(InitUserProcedureSchema).mutation(async ({ ctx, input }): ProcedureStatus<InitUserProcedureType> => {
@@ -146,26 +163,84 @@ export const agencyRouter = createTRPCRouter({
   }),
 
   deleteAgency: protectedProcedure.input(DeleteAgencySchema).mutation(async ({ ctx, input }): ProcedureStatus<DeleteAgencyType> => {
-
+    const { agencyId } = input
     try {
-      const [deleteAgencyQuery] = await ctx.db.delete(AgencyTable).where(eq(AgencyTable.id, input.agencyId))
+      const deleteAgencyTrxRes = await ctx.db.transaction(async (trx): ProcedureStatus<DeleteAgencyType> => {
+        try {
+          // delete all resources related to agency
+          const [deleteUsersQuery] = await trx.delete(UserTable).where(eq(UserTable.agencyId, agencyId))
+          if (deleteUsersQuery.affectedRows === 0) throw new Error("Unable to delete agency users")
 
-      if (deleteAgencyQuery.affectedRows === 0) {
-        return {
-          status: "FAILED",
-          message: "Unable to delete agency, try again"
+          const [deleteAddOnsQuery] = await trx.delete(AddOnTable).where(eq(AddOnTable.agencyId, agencyId))
+          if (deleteAddOnsQuery.affectedRows === 0) throw new Error("Unable to delete agency add ons")
+
+          const [deleteInvitationsQuery] = await trx.delete(InvitationTable).where(eq(InvitationTable.agencyId, agencyId))
+          if (deleteInvitationsQuery.affectedRows === 0) throw new Error("Unable to delete agency invitations")
+
+          const [deleteNotificationsQuery] = await trx.delete(NotificationTable).where(eq(NotificationTable.agencyId, agencyId))
+          if (deleteNotificationsQuery.affectedRows === 0) throw new Error("Unable to delete agency notifications")
+
+          const [deleteAgencySidebarOptionsQuery] = await trx.delete(AgencySidebarOptionTable).where(eq(AgencySidebarOptionTable.agencyId, agencyId))
+          if (deleteAgencySidebarOptionsQuery.affectedRows === 0) throw new Error()
+
+          // delete agency sub accounts resources
+          const agencySubAccounts = await trx.query.SubAccountTable.findMany({
+            where: eq(SubAccountTable.agencyId, agencyId),
+            columns: {
+              id: true,
+            }
+          })
+
+          if (agencySubAccounts.length === 0) {
+            return {
+              status: "SUCCESS",
+              message: "Agency deleted successfully"
+            }
+          }
+
+          const agencySubAccountsId = agencySubAccounts.map(subAccount => subAccount.id)
+
+          const [deleteSubAccountsTagsQuery] = await trx
+            .delete(TagTable)
+            .where(
+              inArray(TagTable.subAccountId, agencySubAccountsId)
+            )
+          if (deleteSubAccountsTagsQuery.affectedRows === 0) throw new Error()
+
+          const subAccountsMediaLink = await trx.query.MediaTable.findMany({
+            where: inArray(MediaTable.subAccountId, agencySubAccountsId),
+            columns: {
+              link: true
+            }
+          })
+
+          const subAccountsMediaFiles = subAccountsMediaLink
+            .map(({ link }) => new URL(link).searchParams.get("file"))
+            .filter(file => file !== null)
+
+          subAccountsMediaFiles.map(file => {
+            void deleteFileFromBucket({
+              bucketName: "media",
+              fileName: file
+            })
+          })
+
+          const [deleteSubAccountsFunnels] = await trx.delete(FunnelTable).where(inArray(FunnelTable.subAccountId, agencySubAccountsId))
+          if (deleteSubAccountsFunnels.affectedRows === 0) throw new Error()
+
+          return {
+            status: "SUCCESS",
+            message: "Agency deleted successfully"
+          }
+        } catch (error) {
+          trx.rollback()
+          return procedureError<DeleteAgencyType>(error)
         }
-      }
+      })
 
-      return {
-        status: "SUCCESS",
-        message: "Agency deleted succesfully"
-      }
+      return deleteAgencyTrxRes
     } catch (error) {
-      return {
-        status: "FAILED",
-        message: "Unable to delete agency, try again"
-      }
+      return procedureError<DeleteAgencyType>(error)
     }
 
   })

@@ -28,7 +28,11 @@ import {
   AddOnTable,
   OAuthAccountTable,
 } from "@/server/db/schema"
+// UTILS
 import { CURRENCY_NUMBER_REGEX } from "@/lib/utils"
+// TYPES
+import type Stripe from "stripe"
+import type { StripeCustomerType, SubscriptionType } from "@/lib/types"
 
 // DB TABLES SCHEMAS
 export const UserSchema = createSelectSchema(UserTable)
@@ -163,7 +167,7 @@ export const GetAgencyById = z.object({
 })
 
 export const UpsertAgencyProcedureSchema = AgencyInsertSchema.extend({
-  price: SubscriptionSchema.pick({ price: true })
+  price: z.string().nullable()
 })
 
 export const UpsertAgencySchema = z.object({
@@ -346,4 +350,30 @@ export const SaveActivityLogSchema = z.object({
 
 export const MarkNotificationsReadSchema = z.object({
   notificationIds: z.array(z.string())
+})
+
+// STRIPE SCHEMAS
+export const CreateStripeSubscriptionSchema = z.object({
+  subscription: z.custom<Stripe.Subscription>(),
+  customerId: z.string()
+})
+
+export const GetConnectAccountProductsSchema = z.object({
+  stripeAccount: z.string()
+})
+
+export const CreateCustomerSchema = z.custom<StripeCustomerType>()
+
+export const CreateSubscriptionSchema = z.object({
+  priceId: z.custom<SubscriptionType["plan"]>(),
+  customerId: z.string(),
+})
+
+export const CreateCheckoutSessionSchema = z.object({
+  subAccountId: z.string(),
+  prices: z.array(z.object({
+    recurring: z.boolean(),
+    productId: z.string()
+  })),
+  subAccountConnectAccountId: z.string(),
 })

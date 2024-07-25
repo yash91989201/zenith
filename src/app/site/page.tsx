@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { PRICING_CARDS } from "@/constants";
-import { cn } from "@/lib/utils";
+import { cn, formatAmount } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -61,10 +61,13 @@ export default function HomePage() {
                 <CardDescription>{card.description}</CardDescription>
               </CardHeader>
               <CardContent>
-                <span className="text-4xl font-bold ">{card.price}</span>
-                {card.price !== "Free" && (
-                  <span className="text-4xl font-bold ">/m</span>
-                )}
+                <span className="text-4xl font-bold ">
+                  {card.price === 0
+                    ? "Free"
+                    : formatAmount(card.price, {
+                        notation: "standard",
+                      })}
+                </span>
               </CardContent>
               <CardFooter className="flex flex-col items-start gap-4">
                 <div>

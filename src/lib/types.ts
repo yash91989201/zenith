@@ -1,6 +1,3 @@
-// TYPES
-import type z from "zod"
-import type { Session } from "lucia"
 // DB TABLE SCHEMAS
 import type {
   UserSchema,
@@ -91,6 +88,11 @@ import type {
   ChangeTicketLaneSchema,
   CreateContactSchema,
 } from "@lib/schema"
+// TYPES
+import type z from "zod"
+import type Stripe from "stripe"
+import type { Session } from "lucia"
+import type { AddressParam, } from "@stripe/stripe-js"
 
 // DB TABLE TYPES
 export type UserType = Omit<z.infer<typeof UserSchema>, "password">
@@ -302,3 +304,13 @@ export type CreateGithubOAuthUserResponseType = Promise<
 // S3 BUCKETS
 export type S3_BUCKETS = "profile" | "media"
 export type STORE_ENDPOINTS = "/api/file/agency-logo" | "/api/file/profile" | "/api/file/media"
+
+// STRIPE TYPE
+export type StripeCustomerType = {
+  email: string;
+  name: string;
+  shipping: Stripe.CustomerCreateParams.Shipping;
+  address: AddressParam
+}
+
+export type PriceList = Stripe.ApiList<Stripe.Price>

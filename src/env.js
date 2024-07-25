@@ -22,6 +22,10 @@ export const env = createEnv({
     PUSHER_APP_ID: z.string(),
     PUSHER_APP_KEY: z.string(),
     PUSHER_APP_SECRET: z.string(),
+    STRIPE_SECRET_KEY: z.string(),
+    STRIPE_WEBHOOK_SECRET: z.string(),
+    ZENITH_PRODUCT_ID: z.string(),
+    STRIPE_WEBHOOK_SECRET_LIVE: z.string(),
   },
 
   /**
@@ -32,6 +36,11 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_URL: z.string(),
     NEXT_PUBLIC_PUSHER_APP_KEY: z.string(),
+    NEXT_PUBLIC_STRIPE_CLIENT_ID: z.string(),
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string(),
+    NEXT_PUBLIC_PLATFORM_ONETIME_FEE: z.string(),
+    NEXT_PUBLIC_PLATFORM_AGENY_PERCENT: z.string(),
+    NEXT_PUBLIC_PLATFORM_SUBSCRIPTION_PERCENT: z.string(),
   },
 
   /**
@@ -42,6 +51,15 @@ export const env = createEnv({
     // CLIENT SIDE ENV'S
     NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
     NEXT_PUBLIC_PUSHER_APP_KEY: process.env.NEXT_PUBLIC_PUSHER_APP_KEY,
+    NEXT_PUBLIC_STRIPE_CLIENT_ID: process.env.NEXT_PUBLIC_STRIPE_CLIENT_ID,
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:
+      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+    NEXT_PUBLIC_PLATFORM_ONETIME_FEE:
+      process.env.NEXT_PUBLIC_PLATFORM_ONETIME_FEE,
+    NEXT_PUBLIC_PLATFORM_AGENY_PERCENT:
+      process.env.NEXT_PUBLIC_PLATFORM_AGENY_PERCENT,
+    NEXT_PUBLIC_PLATFORM_SUBSCRIPTION_PERCENT:
+      process.env.NEXT_PUBLIC_PLATFORM_SUBSCRIPTION_PERCENT,
     // SERVER SIDE ENV'S
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
@@ -56,6 +74,10 @@ export const env = createEnv({
     PUSHER_APP_ID: process.env.PUSHER_APP_ID,
     PUSHER_APP_KEY: process.env.PUSHER_APP_KEY,
     PUSHER_APP_SECRET: process.env.PUSHER_APP_SECRET,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
+    ZENITH_PRODUCT_ID: process.env.ZENITH_PRODUCT_ID,
+    STRIPE_WEBHOOK_SECRET_LIVE: process.env.STRIPE_WEBHOOK_SECRET_LIVE,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

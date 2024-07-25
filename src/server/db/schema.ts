@@ -54,7 +54,7 @@ export const TriggerTypeEnum = mysqlEnum("type", ["CONTACT_FORM"])
 export const ActionTypeEnum = mysqlEnum("type", ["CREATE_CONTACT"])
 export const OAuthProviderEnum = mysqlEnum("provider", ["google", "github"])
 export const InvitationStatusEnum = mysqlEnum("invitation_status", ["ACCEPTED", "REVOKED", "PENDING"])
-export const PlanEnum = mysqlEnum("plan", ["price_1OYxkqFj9oKEERu1NbKUxXxN", "price_1OYxkqFj9oKEERu1KfJGWxgN"])
+export const PlanEnum = mysqlEnum("plan", ["price_1Pg0kvSIZuVcLiYwyWoGT9df", "price_1Pg0kvSIZuVcLiYwKEjbFDhe"])
 export const RoleEnum = mysqlEnum("role", ["AGENCY_OWNER", "AGENCY_ADMIN", "SUBACCOUNT_USER", "SUBACCOUNT_GUEST"])
 
 export const UserTable = mysqlTable("user", {

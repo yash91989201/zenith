@@ -8,7 +8,11 @@ import { UpsertAgencySchema } from "@/lib/schema";
 import { api } from "@/trpc/react";
 // TYPES
 import type { SubmitHandler } from "react-hook-form";
-import type { UpsertAgencyType, AgencyType } from "@/lib/types";
+import type {
+  UpsertAgencyType,
+  AgencyType,
+  StripeCustomerType,
+} from "@/lib/types";
 // CUSTOM HOOKS
 import { useToggle } from "@/hooks/use-toggle";
 // UI
@@ -60,14 +64,17 @@ export function AgencyDetails({ data }: AgencyDetailsProps) {
   const deleteAgencyDialog = useToggle(false);
   const apiUtils = api.useUtils();
 
+  const { mutateAsync: deleteAgency, isPending: deletingAgency } =
+    api.agency.deleteAgency.useMutation();
+
+  const { mutateAsync: createCustomer } =
+    api.stripe.createCustomer.useMutation();
+
   const { mutateAsync: updateAgencyGoal, isPending: updatingAgency } =
     api.agency.updateAgencyGoal.useMutation();
 
   const { mutateAsync: saveActivityLog } =
     api.notification.saveActivityLog.useMutation();
-
-  const { mutateAsync: deleteAgency, isPending: deletingAgency } =
-    api.agency.deleteAgency.useMutation();
 
   const { mutateAsync: initUser } = api.agency.initUser.useMutation();
   const { mutateAsync: upsertAgency } = api.agency.upsertAgency.useMutation();
@@ -83,21 +90,51 @@ export function AgencyDetails({ data }: AgencyDetailsProps) {
     formData,
   ) => {
     try {
+      let customerId: string | undefined;
+
       if (!data?.id) {
-        // create stripe data obj
-      }
-      await initUser({ role: "AGENCY_OWNER" });
-      if (!data?.id) {
-        const actionRes = await upsertAgency({
-          ...formData,
-          price: { price: "" },
-        });
+        const createCustomerData: StripeCustomerType = {
+          email: formData.companyEmail,
+          name: formData.name,
+          shipping: {
+            address: {
+              city: formData.city,
+              country: formData.country,
+              line1: formData.address,
+              postal_code: formData.zipCode,
+              state: formData.zipCode,
+            },
+            name: formData.name,
+          },
+          address: {
+            city: formData.city,
+            country: formData.country,
+            line1: formData.address,
+            postal_code: formData.zipCode,
+            state: formData.zipCode,
+          },
+        };
+        const actionRes = await createCustomer(createCustomerData);
         if (actionRes.status === "SUCCESS") {
-          toast.success(actionRes.message);
-          router.refresh();
-        } else {
-          toast.error(actionRes.message);
+          customerId = actionRes.data?.customerId;
         }
+      }
+
+      await initUser({ role: "AGENCY_OWNER" });
+
+      if (!data?.customerId && !customerId) return;
+
+      const actionRes = await upsertAgency({
+        ...formData,
+        price: null,
+        customerId,
+      });
+
+      if (actionRes.status === "SUCCESS") {
+        toast.success(actionRes.message);
+        router.refresh();
+      } else {
+        toast.error(actionRes.message);
       }
     } catch (error) {}
   };

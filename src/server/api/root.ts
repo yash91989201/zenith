@@ -12,6 +12,7 @@ import { funnelRouter } from "@/server/api/routers/funnel";
 import { ticketRouter } from "@/server/api/routers/ticket";
 import { contactRouter } from "@/server/api/routers/contact";
 import { tagRouter } from "@/server/api/routers/tag";
+import { stripeRouter } from "@/server/api/routers/stripe";
 
 /**
  * This is the primary router for your server.
@@ -19,14 +20,15 @@ import { tagRouter } from "@/server/api/routers/tag";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
+  tag: tagRouter,
   lane: laneRouter,
   user: userRouter,
   admin: adminRouter,
   media: mediaRouter,
-  tag: tagRouter,
   funnel: funnelRouter,
   ticket: ticketRouter,
   agency: agencyRouter,
+  stripe: stripeRouter,
   contact: contactRouter,
   pipeline: pipelineRouter,
   subAccount: subAccountRouter,
