@@ -37,9 +37,9 @@ export async function Sidebar({ id, type }: SidebarProps) {
 
   const sidebarOptions =
     type === "agency"
-      ? user.agency?.sidebarOptions ?? []
-      : user.agency?.subAccounts?.find((subAccount) => subAccount.id === id)
-          ?.sidebarOptions ?? [];
+      ? (user.agency?.sidebarOptions ?? [])
+      : (user.agency?.subAccounts?.find((subAccount) => subAccount.id === id)
+          ?.sidebarOptions ?? []);
 
   const subAccounts =
     user.agency?.subAccounts?.filter((subAccount) =>

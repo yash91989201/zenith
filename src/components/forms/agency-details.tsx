@@ -89,23 +89,13 @@ export function AgencyDetails({ data }: AgencyDetailsProps) {
   const agencyDetailsSubmitAction: SubmitHandler<UpsertAgencyType> = async (
     formData,
   ) => {
-    try {
-      let customerId: string | undefined;
+    let customerId: string | undefined;
 
-      if (!data?.id) {
-        const createCustomerData: StripeCustomerType = {
-          email: formData.companyEmail,
-          name: formData.name,
-          shipping: {
-            address: {
-              city: formData.city,
-              country: formData.country,
-              line1: formData.address,
-              postal_code: formData.zipCode,
-              state: formData.zipCode,
-            },
-            name: formData.name,
-          },
+    if (!data?.id) {
+      const createCustomerData: StripeCustomerType = {
+        email: formData.companyEmail,
+        name: formData.name,
+        shipping: {
           address: {
             city: formData.city,
             country: formData.country,
@@ -113,30 +103,41 @@ export function AgencyDetails({ data }: AgencyDetailsProps) {
             postal_code: formData.zipCode,
             state: formData.zipCode,
           },
-        };
-        const actionRes = await createCustomer(createCustomerData);
-        if (actionRes.status === "SUCCESS") {
-          customerId = actionRes.data?.customerId;
-        }
-      }
-
-      await initUser({ role: "AGENCY_OWNER" });
-
-      if (!data?.customerId && !customerId) return;
-
-      const actionRes = await upsertAgency({
-        ...formData,
-        price: null,
-        customerId,
-      });
-
+          name: formData.name,
+        },
+        address: {
+          city: formData.city,
+          country: formData.country,
+          line1: formData.address,
+          postal_code: formData.zipCode,
+          state: formData.zipCode,
+        },
+      };
+      const actionRes = await createCustomer(createCustomerData);
       if (actionRes.status === "SUCCESS") {
-        toast.success(actionRes.message);
-        router.refresh();
-      } else {
-        toast.error(actionRes.message);
+        customerId = actionRes.data?.customerId;
       }
-    } catch (error) {}
+    }
+
+    if (!data?.id) {
+      await initUser({ role: "AGENCY_OWNER" });
+    }
+
+    if (!data?.customerId && !customerId) return;
+
+    const actionRes = await upsertAgency({
+      ...formData,
+      id: data?.id,
+      price: null,
+      customerId,
+    });
+
+    if (actionRes.status === "SUCCESS") {
+      toast.success(actionRes.message);
+      router.refresh();
+    } else {
+      toast.error(actionRes.message);
+    }
   };
 
   const updateAgencyGoalAction = async (

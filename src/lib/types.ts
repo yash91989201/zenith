@@ -73,8 +73,7 @@ import type {
   DeleteUserSchema,
   InviteUserSchema,
   SaveMediaDataSchema,
-  CreateFunnelFormSchema,
-  CreateFunnelProcedureSchema,
+  UpsertFunnelSchema,
   UpsertPipelineFormSchema,
   DeletePipelineByIdSchema,
   UpdateLaneOrderSchema,
@@ -93,6 +92,7 @@ import type z from "zod"
 import type Stripe from "stripe"
 import type { Session } from "lucia"
 import type { AddressParam, } from "@stripe/stripe-js"
+import type { AppRouter } from "@/server/api/root"
 
 // DB TABLE TYPES
 export type UserType = Omit<z.infer<typeof UserSchema>, "password">
@@ -110,7 +110,7 @@ export type AutomationInstanceType = z.infer<typeof AutomationInstanceSchema>
 export type ActionType = z.infer<typeof ActionSchema>
 export type ContactType = z.infer<typeof ContactSchema>
 export type MediaType = z.infer<typeof MediaSchema>
-export type FunnelType = z.infer<typeof FunnelSchema>
+export type FunnelType = Omit<z.infer<typeof FunnelSchema>, "liveProducts"> & { liveProducts: string[] }
 export type ClassNameType = z.infer<typeof ClassNameSchema>
 export type FunnelPageType = z.infer<typeof FunnelPageSchema>
 export type AgencySidebarOptionType = z.infer<typeof AgencySidebarOptionSchema>
@@ -137,7 +137,7 @@ export type AutomationInstanceInsertType = z.infer<typeof AutomationInstanceInse
 export type ActionInsertType = z.infer<typeof ActionInsertSchema>
 export type ContactInsertType = z.infer<typeof ContactInsertSchema>
 export type MediaInsertType = z.infer<typeof MediaInsertSchema>
-export type FunnelInsertType = z.infer<typeof FunnelInsertSchema>
+export type FunnelInsertType = Omit<z.infer<typeof FunnelInsertSchema>, "liveProducts"> & { liveProducts: string[] | undefined }
 export type ClassNameInsertType = z.infer<typeof ClassNameInsertSchema>
 export type FunnelPageInsertType = z.infer<typeof FunnelPageInsertSchema>
 export type AgencySidebarOptionInsertType = z.infer<typeof AgencySidebarOptionInsertSchema>
@@ -213,8 +213,7 @@ export type ChangeTicketLaneType = z.infer<typeof ChangeTicketLaneSchema>
 export type TagByIdType = z.infer<typeof TagByIdSchema>
 
 // FUNNEL SCHEMA TYPES
-export type CreateFunnelFormType = z.infer<typeof CreateFunnelFormSchema>
-export type CreateFunnelProcedureType = z.infer<typeof CreateFunnelProcedureSchema>
+export type UpsertFunnelType = z.infer<typeof UpsertFunnelSchema>
 
 // CONTACT SCHEMA TYPES
 export type CreateContactType = z.infer<typeof CreateContactSchema>
@@ -242,6 +241,8 @@ export type SubAccountContactsType = SubAccountType & {
     ticket: TicketType[]
   })[]
 }
+
+export type FunnelWithPagesType = Awaited<ReturnType<AppRouter["funnel"]["getAll"]>>[0]
 
 const TagColors = ['BLUE', 'ORANGE', 'ROSE', 'PURPLE', 'GREEN'] as const
 export type TagColor = (typeof TagColors)[number]

@@ -82,7 +82,7 @@ const InstantImageUpload = React.forwardRef<HTMLInputElement, InputProps>(
       isDragAccept,
       isDragReject,
     } = useDropzone({
-      accept: { "image/*": [] },
+      accept: dropzoneOptions?.accept ?? { "image/*": [] },
       multiple: false,
       disabled,
       onDrop: (acceptedFiles) => {

@@ -315,19 +315,14 @@ export const TagByIdSchema = z.object({
 })
 
 // FUNNEL SCHEMAS
-export const CreateFunnelFormSchema = z.object({
-  name: z.string(),
-  description: z.string(),
-  subDomainName: z.string().optional(),
-  favicon: z.string().optional(),
+export const UpsertFunnelSchema = FunnelInsertSchema.omit({
+  liveProducts: true
+}).extend({
+  liveProducts: z.array(z.string()).optional()
 })
 
-export const CreateFunnelProcedureSchema = z.object({
-  subAccountId: z.string(),
-  funnel: CreateFunnelFormSchema.extend({
-    liveProduces: z.string()
-  }),
-  funnelId: z.string(),
+export const GetAllFunnelSchema = z.object({
+  subAccountId: z.string()
 })
 
 // CONTACT SCHEMA
