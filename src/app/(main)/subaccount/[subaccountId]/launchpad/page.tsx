@@ -6,7 +6,7 @@ import { SubAccountTable } from "@/server/db/schema";
 // UTILS
 import { db } from "@/server/db";
 import { api } from "@/trpc/server";
-import { stripe } from "@/lib/stripe";
+import { getStripeOAuthLink, stripe } from "@/lib/stripe";
 // UI
 import {
   Card,
@@ -15,7 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@ui/card";
-import { Button } from "@ui/button";
+import { Button, buttonVariants } from "@ui/button";
 // CUSTOM COMPONENTS
 import BlurPage from "@global/blur-page";
 // ICONS
@@ -46,25 +46,28 @@ export default async function LaunchPadPage({ params, searchParams }: Props) {
     subAccount.name &&
     subAccount.state;
 
-  let connectedStripeAccount = subAccount.connectAccountId === null;
+  let stripeAccountConnected = subAccount.connectAccountId !== null;
 
-  if (searchParams.code) {
-    if (!connectedStripeAccount) {
-      try {
-        const response = await stripe.oauth.token({
-          grant_type: "authorization_code",
-          code: searchParams.code,
-        });
+  const stripeOAuthLink = getStripeOAuthLink({
+    accountType: "subaccount",
+    state: `launchpad___${subAccount.id}`,
+  });
 
-        await db
-          .update(SubAccountTable)
-          .set({ connectAccountId: response.stripe_user_id })
-          .where(eq(SubAccountTable.id, subAccount.id));
+  if (searchParams.code && !stripeAccountConnected) {
+    try {
+      const response = await stripe.oauth.token({
+        grant_type: "authorization_code",
+        code: searchParams.code,
+      });
 
-        connectedStripeAccount = true;
-      } catch (error) {
-        console.log("🔴 Could not connect stripe account");
-      }
+      await db
+        .update(SubAccountTable)
+        .set({ connectAccountId: response.stripe_user_id })
+        .where(eq(SubAccountTable.id, subAccount.id));
+
+      stripeAccountConnected = true;
+    } catch (error) {
+      console.log("🔴 Could not connect stripe account");
     }
   }
 
@@ -107,16 +110,13 @@ export default async function LaunchPadPage({ params, searchParams }: Props) {
                     used to run payouts.
                   </p>
                 </div>
-                {(subAccount.connectAccountId ?? connectedStripeAccount) ? (
+                {stripeAccountConnected ? (
                   <CheckCircleIcon
                     size={50}
-                    className=" flex-shrink-0 p-2 text-primary"
+                    className="flex-shrink-0 p-2 text-primary"
                   />
                 ) : (
-                  <Link
-                    className="rounded-md bg-primary px-3 py-2 text-white"
-                    href={``}
-                  >
+                  <Link href={stripeOAuthLink} className={buttonVariants()}>
                     Start
                   </Link>
                 )}

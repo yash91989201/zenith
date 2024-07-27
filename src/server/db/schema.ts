@@ -142,7 +142,7 @@ export const SubAccountTable = mysqlTable("sub_account", {
   id: varchar("id", { length: 48 }).$defaultFn(() => createId()).primaryKey(),
   createdAt: datetime("created_at").notNull().$defaultFn(() => new Date()),
   updatedAt: datetime("updated_at").notNull().$defaultFn(() => new Date()).$onUpdateFn(() => new Date()),
-  connectAccountId: varchar("connect_account_id", { length: 48 }).default(""),
+  connectAccountId: varchar("connect_account_id", { length: 48 }),
   name: varchar("name", { length: 256 }).notNull(),
   subAccountLogo: varchar("sub_account_logo", { length: 128 }).notNull(),
   companyEmail: varchar("company_email", { length: 256 }).notNull(),
@@ -422,7 +422,7 @@ export const FunnelTable = mysqlTable("funnel", {
   published: boolean("published").notNull().default(false),
   subDomainName: varchar("sub_domain_name", { length: 256 }),
   favicon: varchar("favicon", { length: 256 }),
-  liveProducts: json("live_products").$type<string[]>().notNull().default([]),
+  liveProducts: json("live_products").$type<{ productId: string; recurring: boolean; }[]>().notNull().default([]),
   // FOREIGN KEY RELATIONS
   subAccountId: varchar("sub_account_id", { length: 48 }).notNull().references(() => SubAccountTable.id)
 }, (table) => ({

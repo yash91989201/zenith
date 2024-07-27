@@ -45,10 +45,10 @@ export function FunnelTable({ subAccountId }: Props) {
   return (
     <>
       <div className="mb-3 flex items-center justify-between gap-3">
-        <div className="flex flex-1 items-center gap-3 rounded-md border-b bg-white px-3 py-1.5">
-          <Search className="size-4" />
+        <div className="flex flex-1 items-center gap-3 rounded-md border-b bg-white px-3  py-1.5 dark:bg-muted">
+          <Search className="size-4 dark:text-muted-foreground" />
           <input
-            className="flex h-9 w-full border-none bg-transparent  py-1 text-sm outline-none  placeholder:text-muted-foreground focus-visible:outline-none"
+            className="flex h-9 w-full border-none bg-transparent py-1 text-sm outline-none  placeholder:text-muted-foreground focus-visible:outline-none"
             placeholder="Search funnel by name..."
             value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
             onChange={(event) => {

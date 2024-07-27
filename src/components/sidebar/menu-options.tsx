@@ -241,7 +241,7 @@ export function MenuOptions({
             <Command className="overflow-visible rounded-lg bg-transparent">
               <CommandInput
                 placeholder="Search"
-                className="rounded-md dark:bg-muted"
+                className="rounded-md dark:bg-transparent"
               />
               <CommandList className="overflow-visible pb-16">
                 <CommandEmpty>No result found</CommandEmpty>

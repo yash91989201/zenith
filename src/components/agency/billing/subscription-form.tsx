@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { Elements, useStripe } from "@stripe/react-stripe-js";
 import { PaymentElement, useElements } from "@stripe/react-stripe-js";
 // SCHEMAS
@@ -155,31 +155,35 @@ const PaymentForm = ({
   const stripeHook = useStripe();
   const [priceError, setPriceError] = useState("");
 
+  const [isPending, startTransition] = useTransition();
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (!selectedPriceId) {
       setPriceError("You need to select a plan to subscribe.");
       return;
     }
     setPriceError("");
-    event.preventDefault();
     if (!stripeHook || !elements) return;
 
-    const { error } = await stripeHook.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: `${process.env.NEXT_PUBLIC_URL}/agency`,
-      },
-    });
-
-    if (error) {
-      toast.error("Payment failed", {
-        description: error.message,
+    startTransition(async () => {
+      const { error } = await stripeHook.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: `${process.env.NEXT_PUBLIC_URL}/agency`,
+        },
       });
-      return;
-    }
 
-    toast.success("Payment successful", {
-      description: "Your payment has been successfully processed. ",
+      if (error) {
+        toast.error("Payment failed", {
+          description: error.message,
+        });
+        return;
+      }
+
+      toast.success("Payment successful", {
+        description: "Your payment has been successfully processed. ",
+      });
     });
   };
 
@@ -187,8 +191,18 @@ const PaymentForm = ({
     <form onSubmit={handleSubmit}>
       <small className="text-destructive">{priceError}</small>
       <PaymentElement />
-      <Button disabled={!stripeHook} className="mt-4 w-full">
-        Submit
+      <Button
+        disabled={!stripeHook || isPending}
+        className="mt-4 w-full gap-1.5"
+      >
+        {isPending ? (
+          <>
+            <Loader2 className="size-4 animate-spin" />
+            <span>Processing Payment</span>
+          </>
+        ) : (
+          "Pay Now"
+        )}
       </Button>
     </form>
   );
