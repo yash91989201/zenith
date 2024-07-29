@@ -168,22 +168,13 @@ export function FunnelStep({ page }: Props) {
       </div>
 
       {state.type === "preview"
-        ? createPortal(
-            <FunnelStepDragPreview funnelPages={funnelPages} page={page} />,
-            state.container,
-          )
+        ? createPortal(<FunnelStepDragPreview page={page} />, state.container)
         : null}
     </>
   );
 }
 
-function FunnelStepDragPreview({
-  page,
-  funnelPages,
-}: {
-  funnelPages: number;
-  page: FunnelPageType;
-}) {
+function FunnelStepDragPreview({ page }: { page: FunnelPageType }) {
   return (
     <div className="relative flex w-72 select-none items-center gap-3 rounded-md border bg-white p-3 dark:border-gray-700">
       <Button size="icon" variant="ghost">
@@ -191,11 +182,6 @@ function FunnelStepDragPreview({
       </Button>
       <p className="relative flex size-10 items-center justify-center rounded-md bg-gray-200 dark:bg-gray-700">
         <Mail className="size-5" />
-        {funnelPages - 1 !== page.order && (
-          <span className="absolute left-1/2 top-14 -translate-x-1/2">
-            <ArrowDown className="size-4" />
-          </span>
-        )}
       </p>
       <div className="flex flex-col gap-1.5">
         <p className="flex-1">{page.name}</p>
