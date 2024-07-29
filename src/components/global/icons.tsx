@@ -471,127 +471,127 @@ const FunnelPagePlaceholder = () => {
           />
         </clipPath>
       </defs>
-      <g clip-path="url(#f19aabff22)">
+      <g clipPath="url(#f19aabff22)">
         <path
           className="fill-[#d9d9d9] dark:fill-muted"
           d="M 24.410156 237.574219 L 267.410156 237.574219 L 267.410156 786.277344 L 24.410156 786.277344 Z M 24.410156 237.574219 "
-          fill-opacity="1"
+          fillOpacity="1"
           fillRule="nonzero"
         />
       </g>
-      <g clip-path="url(#774fba0edd)">
+      <g clipPath="url(#774fba0edd)">
         <path
           className="fill-[#d9d9d9] dark:fill-muted"
           d="M 1418.949219 17.925781 L 1418.949219 211.273438 L 24.40625 211.273438 L 24.40625 17.925781 Z M 1418.949219 17.925781 "
-          fill-opacity="1"
+          fillOpacity="1"
           fillRule="nonzero"
         />
       </g>
-      <g clip-path="url(#c14bc46e9b)">
+      <g clipPath="url(#c14bc46e9b)">
         <path
           className="fill-[#d9d9d9] dark:fill-muted"
           d="M 951.316406 237.574219 L 1418.953125 237.574219 L 1418.953125 447.5625 L 951.316406 447.5625 Z M 951.316406 237.574219 "
-          fill-opacity="1"
+          fillOpacity="1"
           fillRule="nonzero"
         />
       </g>
-      <g clip-path="url(#fc27728001)">
+      <g clipPath="url(#fc27728001)">
         <path
           className="fill-[#d9d9d9] dark:fill-muted"
           d="M 951.316406 473.8125 L 1418.953125 473.8125 L 1418.953125 511.925781 L 951.316406 511.925781 Z M 951.316406 473.8125 "
-          fill-opacity="1"
+          fillOpacity="1"
           fillRule="nonzero"
         />
       </g>
-      <g clip-path="url(#51fb5d13a0)">
+      <g clipPath="url(#51fb5d13a0)">
         <path
           className="fill-[#d9d9d9] dark:fill-muted"
           d="M 951.316406 528.871094 L 1263.949219 528.871094 L 1263.949219 554.0625 L 951.316406 554.0625 Z M 951.316406 528.871094 "
-          fill-opacity="1"
+          fillOpacity="1"
           fillRule="nonzero"
         />
       </g>
-      <g clip-path="url(#ee285f2161)">
+      <g clipPath="url(#ee285f2161)">
         <path
           className="fill-[#d9d9d9] dark:fill-muted"
           d="M 951.316406 571.3125 L 1263.949219 571.3125 L 1263.949219 596.507812 L 951.316406 596.507812 Z M 951.316406 571.3125 "
-          fill-opacity="1"
+          fillOpacity="1"
           fillRule="nonzero"
         />
       </g>
-      <g clip-path="url(#f0ea2710d2)">
+      <g clipPath="url(#f0ea2710d2)">
         <path
           className="fill-[#d9d9d9] dark:fill-muted"
           d="M 300.710938 237.574219 L 917.667969 237.574219 L 917.667969 596.507812 L 300.710938 596.507812 Z M 300.710938 237.574219 "
-          fill-opacity="1"
+          fillOpacity="1"
           fillRule="nonzero"
         />
       </g>
-      <g clip-path="url(#47018aba58)">
-        <g clip-path="url(#a9cfaa9a53)">
+      <g clipPath="url(#47018aba58)">
+        <g clipPath="url(#a9cfaa9a53)">
           <path
             className="fill-[#bfbfbf] dark:fill-background"
             d="M 320.597656 256.882812 L 468.714844 256.882812 L 468.714844 405 L 320.597656 405 Z M 320.597656 256.882812 "
-            fill-opacity="1"
+            fillOpacity="1"
             fillRule="nonzero"
           />
         </g>
       </g>
-      <g clip-path="url(#08a9aa736e)">
-        <g clip-path="url(#f7b7fea623)">
+      <g clipPath="url(#08a9aa736e)">
+        <g clipPath="url(#f7b7fea623)">
           <path
             className="fill-[#bfbfbf] dark:fill-background"
             d="M 848.375 571.3125 L 369.988281 571.3125 L 369.988281 358.6875 L 848.375 358.6875 Z M 848.375 571.3125 "
-            fill-opacity="1"
+            fillOpacity="1"
             fillRule="nonzero"
           />
         </g>
       </g>
-      <g clip-path="url(#cd184ededd)">
+      <g clipPath="url(#cd184ededd)">
         <path
           className="fill-[#d9d9d9] dark:fill-muted"
           d="M 300.710938 631.613281 L 451.769531 631.613281 L 451.769531 786.277344 L 300.710938 786.277344 Z M 300.710938 631.613281 "
-          fill-opacity="1"
+          fillOpacity="1"
           fillRule="nonzero"
         />
       </g>
-      <g clip-path="url(#b8b7be316d)">
+      <g clipPath="url(#b8b7be316d)">
         <path
           className="fill-[#d9d9d9] dark:fill-muted"
           d="M 484.769531 631.613281 L 743.480469 631.613281 L 743.480469 786.277344 L 484.769531 786.277344 Z M 484.769531 631.613281 "
-          fill-opacity="1"
+          fillOpacity="1"
           fillRule="nonzero"
         />
       </g>
-      <g clip-path="url(#623e45c433)">
+      <g clipPath="url(#623e45c433)">
         <path
           className="fill-[#d9d9d9] dark:fill-muted"
           d="M 766.609375 631.613281 L 917.667969 631.613281 L 917.667969 786.277344 L 766.609375 786.277344 Z M 766.609375 631.613281 "
-          fill-opacity="1"
+          fillOpacity="1"
           fillRule="nonzero"
         />
       </g>
-      <g clip-path="url(#f118308c68)">
+      <g clipPath="url(#f118308c68)">
         <path
           className="fill-[#d9d9d9] dark:fill-muted"
           d="M 950.667969 631.613281 L 1418.300781 631.613281 L 1418.300781 669.726562 L 950.667969 669.726562 Z M 950.667969 631.613281 "
-          fill-opacity="1"
+          fillOpacity="1"
           fillRule="nonzero"
         />
       </g>
-      <g clip-path="url(#d0cc3d7cb9)">
+      <g clipPath="url(#d0cc3d7cb9)">
         <path
           className="fill-[#d9d9d9] dark:fill-muted"
           d="M 950.667969 686.671875 L 1263.296875 686.671875 L 1263.296875 711.863281 L 950.667969 711.863281 Z M 950.667969 686.671875 "
-          fill-opacity="1"
+          fillOpacity="1"
           fillRule="nonzero"
         />
       </g>
-      <g clip-path="url(#57697b4ead)">
+      <g clipPath="url(#57697b4ead)">
         <path
           className="fill-[#d9d9d9] dark:fill-muted"
           d="M 950.667969 729.113281 L 1263.296875 729.113281 L 1263.296875 754.308594 L 950.667969 754.308594 Z M 950.667969 729.113281 "
-          fill-opacity="1"
+          fillOpacity="1"
           fillRule="nonzero"
         />
       </g>
@@ -985,7 +985,7 @@ const Send = () => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_63_10787)">
+      <g clipPath="url(#clip0_63_10787)">
         <path
           fillRule="evenodd"
           clipRule="evenodd"
@@ -1061,7 +1061,7 @@ const Star = () => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_56_9997)">
+      <g clipPath="url(#clip0_56_9997)">
         <path
           d="M10.1109 3.43478C10.7335 1.64366 13.2665 1.64366 13.8891 3.43478L14.8347 6.15493C15.1093 6.94508 15.8467 7.48082 16.683 7.49786L19.5622 7.55653C21.4581 7.59517 22.2409 10.0043 20.7298 11.1499L18.4349 12.8897C17.7683 13.3951 17.4867 14.2619 17.7289 15.0626L18.5628 17.819C19.112 19.634 17.0627 21.1229 15.5062 20.0398L13.1424 18.3949C12.4557 17.9171 11.5443 17.9171 10.8576 18.3949L8.49383 20.0398C6.93734 21.1229 4.88805 19.634 5.43715 17.819L6.27107 15.0626C6.51331 14.2619 6.23165 13.3951 5.56506 12.8897L3.27022 11.1499C1.75915 10.0043 2.54191 7.59517 4.43776 7.55653L7.31697 7.49786C8.15331 7.48082 8.89069 6.94508 9.16535 6.15494L10.1109 3.43478Z"
           className={`  fill-[#C8CDD8] text-xl transition-all`}

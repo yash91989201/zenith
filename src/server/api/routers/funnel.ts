@@ -15,7 +15,7 @@ export const funnelRouter = createTRPCRouter({
       where: eq(FunnelTable.id, input.funnelId),
       with: {
         funnelPages: {
-          orderBy: [asc(FunnelPageTable.createdAt)]
+          orderBy: [asc(FunnelPageTable.order)]
         },
       }
     })

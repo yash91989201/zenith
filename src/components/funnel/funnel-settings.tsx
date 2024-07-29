@@ -15,18 +15,16 @@ import { FunnelForm } from "@/components/funnel/funnel-form";
 import { FunnelProductTable } from "@/components/funnel/funnel-product-table";
 
 type Props = {
-  subAccountId: string;
   funnel: FunnelWithPagesType;
 };
 
-export async function FunnelSettings({ subAccountId, funnel }: Props) {
+export async function FunnelSettings({ funnel }: Props) {
   //TODO: connect stripe to sell products
 
+  const { subAccountId } = funnel;
   const subAccount = await api.subAccount.getById({ id: subAccountId });
 
-  if (!subAccount) return;
-
-  if (!subAccount.connectAccountId) return;
+  if (!subAccount?.connectAccountId) return;
 
   const products = await api.stripe.getConnectAccountProducts({
     stripeAccount: subAccount.connectAccountId,
@@ -52,7 +50,7 @@ export async function FunnelSettings({ subAccountId, funnel }: Props) {
           </>
         </CardContent>
       </Card>
-      <div className="w-96">
+      <div className="w-full lg:w-96">
         <FunnelForm funnel={funnel} subAccountId={subAccountId} />
       </div>
     </div>

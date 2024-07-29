@@ -12,7 +12,6 @@ export type PipelineDndContextType = {
     ticketId: string;
     entry: {
       element: HTMLElement;
-      // actionMenuTrigger: HTMLElement;
     };
   }) => CleanupFn;
 

@@ -343,6 +343,27 @@ export const UpdateFunnelProductsSchema = z.object({
     })
   )
 })
+
+// FUNNEL PAGE SCHEMAS
+export const GetAllFunnelPagesSchema = z.object({
+  funnelId: z.string()
+})
+
+export const UpsertFunnelPageSchema = z.object({
+  funnelId: z.string(),
+  funnelPage: FunnelPageInsertSchema.omit({ pathName: true }).extend({
+    pathName: z.string().min(1, { message: "At least 1 character is required in pathname" }).optional()
+  })
+})
+
+export const DeleteFunnelPageSchema = z.object({
+  funnelPageId: z.string()
+})
+
+export const ReorderFunnelPageSchema = z.object({
+  funnelPages: z.array(FunnelPageSchema)
+})
+
 // CONTACT SCHEMA
 export const GetContactByNameSchema = z.object({
   name: z.string().min(1)

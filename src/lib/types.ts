@@ -87,6 +87,8 @@ import type {
   ChangeTicketLaneSchema,
   CreateContactSchema,
   UpdateFunnelProductsSchema,
+  UpsertFunnelPageSchema,
+  DeleteFunnelPageSchema,
 } from "@lib/schema"
 // TYPES
 import type z from "zod"
@@ -215,6 +217,10 @@ export type TagByIdType = z.infer<typeof TagByIdSchema>
 // FUNNEL SCHEMA TYPES
 export type UpsertFunnelType = z.infer<typeof UpsertFunnelSchema>
 export type UpdateFunnelProductsType = z.infer<typeof UpdateFunnelProductsSchema>
+export type DeleteFunnelPageType = z.infer<typeof DeleteFunnelPageSchema>
+
+// FUNNEL PAGE SCHEMA TYPES
+export type UpsertFunnelPageType = z.infer<typeof UpsertFunnelPageSchema>
 
 // CONTACT SCHEMA TYPES
 export type CreateContactType = z.infer<typeof CreateContactSchema>

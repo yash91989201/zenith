@@ -1,13 +1,17 @@
-import BlurPage from "@global/blur-page";
-import { buttonVariants } from "@ui/button";
-import { cn } from "@/lib/utils";
-import { api } from "@/trpc/server";
-import { CircleChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+// UTILS
+import { cn } from "@/lib/utils";
+import { api } from "@/trpc/server";
+import { buttonVariants } from "@ui/button";
+// UI
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@ui/tabs";
-import { FunnelSteps } from "@/components/funnel/funnel-steps";
+// CUSTOM COMPONNETS
+import BlurPage from "@global/blur-page";
+import { FunnelSteps } from "@funnelSteps/index";
 import { FunnelSettings } from "@/components/funnel/funnel-settings";
+// ICONS
+import { CircleChevronLeft } from "lucide-react";
 
 type Props = {
   params: {
@@ -23,10 +27,12 @@ export default async function FunnelPage({ params }: Props) {
     return redirect(`/subaccount/${params.subaccountId}/funnels`);
   }
 
+  void api.funnelPage.getAll.prefetch({ funnelId: funnel.id });
+
   return (
     <BlurPage>
       <Tabs defaultValue="steps" className="w-full">
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col items-start gap-3 lg:flex-row lg:items-center">
           <Link
             className={cn(
               buttonVariants({
@@ -37,27 +43,19 @@ export default async function FunnelPage({ params }: Props) {
             )}
             href={`/subaccount/${params.subaccountId}/funnels`}
           >
-            <CircleChevronLeft className="size-9 stroke-[1.5]" />
+            <CircleChevronLeft className="size-6 stroke-[1.5]" />
           </Link>
           <h1 className="flex-1 py-3 text-3xl">{funnel.name}</h1>
-          <TabsList className="grid  w-1/4 grid-cols-2 bg-transparent ">
+          <TabsList className="grid w-full grid-cols-2 bg-transparent lg:w-1/4 ">
             <TabsTrigger value="steps">Steps</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
         </div>
         <TabsContent value="steps">
-          <FunnelSteps
-            funnel={funnel}
-            pages={funnel.funnelPages}
-            funnelId={params.funnelId}
-            subAccountId={params.subaccountId}
-          />
+          <FunnelSteps funnel={funnel} />
         </TabsContent>
         <TabsContent value="settings">
-          <FunnelSettings
-            funnel={funnel}
-            subAccountId={params.subaccountId}
-          />
+          <FunnelSettings funnel={funnel} />
         </TabsContent>
       </Tabs>
     </BlurPage>

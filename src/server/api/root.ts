@@ -13,6 +13,7 @@ import { ticketRouter } from "@/server/api/routers/ticket";
 import { contactRouter } from "@/server/api/routers/contact";
 import { tagRouter } from "@/server/api/routers/tag";
 import { stripeRouter } from "@/server/api/routers/stripe";
+import { funnelPageRouter } from "@/server/api/routers/funnel-page";
 
 /**
  * This is the primary router for your server.
@@ -31,6 +32,7 @@ export const appRouter = createTRPCRouter({
   stripe: stripeRouter,
   contact: contactRouter,
   pipeline: pipelineRouter,
+  funnelPage: funnelPageRouter,
   subAccount: subAccountRouter,
   notification: notificationRouter,
 });

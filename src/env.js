@@ -34,7 +34,9 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
+    NEXT_PUBLIC_SCHEME: z.string(),
     NEXT_PUBLIC_URL: z.string(),
+    NEXT_PUBLIC_DOMAIN: z.string(),
     NEXT_PUBLIC_PUSHER_APP_KEY: z.string(),
     NEXT_PUBLIC_STRIPE_CLIENT_ID: z.string(),
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string(),
@@ -49,6 +51,8 @@ export const env = createEnv({
    */
   runtimeEnv: {
     // CLIENT SIDE ENV'S
+    NEXT_PUBLIC_DOMAIN: process.env.NEXT_PUBLIC_DOMAIN,
+    NEXT_PUBLIC_SCHEME: process.env.NEXT_PUBLIC_SCHEME,
     NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
     NEXT_PUBLIC_PUSHER_APP_KEY: process.env.NEXT_PUBLIC_PUSHER_APP_KEY,
     NEXT_PUBLIC_STRIPE_CLIENT_ID: process.env.NEXT_PUBLIC_STRIPE_CLIENT_ID,

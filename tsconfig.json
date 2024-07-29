@@ -37,7 +37,8 @@
       "@icons":["./src/components/global/icons"],
       "@accountModal/*":["./src/components/global/account-modal/*"],
       "@hooks/*":["./src/hooks/*"],
-      "@pipelineDnd/*":["./src/components/pipeline/pipeline-dnd/*"]
+      "@pipelineDnd/*":["./src/components/pipeline/pipeline-dnd/*"],
+      "@funnelSteps/*":["./src/components/funnel/funnel-steps/*"]
     }
   },
   "include": [
