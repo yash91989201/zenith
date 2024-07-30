@@ -13,6 +13,7 @@ export function Tag({ colorName, title, children }: Props) {
     <div
       key={colorName}
       className={cn(
+        title ? "p-1 px-2" : "size-4",
         colorName === "BLUE" && "bg-[#57acea]/10 text-[#57acea]",
         colorName === "ORANGE" && "bg-[#ffac7e]/10 text-[#ffac7e]",
         colorName === "ROSE" && "bg-rose-500/10 text-rose-500",
@@ -23,7 +24,7 @@ export function Tag({ colorName, title, children }: Props) {
         colorName === "ROSE" && !title && "border-[1px] border-rose-500",
         colorName === "GREEN" && !title && "border-[1px] border-emerald-400",
         colorName === "PURPLE" && !title && "border-[1px] border-purple-400",
-        "inline-flex flex-shrink-0 cursor-pointer items-center rounded-sm p-1 px-2 text-xs",
+        "flex flex-shrink-0 cursor-pointer items-center rounded text-xs",
       )}
     >
       {title}
