@@ -466,7 +466,7 @@ export const FunnelPageTable = mysqlTable("funnel_page", {
   pathName: varchar("path_name", { length: 256 }).notNull().default(""),
   visits: int("visits").notNull().default(0),
   content: text("content"),
-  order: int("order"),
+  order: int("order").notNull().default(0),
   previewImage: text("preview_image"),
   // FOREIGN KEY RELATIONS
   funnelId: varchar("funnel_id", { length: 48 }).notNull().references(() => FunnelTable.id)

@@ -2,19 +2,16 @@ import { createContext, useMemo } from "react";
 // TYPES
 import type { Dispatch, ReactNode, SetStateAction } from "react";
 import type { CleanupFn } from "@atlaskit/pragmatic-drag-and-drop/types";
-import type { FunnelPagesEntry } from "@funnelSteps/registry";
+import type { FunnelPagesEntry } from "@/components/funnel/funnel-steps-editor/registry";
 import type { Edge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/types";
 import type { FunnelPageType, FunnelType } from "@/lib/types";
 
 export type FunnelStepsContextType = {
   instanceId: symbol;
-  selectedPageId: string | undefined;
   pages: FunnelPageType[];
-  funnelId: string;
-  subAccountId: string;
   funnel: FunnelType;
-  setSelectedPageId: Dispatch<SetStateAction<string | undefined>>;
-  getFunnelPagesLength: () => number;
+  currentPage: FunnelPageType | undefined;
+  setCurrentPage: Dispatch<SetStateAction<FunnelPageType | undefined>>;
   registerFunnelPage: (entry: FunnelPagesEntry) => CleanupFn;
   reorderFunnelPage: (args: {
     startIndex: number;
@@ -34,42 +31,33 @@ export type FunnelStepsProviderProps = FunnelStepsContextType & {
 export function FunnelStepsProvider({
   children,
   instanceId,
-  getFunnelPagesLength,
   registerFunnelPage,
   reorderFunnelPage,
-  selectedPageId,
-  setSelectedPageId,
+  setCurrentPage,
+  currentPage,
   pages,
-  funnelId,
-  subAccountId,
   funnel,
 }: FunnelStepsProviderProps) {
   const contextValue: FunnelStepsContextType = useMemo(() => {
     return {
       children,
       instanceId,
-      getFunnelPagesLength,
       registerFunnelPage,
       reorderFunnelPage,
-      selectedPageId,
-      setSelectedPageId,
+      setCurrentPage,
+      currentPage,
       pages,
-      funnelId,
-      subAccountId,
       funnel,
     };
   }, [
     pages,
     children,
     instanceId,
-    selectedPageId,
-    setSelectedPageId,
     reorderFunnelPage,
     registerFunnelPage,
-    getFunnelPagesLength,
-    funnelId,
-    subAccountId,
     funnel,
+    setCurrentPage,
+    currentPage,
   ]);
 
   return (

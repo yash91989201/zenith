@@ -12,10 +12,10 @@ import { api } from "@/trpc/react";
 // TYPES
 import type { LaneDetailType } from "@/lib/types";
 import type { Edge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/types";
-// PROVIDERS
-import { PipelineDndProvider } from "@/providers/pipeline-dnd-provider";
+// UI
+import { AutoScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 // CUSTOM COMPONENTS
-import LanesWrapper from "@/components/pipeline/pipeline-dnd/lanes-wrapper";
+import { PipelineDndProvider } from "@/providers/pipeline-dnd-provider";
 import { PipelineLane } from "@/components/pipeline/pipeline-dnd/pipeline-lane";
 
 type Outcome =
@@ -558,17 +558,20 @@ export const PipelineDnd = memo(
         reorderTicket={reorderTicket}
         moveTicket={moveTicket}
       >
-        <LanesWrapper>
-          {laneState.lanes.map((lane) => (
-            <PipelineLane
-              key={lane.id}
-              lane={lane}
-              tickets={lane.tickets}
-              subAccountId={subAccountId}
-              pipelineId={pipelineId}
-            />
-          ))}
-        </LanesWrapper>
+        <AutoScrollArea className="whitespace-nowrap rounded-md border">
+          <div className="flex w-full gap-3 p-3 pb-6">
+            {laneState.lanes.map((lane) => (
+              <PipelineLane
+                key={lane.id}
+                lane={lane}
+                tickets={lane.tickets}
+                subAccountId={subAccountId}
+                pipelineId={pipelineId}
+              />
+            ))}
+          </div>
+          <ScrollBar orientation="horizontal" />
+        </AutoScrollArea>
       </PipelineDndProvider>
     );
   },

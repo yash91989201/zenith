@@ -38,7 +38,7 @@
       "@accountModal/*":["./src/components/global/account-modal/*"],
       "@hooks/*":["./src/hooks/*"],
       "@pipelineDnd/*":["./src/components/pipeline/pipeline-dnd/*"],
-      "@funnelSteps/*":["./src/components/funnel/funnel-steps/*"]
+      "@funnelStepsEditor/*":["src/components/funnel/funnel-steps-editor/*"]
     }
   },
   "include": [

@@ -6,11 +6,16 @@ import {
   draggable,
   dropTargetForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import {
+  extractClosestEdge,
+  attachClosestEdge,
+} from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 import { DropIndicator } from "@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/box";
-import { extractClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
-import { centerUnderPointer } from "@atlaskit/pragmatic-drag-and-drop/element/center-under-pointer";
+import { pointerOutsideOfPreview } from "@atlaskit/pragmatic-drag-and-drop/element/pointer-outside-of-preview";
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
+// UTILS
+import { cn } from "@/lib/utils";
 // TYPES
 import type { FunnelPageType } from "@/lib/types";
 import type { Edge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
@@ -35,117 +40,133 @@ type State =
     }
   | {
       type: "is-dragging";
-    }
-  | {
-      type: "is-dragging-over";
-      closestEdge: Edge | null;
     };
 
 const idle: State = { type: "idle" };
 const dragging: State = { type: "is-dragging" };
 
 export function FunnelStep({ page }: Props) {
-  const funnelPageId = page.id;
-  const {
-    getFunnelPagesLength,
-    instanceId,
-    registerFunnelPage,
-    setSelectedPageId,
-    selectedPageId,
-  } = useFunnelSteps();
-
-  const funnelPages = getFunnelPagesLength();
+  const { id: funnelPageId, order: index } = page;
 
   const [state, setState] = useState<State>(idle);
+  const [closestEdge, setClosestEdge] = useState<Edge | null>(null);
 
   const funnelPageRef = useRef<HTMLDivElement | null>(null);
-  const handleRef = useRef<HTMLButtonElement | null>(null);
+  const dragHandleRef = useRef<HTMLButtonElement | null>(null);
+
+  const { pages, instanceId, currentPage, setCurrentPage, registerFunnelPage } =
+    useFunnelSteps();
 
   useEffect(() => {
-    invariant(funnelPageRef.current);
-    invariant(handleRef.current);
-
     const element = funnelPageRef.current;
+    const dragHandle = dragHandleRef.current;
+
+    invariant(element);
+    invariant(dragHandle);
+
+    const data = {
+      index,
+      instanceId,
+      funnelPageId,
+    };
 
     return combine(
       registerFunnelPage({
         funnelPageId,
-        entry: funnelPageRef.current,
+        entry: element,
       }),
-
+      // makes the element draggable
       draggable({
-        element: funnelPageRef.current,
-        dragHandle: handleRef.current,
-        getInitialData: () => ({
-          instanceId,
-          funnelPageId,
-        }),
-        onGenerateDragPreview: ({ nativeSetDragImage }) => {
+        element,
+        dragHandle,
+        getInitialData: () => data,
+        onGenerateDragPreview({ nativeSetDragImage }) {
           setCustomNativeDragPreview({
             nativeSetDragImage,
-            getOffset: centerUnderPointer,
-            render: ({ container }) => {
-              setState({
-                type: "preview",
-                container,
-              });
-              return () => setState(idle);
+            getOffset: pointerOutsideOfPreview({
+              x: "16px",
+              y: "8px",
+            }),
+            render({ container }) {
+              setState({ type: "preview", container });
+
+              return () => setState(dragging);
             },
           });
         },
+
         onDragStart: () => setState(dragging),
         onDrop: () => setState(idle),
       }),
 
       dropTargetForElements({
         element,
-        getData: () => ({ funnelPageId }),
-        canDrop: ({ source }) => {
-          // not allowing dropping on yourself
-          if (source.element === element) {
-            return false;
-          }
-          return true;
-        },
-        getIsSticky: () => true,
-        onDragEnter({ self }) {
-          const closestEdge = extractClosestEdge(self.data);
-          setState({ type: "is-dragging-over", closestEdge });
-        },
-        onDrag({ self }) {
-          const closestEdge = extractClosestEdge(self.data);
-
-          // Only need to update react state if nothing has changed.
-          // Prevents re-rendering.
-          setState((current) => {
-            if (
-              current.type === "is-dragging-over" &&
-              current.closestEdge === closestEdge
-            ) {
-              return current;
-            }
-            return { type: "is-dragging-over", closestEdge };
+        getData: ({ input, element }) => {
+          return attachClosestEdge(data, {
+            input,
+            element,
+            allowedEdges: ["top", "bottom"],
           });
         },
-        onDragLeave: () => setState(idle),
-        onDrop: () => setState(idle),
+        canDrop: ({ source }) => {
+          return (
+            source.element !== element && source.data.instanceId === instanceId
+          );
+        },
+        onDrag: ({ source, self }) => {
+          const isSource = source.element === element;
+          if (isSource) {
+            setClosestEdge(null);
+            return;
+          }
+
+          const closestEdge = extractClosestEdge(self.data);
+
+          const sourceIndex = source.data.index;
+          invariant(typeof sourceIndex === "number");
+
+          const isItemBeforeSource = index === sourceIndex - 1;
+          const isItemAfterSource = index === sourceIndex + 1;
+
+          const isDropIndicatorHidden =
+            (isItemBeforeSource && closestEdge === "bottom") ||
+            (isItemAfterSource && closestEdge === "top");
+
+          if (isDropIndicatorHidden) {
+            setClosestEdge(null);
+            return;
+          }
+
+          setClosestEdge(closestEdge);
+        },
+        onDragLeave: () => {
+          setState(idle);
+          setClosestEdge(null);
+        },
+        onDrop: () => {
+          setState(idle);
+          setClosestEdge(null);
+        },
       }),
     );
-  }, [registerFunnelPage, instanceId, funnelPageId]);
+  }, [registerFunnelPage, instanceId, funnelPageId, index]);
 
   return (
     <>
       <div
         ref={funnelPageRef}
-        className="relative mb-3 flex select-none items-center gap-3 rounded-md border p-3 dark:border-gray-700"
-        onClick={() => setSelectedPageId(page.id)}
+        className={cn(
+          state.type === "is-dragging" && "opacity-80",
+          "relative mb-3 flex select-none items-center gap-3 rounded-md border p-3 dark:border-gray-700",
+        )}
+        onClick={() => setCurrentPage(page)}
       >
-        <Button size="icon" variant="ghost" ref={handleRef}>
+        <Button size="icon" variant="ghost" ref={dragHandleRef}>
           <GripVertical className="size-4 cursor-grab" />
         </Button>
         <p className="relative flex size-10 items-center justify-center rounded-md bg-gray-200 dark:bg-gray-700">
           <Mail className="size-5" />
-          {funnelPages - 1 !== page.order && (
+          {pages.length !== page.order && (
             <span className="absolute left-1/2 top-14 -translate-x-1/2">
               <ArrowDown className="size-4" />
             </span>
@@ -158,13 +179,10 @@ export function FunnelStep({ page }: Props) {
           </span>
         </div>
 
-        {selectedPageId === page.id && (
+        {currentPage?.id === page.id && (
           <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-green-500" />
         )}
-
-        {state.type === "is-dragging-over" && state.closestEdge && (
-          <DropIndicator edge={state.closestEdge} gap={"2px"} />
-        )}
+        {closestEdge && <DropIndicator edge={closestEdge} gap={"4px"} />}
       </div>
 
       {state.type === "preview"

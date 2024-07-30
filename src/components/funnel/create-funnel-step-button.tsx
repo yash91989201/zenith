@@ -1,8 +1,6 @@
-// UTILS
-import { api } from "@/trpc/react";
+"use client";
 // CUSTOM HOOKS
 import { useToggle } from "@/hooks/use-toggle";
-import { useFunnelSteps } from "@/hooks/useFunnelSteps";
 // UI
 import {
   Dialog,
@@ -18,16 +16,13 @@ import { FunnelPageForm } from "@/components/funnel/funnel-page-form";
 // ICONS
 import { PlusCircle } from "lucide-react";
 
-export function CreateFunnelStepButton() {
-  const apiUtils = api.useUtils();
+type Props = {
+  funnelId: string;
+  subAccountId: string;
+};
+
+export function CreateFunnelStepButton({ funnelId, subAccountId }: Props) {
   const funnelStepModal = useToggle();
-  const { funnelId, subAccountId } = useFunnelSteps();
-
-  const onClose = () => {
-    void apiUtils.funnelPage.getAll.refetch({ funnelId });
-
-    funnelStepModal.close();
-  };
 
   return (
     <Dialog open={funnelStepModal.isOpen} onOpenChange={funnelStepModal.toggle}>
@@ -46,9 +41,9 @@ export function CreateFunnelStepButton() {
         </DialogHeader>
         <FunnelPageForm
           modalChild
-          onClose={onClose}
-          subAccountId={subAccountId}
           funnelId={funnelId}
+          subAccountId={subAccountId}
+          onClose={funnelStepModal.close}
         />
       </DialogContent>
     </Dialog>

@@ -2,7 +2,6 @@
 import { toast } from "sonner";
 import { memo, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import { createId } from "@paralleldrive/cuid2";
 import { zodResolver } from "@hookform/resolvers/zod";
 // UTILS
@@ -56,7 +55,7 @@ export const FunnelPageForm = memo(
     modalChild = false,
     onClose,
   }: Props) => {
-    const router = useRouter();
+    const apiUtils = api.useUtils();
 
     const { mutateAsync: saveActivityLog } =
       api.notification.saveActivityLog.useMutation();
@@ -99,13 +98,14 @@ export const FunnelPageForm = memo(
       const actionRes = await upsertFunnelPage(formData);
 
       if (actionRes.status === "SUCCESS") {
+        await apiUtils.funnelPage.getAll.refetch({ funnelId });
+
         await saveActivityLog({
           subAccountId,
           activity: `Updated a funnel page | ${formData.funnelPage.name}`,
         });
 
         onClose?.();
-        router.refresh();
         toast.success(actionRes.message);
       } else {
         toast.error(actionRes.message);
@@ -126,12 +126,12 @@ export const FunnelPageForm = memo(
       });
 
       if (actionRes.status === "SUCCESS") {
+        await apiUtils.funnelPage.getAll.refetch({ funnelId });
         await saveActivityLog({
           subAccountId,
           activity: `Copied a funnel page | ${funnelPage.name}`,
         });
 
-        router.refresh();
         toast.success(actionRes.message);
       } else {
         toast.error(actionRes.message);
@@ -144,12 +144,13 @@ export const FunnelPageForm = memo(
 
       const actionRes = await deleteFunnelPage({ funnelPageId: funnelPage.id });
       if (actionRes.status === "SUCCESS") {
+        await apiUtils.funnelPage.getAll.refetch({ funnelId });
+
         await saveActivityLog({
           activity: `Delete funnel page | ${funnelPage?.name}`,
           subAccountId,
         });
 
-        router.refresh();
         toast.success(actionRes.message);
       } else {
         toast.error(actionRes.message);

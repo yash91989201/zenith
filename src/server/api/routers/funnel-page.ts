@@ -46,7 +46,6 @@ export const funnelPageRouter = createTRPCRouter({
       })
         .from(FunnelPageTable)
         .where(eq(FunnelPageTable.funnelId, funnelId))
-      console.log(funnelPages)
 
       const [createFunnelPageQuery] = await ctx.db
         .insert(FunnelPageTable)
@@ -99,7 +98,7 @@ export const funnelPageRouter = createTRPCRouter({
         .where(
           eq(FunnelPageTable.id, input.funnelPageId)
         )
-      console.log(deleteFunnelPageQuery)
+
       if (deleteFunnelPageQuery.affectedRows === 0) throw new Error("Unable to delete funnel page")
 
       return {

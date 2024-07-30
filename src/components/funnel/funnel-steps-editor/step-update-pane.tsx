@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 // UTILS
 import { env } from "@/env";
 // CUSTOM HOOKS
@@ -10,22 +9,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@ui/card";
 // CUSTOM COMPONENTS
 import { FunnelPageForm } from "@/components/funnel/funnel-page-form";
 // ICONS
+import { Icons } from "@global/icons";
 import { Edit, ExternalLink } from "lucide-react";
-import { Icons } from "@/components/global/icons";
 
 export function StepUpdatePane() {
-  const { selectedPageId, pages, funnelId, subAccountId, funnel } =
-    useFunnelSteps();
+  const { currentPage, funnel } = useFunnelSteps();
+  const { id: funnelId, subAccountId } = funnel;
 
-  const [selectedPage, setSelectedPage] = useState(
-    pages.find((page) => page.id === selectedPageId),
-  );
-
-  useEffect(() => {
-    setSelectedPage(pages.find((page) => page.id === selectedPageId));
-  }, [pages, selectedPageId]);
-
-  if (!selectedPage) {
+  if (!currentPage) {
     return (
       <div className="flex h-[600px] items-center justify-center text-muted-foreground">
         Create or select a page to view page settings.
@@ -37,12 +28,12 @@ export function StepUpdatePane() {
     <Card>
       <CardHeader>
         <p className="text-sm text-muted-foreground">Page name</p>
-        <CardTitle>{selectedPage.name}</CardTitle>
+        <CardTitle>{currentPage.name}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="mb-3 w-full overflow-clip rounded-lg border-2 p-1.5 sm:w-80">
           <Link
-            href={`/subaccount/${subAccountId}/funnels/${funnelId}/editor/${selectedPage.id}`}
+            href={`/subaccount/${subAccountId}/funnels/${funnelId}/editor/${currentPage.id}`}
             className="group relative block w-full cursor-pointer hover:opacity-50"
           >
             {Icons.funnelPagePlaceholder}
@@ -50,13 +41,13 @@ export function StepUpdatePane() {
           </Link>
           <Link
             target="_blank"
-            href={`${env.NEXT_PUBLIC_SCHEME}${funnel.subDomainName}.${env.NEXT_PUBLIC_DOMAIN}/${selectedPage.pathName}`}
+            href={`${env.NEXT_PUBLIC_SCHEME}${funnel.subDomainName}.${env.NEXT_PUBLIC_DOMAIN}/${currentPage.pathName}`}
             className="flex items-start gap-1.5 p-1.5 transition-colors duration-200 hover:text-primary"
           >
             <ExternalLink className="size-4" />
             <div className="w-64 overflow-hidden overflow-ellipsis text-sm">
               {funnel.subDomainName}.{env.NEXT_PUBLIC_DOMAIN}/
-              {selectedPage.pathName}
+              {currentPage.pathName}
             </div>
           </Link>
         </div>
@@ -65,7 +56,7 @@ export function StepUpdatePane() {
           modalChild
           funnelId={funnelId}
           subAccountId={subAccountId}
-          funnelPage={selectedPage}
+          funnelPage={currentPage}
         />
       </CardContent>
     </Card>

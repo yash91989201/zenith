@@ -8,8 +8,8 @@ import { buttonVariants } from "@ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@ui/tabs";
 // CUSTOM COMPONNETS
 import BlurPage from "@global/blur-page";
-import { FunnelSteps } from "@funnelSteps/index";
 import { FunnelSettings } from "@/components/funnel/funnel-settings";
+import { FunnelPagesView } from "@/components/funnel/funnel-pages-view";
 // ICONS
 import { CircleChevronLeft } from "lucide-react";
 
@@ -52,7 +52,7 @@ export default async function FunnelPage({ params }: Props) {
           </TabsList>
         </div>
         <TabsContent value="steps">
-          <FunnelSteps funnel={funnel} />
+          <FunnelPagesView funnel={funnel} />
         </TabsContent>
         <TabsContent value="settings">
           <FunnelSettings funnel={funnel} />

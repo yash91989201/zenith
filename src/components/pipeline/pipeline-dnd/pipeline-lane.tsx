@@ -11,7 +11,6 @@ import {
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DropIndicator } from "@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/box";
-import { autoScrollForElements } from "@atlaskit/pragmatic-drag-and-drop-auto-scroll/element";
 import { centerUnderPointer } from "@atlaskit/pragmatic-drag-and-drop/element/center-under-pointer";
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
 // UTILS
@@ -25,7 +24,7 @@ import { LaneProvider } from "@/providers/lane-provider";
 import { usePipelineDnd } from "@/hooks/use-pipeline-dnd";
 // UI
 import { Badge } from "@ui/badge";
-import { ScrollArea } from "@ui/scroll-area";
+import { AutoScrollArea } from "@ui/scroll-area";
 // CUSTOM COMPONENTS
 import { PipelineTicket } from "@pipelineDnd/pipeline-ticket";
 import { LaneMenu } from "@/components/pipeline/pipeline-dnd/lane-menu";
@@ -62,7 +61,6 @@ export const PipelineLane = memo(
     const laneRef = useRef<HTMLDivElement | null>(null);
     const laneInnerRef = useRef<HTMLDivElement | null>(null);
     const laneHeaderRef = useRef<HTMLDivElement | null>(null);
-    const scrollableRef = useRef<HTMLDivElement | null>(null);
     const [isDragging, setIsDragging] = useState<boolean>(false);
 
     const { instanceId, registerLane } = usePipelineDnd();
@@ -75,7 +73,6 @@ export const PipelineLane = memo(
       invariant(laneRef.current);
       invariant(laneInnerRef.current);
       invariant(laneHeaderRef.current);
-      invariant(scrollableRef.current);
 
       return combine(
         registerLane({
@@ -187,13 +184,6 @@ export const PipelineLane = memo(
             setState(idle);
           },
         }),
-        // create auto scroll feature for ticket when something is dropped within laneInnerRef div
-        autoScrollForElements({
-          element: scrollableRef.current,
-          canScroll: ({ source }) =>
-            source.data.instanceId === instanceId &&
-            source.data.type === "ticket",
-        }),
       );
     }, [instanceId, laneId, registerLane]);
 
@@ -240,18 +230,18 @@ export const PipelineLane = memo(
               />
             </div>
 
-            <ScrollArea
+            <AutoScrollArea
               className={cn(
                 "flex-1",
                 state.type === "is-ticket-over" && "bg-primary/10",
               )}
             >
-              <div className="m-4 space-y-3" ref={scrollableRef}>
+              <div className="m-4 space-y-3">
                 {tickets.map((ticket) => (
                   <PipelineTicket key={ticket.id} ticket={ticket} />
                 ))}
               </div>
-            </ScrollArea>
+            </AutoScrollArea>
           </div>
           {state.type === "is-lane-over" && state.closestEdge && (
             <DropIndicator edge={state.closestEdge} gap="gap-1" />
